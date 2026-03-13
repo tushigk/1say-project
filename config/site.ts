@@ -9,7 +9,7 @@ export const siteConfig = {
   },
 };
 
-export const siteUrl = "http://localhost:3040";
-// export const siteUrl = "https://backend.afterkiss.space";
+// export const siteUrl = "http://localhost:3040";
+export const siteUrl = "https://backend.afterkiss.space";
 
 export type SiteConfig = typeof siteConfig;
