@@ -190,36 +190,6 @@ export default function PaymentPage({ params: paramsPromise }: { params: Promise
         <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/dark-matter.png')] opacity-[0.03] pointer-events-none" />
       </div>
       {/* Premium Header / Navigation */}
-      <nav className="sticky top-0 inset-x-0 z-50 px-4 py-4 md:px-12 md:py-6 flex items-center justify-between pointer-events-auto bg-black/40 backdrop-blur-2xl border-b border-white/5">
-        <div className="flex items-center gap-3 md:gap-8">
-          <button
-            onClick={() => router.push("/plans")}
-            className="group flex items-center gap-2 md:gap-3 px-3 py-2 rounded-xl hover:bg-white/5 transition-all duration-300"
-          >
-            <div className="w-8 h-8 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center group-hover:border-rose-500/50 transition-colors">
-              <ChevronLeft size={18} className="text-zinc-400 group-hover:text-white transition-colors" />
-            </div>
-            <span className="hidden xs:block text-[10px] font-black uppercase tracking-[0.2em] text-zinc-500 group-hover:text-white transition-colors">Буцах</span>
-          </button>
-
-          <div className="flex items-center gap-3 md:gap-4 cursor-pointer group" onClick={() => router.push("/")}>
-            <div className="w-8 h-8 md:w-10 md:h-10 rounded-xl bg-linear-to-br from-rose-500 via-rose-600 to-purple-700 flex items-center justify-center shadow-[0_8px_15px_rgba(225,29,72,0.2)] rotate-3 group-hover:rotate-6 transition-all duration-500">
-              <Flame size={16} className="text-white fill-white/20 md:w-5 md:h-5" />
-            </div>
-            <div className="leading-tight">
-              <span className="block font-serif text-lg md:text-xl font-bold tracking-tighter text-white">Noir</span>
-              <span className="text-[7px] md:text-[8px] uppercase tracking-[0.3em] text-rose-500/80 font-bold">Checkout</span>
-            </div>
-          </div>
-        </div>
-
-        <div className="flex items-center gap-3">
-          <div className={`px-3 py-1 md:px-4 md:py-1.5 rounded-full text-[8px] md:text-[9px] font-black uppercase tracking-[0.2em] flex items-center gap-2 border ${isPaid ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-400' : 'bg-rose-500/10 border-rose-500/30 text-rose-500 animate-pulse'}`}>
-            <span className={`w-1 md:w-1.5 h-1 md:h-1.5 rounded-full ${isPaid ? 'bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.6)]' : 'bg-rose-500 shadow-[0_0_8px_rgba(225,29,72,0.6)]'}`} />
-            <span className="whitespace-nowrap">{isPaid ? "Төлөгдсөн" : "Хүлээгдэж байна"}</span>
-          </div>
-        </div>
-      </nav>
 
       <main className="relative z-10 w-full max-w-7xl mx-auto px-6 py-12 md:py-20 font-sans">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 items-start">
