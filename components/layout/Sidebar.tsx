@@ -5,14 +5,42 @@ import { Flame, Heart, BookOpen, MessageCircle, Users, LogOut } from 'lucide-rea
 import { NavItem } from './NavItem';
 import Image from 'next/image';
 import { useAuth } from '../providers/AuthProvider';
+import useSWR from 'swr';
+import { chatApi } from '@/apis';
+import { useSocket } from '../providers/SocketProvider';
+
+interface Chat {
+    _id: string;
+    type: 'direct' | 'group';
+    unreadCount?: number;
+}
 
 interface SidebarProps {
     activeTab: string;
-    setActiveTab: (tab: 'discover' | 'stories' | 'chat' | 'groups') => void;
+    setActiveTab: (tab: 'discover' | 'stories' | 'chat' | 'groups' | 'profile') => void;
+    onNavigateToProfile?: (id: string) => void;
 }
 
-export function Sidebar({ activeTab, setActiveTab }: SidebarProps) {
+export function Sidebar({ activeTab, setActiveTab, onNavigateToProfile }: SidebarProps) {
     const { logout, user } = useAuth();
+    const { socket } = useSocket();
+
+    const { data: chatsData, mutate: mutateChats } = useSWR(user ? 'chats' : null, () => chatApi.listChats());
+
+    React.useEffect(() => {
+        if (!socket) return;
+        const handleUpdate = () => mutateChats();
+        socket.on('chat:message', handleUpdate);
+        socket.on('notification:new', handleUpdate);
+        return () => {
+            socket.off('chat:message', handleUpdate);
+            socket.off('notification:new', handleUpdate);
+        };
+    }, [socket, mutateChats]);
+
+    const chats: Chat[] = chatsData?.data || chatsData || [];
+    const directUnreadCount = Array.isArray(chats) ? chats.filter((c) => c.type === 'direct').reduce((acc, c) => acc + (c.unreadCount || 0), 0) : 0;
+    const groupUnreadCount = Array.isArray(chats) ? chats.filter((c) => c.type === 'group').reduce((acc, c) => acc + (c.unreadCount || 0), 0) : 0;
 
     return (
         <aside className="hidden md:flex flex-col w-72 border-r border-zinc-800/50 bg-black/40 backdrop-blur-2xl relative z-30">
@@ -48,19 +76,23 @@ export function Sidebar({ activeTab, setActiveTab }: SidebarProps) {
                         label="Чат"
                         isActive={activeTab === 'chat'}
                         onClick={() => setActiveTab('chat')}
-                        badge="3"
+                        badge={directUnreadCount > 0 ? directUnreadCount.toString() : undefined}
                     />
                     <NavItem
                         icon={<Users />}
                         label="Грүпп чат"
                         isActive={activeTab === 'groups'}
                         onClick={() => setActiveTab('groups')}
+                        badge={groupUnreadCount > 0 ? groupUnreadCount.toString() : undefined}
                     />
                 </div>
             </nav>
 
             <div className="p-6 space-y-4">
-                <div className="rounded-3xl p-1.5 bg-zinc-900/50 border border-zinc-800/50 hover:border-rose-500/30 transition-all cursor-pointer group">
+                <div 
+                    onClick={() => user?._id && onNavigateToProfile?.(user._id)}
+                    className="rounded-3xl p-1.5 bg-zinc-900/50 border border-zinc-800/50 hover:border-rose-500/30 transition-all cursor-pointer group"
+                >
                     <div className="flex items-center gap-3 p-2 rounded-2xl hover:bg-zinc-800/50 transition-colors">
                         <div className="w-11 h-11 rounded-2xl overflow-hidden relative ring-2 ring-zinc-800 group-hover:ring-rose-500/50 transition-all">
                             <Image

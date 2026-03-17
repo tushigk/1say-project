@@ -20,12 +20,18 @@ export default function AppInterface() {
   const [activeTab, setActiveTab] = useState<Tab>('discover');
   const [prevTab, setPrevTab] = useState<Tab>('discover');
   const [viewingUserId, setViewingUserId] = useState<string | null>(null);
+  const [selectedChatId, setSelectedChatId] = useState<string | null>(null);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const navigateToProfile = (userId: string) => {
     setPrevTab(activeTab);
     setViewingUserId(userId);
     setActiveTab('profile');
+  };
+
+  const navigateToChat = (chatId: string) => {
+    setSelectedChatId(chatId);
+    setActiveTab('chat');
   };
 
   const getTabTitle = () => {
@@ -51,8 +57,20 @@ export default function AppInterface() {
       >
         {activeTab === 'discover' && <DiscoverView onNavigateToProfile={navigateToProfile} />}
         {activeTab === 'stories' && <StoriesView onNavigateToProfile={navigateToProfile} />}
-        {activeTab === 'chat' && <ChatView />}
-        {activeTab === 'groups' && <GroupChatView />}
+        {activeTab === 'chat' && (
+          <ChatView 
+            onNavigateToProfile={navigateToProfile} 
+            selectedChatId={selectedChatId} 
+            setSelectedChatId={setSelectedChatId}
+          />
+        )}
+        {activeTab === 'groups' && (
+          <GroupChatView 
+            onNavigateToProfile={navigateToProfile} 
+            selectedChatId={selectedChatId} 
+            setSelectedChatId={setSelectedChatId}
+          />
+        )}
         {activeTab === 'profile' && viewingUserId && (
           <ProfileView 
             userId={viewingUserId} 
@@ -60,6 +78,7 @@ export default function AppInterface() {
               setActiveTab(prevTab === 'profile' ? 'discover' : prevTab);
               setViewingUserId(null);
             }} 
+            onNavigateToChat={navigateToChat}
           />
         )}
       </motion.div>
@@ -72,7 +91,11 @@ export default function AppInterface() {
       <div className="fixed top-[-10%] left-[-10%] w-[40%] h-[40%] bg-rose-900/10 blur-[120px] rounded-full z-0 pointer-events-none"></div>
       <div className="fixed bottom-[-10%] right-[-10%] w-[30%] h-[30%] bg-purple-900/10 blur-[120px] rounded-full z-0 pointer-events-none"></div>
 
-      <Sidebar activeTab={activeTab} setActiveTab={setActiveTab} />
+      <Sidebar 
+        activeTab={activeTab} 
+        setActiveTab={setActiveTab} 
+        onNavigateToProfile={navigateToProfile}
+      />
 
       {/* Mobile Sidebar Overlay */}
       <AnimatePresence>

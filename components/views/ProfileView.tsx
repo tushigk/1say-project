@@ -1,19 +1,36 @@
 'use client';
 
 import React from 'react';
-import { motion } from 'framer-motion';
-import { ArrowLeft, MapPin, Calendar, Heart, MessageCircle, AlertCircle } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { ArrowLeft, Heart, MessageCircle, AlertCircle } from 'lucide-react';
 import Image from 'next/image';
 import useSWR from 'swr';
-import { profileApi } from '@/apis';
+import { profileApi, chatApi } from '@/apis';
+import { toast } from 'react-hot-toast';
+import { Plus, Users, X } from 'lucide-react';
+import { useAuth } from '@/components/providers/AuthProvider';
+
+interface GroupChat {
+    _id: string;
+    title: string;
+    type: 'group' | 'direct';
+    members?: string[];
+}
 
 interface ProfileViewProps {
     userId: string;
     onBack: () => void;
+    onNavigateToChat?: (chatId: string) => void;
 }
 
-export function ProfileView({ userId, onBack }: ProfileViewProps) {
-    const { data: profile, error, isLoading } = useSWR(
+export function ProfileView({ userId, onBack, onNavigateToChat }: ProfileViewProps) {
+    const { user: currentUser } = useAuth();
+    const [isActionLoading, setIsActionLoading] = React.useState(false);
+    const [isInviteModalOpen, setIsInviteModalOpen] = React.useState(false);
+    const [myGroups, setMyGroups] = React.useState<GroupChat[]>([]);
+    const [isGroupsLoading, setIsGroupsLoading] = React.useState(false);
+
+    const { data, error, isLoading } = useSWR(
         userId ? `profile/public/${userId}` : null,
         () => profileApi.getPublicUserProfile(userId)
     );
@@ -26,7 +43,7 @@ export function ProfileView({ userId, onBack }: ProfileViewProps) {
         );
     }
 
-    if (error || !profile) {
+    if (error || !data?.profile) {
         return (
             <div className="flex flex-col h-full items-center justify-center space-y-4 text-zinc-500">
                 <AlertCircle size={48} />
@@ -38,11 +55,64 @@ export function ProfileView({ userId, onBack }: ProfileViewProps) {
         );
     }
 
+    const { profile, posts, postsTotal } = data;
+
+    const handlePM = async () => {
+        if (!profile?._id) return;
+        setIsActionLoading(true);
+        try {
+            const res = await chatApi.createDirectChat(profile._id);
+            if (res.data?._id) {
+                onNavigateToChat?.(res.data._id);
+            } else if (res._id) {
+                onNavigateToChat?.(res._id);
+            } else {
+                toast.error("Чат үүсгэхэд асуудал гарлаа");
+            }
+        } catch (error: unknown) {
+            console.error("PM Error:", error);
+            const message = error instanceof Error ? error.message : "Чат үүсгэхэд алдаа гарлаа";
+            toast.error(message);
+        } finally {
+            setIsActionLoading(false);
+        }
+    };
+
+    const openInviteModal = async () => {
+        setIsInviteModalOpen(true);
+        setIsGroupsLoading(true);
+        try {
+            const res = await chatApi.listChats({});
+            // Filter for group chats
+            const groups = (res.data || res).filter((chat: GroupChat) => chat.type === 'group');
+            setMyGroups(groups);
+        } catch (error) {
+            console.error("Fetch Groups Error:", error);
+            toast.error("Грүппүүд ачаалахад алдаа гарлаа");
+        } finally {
+            setIsGroupsLoading(false);
+        }
+    };
+
+    const handleInvite = async (chatId: string) => {
+        setIsActionLoading(true);
+        try {
+            await chatApi.inviteToGroupChat(chatId, profile._id);
+            toast.success("Урилга амжилттай илгээгдлээ");
+            setIsInviteModalOpen(false);
+        } catch (error: unknown) {
+            console.error("Invite Error:", error);
+            const message = error instanceof Error ? error.message : "Урихад алдаа гарлаа";
+            toast.error(message);
+        } finally {
+            setIsActionLoading(false);
+        }
+    };
+
     return (
         <div className="max-w-4xl mx-auto p-6 md:p-10 space-y-10">
-            {/* Header / Back Button */}
             <div className="flex items-center gap-4">
-                <button 
+                <button
                     onClick={onBack}
                     className="p-3 bg-zinc-900/50 hover:bg-rose-500 group rounded-2xl transition-all border border-zinc-800"
                 >
@@ -51,13 +121,11 @@ export function ProfileView({ userId, onBack }: ProfileViewProps) {
                 <h1 className="text-2xl font-serif text-white uppercase tracking-widest">Профайл</h1>
             </div>
 
-            {/* Profile Card */}
-            <motion.div 
+            <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 className="glass-card rounded-[3rem] overflow-hidden border border-zinc-900/50 bg-zinc-900/20 backdrop-blur-xl"
             >
-                {/* Cover Area / Top Half */}
                 <div className="h-48 bg-linear-to-br from-rose-900/20 to-purple-900/20 relative">
                     <div className="absolute inset-0 bg-black/20" />
                 </div>
@@ -66,7 +134,7 @@ export function ProfileView({ userId, onBack }: ProfileViewProps) {
                     <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
                         <div className="flex flex-col md:flex-row items-center md:items-end gap-6 text-center md:text-left">
                             <div className="w-32 h-32 rounded-3xl overflow-hidden relative border-4 border-zinc-950 shadow-2xl bg-zinc-900">
-                                <Image 
+                                <Image
                                     src={profile.avatar || `https://picsum.photos/seed/${profile._id}/200/200`}
                                     alt={profile.username}
                                     fill
@@ -75,74 +143,169 @@ export function ProfileView({ userId, onBack }: ProfileViewProps) {
                             </div>
                             <div className="space-y-1 pb-2">
                                 <div className="flex items-center gap-2 justify-center md:justify-start">
-                                    <h2 className="text-4xl font-serif font-bold text-white tracking-tight">{profile.name || profile.username}</h2>
-                                    {profile.isPremium && (
-                                        <div className="px-2 py-0.5 bg-rose-500/10 text-rose-500 border border-rose-500/20 rounded-md text-[10px] font-bold uppercase tracking-widest">
-                                            Premium
-                                        </div>
-                                    )}
+                                    <h2 className="text-4xl font-serif font-bold text-white tracking-tight">{profile.username}</h2>
+                                    <div className="px-2 py-0.5 bg-rose-500/10 text-rose-500 border border-rose-500/20 rounded-md text-[10px] font-bold uppercase tracking-widest">
+                                        {profile.level?.title || 'Level 1'}
+                                    </div>
                                 </div>
-                                <p className="text-zinc-500 font-medium">@{profile.username}</p>
+                                <p className="text-zinc-500 font-medium capitalize">{profile.gender === 'male' ? 'Эрэгтэй' : profile.gender === 'female' ? 'Эмэгтэй' : profile.gender}</p>
                             </div>
                         </div>
-                        
-                        <div className="flex gap-3">
-                            <button className="flex-1 md:flex-none px-8 py-3.5 bg-rose-600 hover:bg-rose-500 text-white rounded-2xl font-bold transition-all shadow-lg active:scale-95">
-                                Мэндчилэх
-                            </button>
-                        </div>
+
+                        {currentUser?._id !== profile._id && (
+                            <div className="flex flex-wrap gap-3 justify-center md:justify-start">
+                                <button 
+                                    onClick={handlePM}
+                                    disabled={isActionLoading}
+                                    className="px-8 py-3.5 bg-rose-600 hover:bg-rose-500 disabled:opacity-50 text-white rounded-2xl font-bold transition-all shadow-lg active:scale-95 flex items-center gap-2"
+                                >
+                                    {isActionLoading ? <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" /> : <MessageCircle size={18} />}
+                                    Мэндчилэх
+                                </button>
+                                <button 
+                                    onClick={openInviteModal}
+                                    disabled={isActionLoading}
+                                    className="px-8 py-3.5 bg-zinc-900 hover:bg-zinc-800 disabled:opacity-50 text-white rounded-2xl font-bold transition-all border border-zinc-800 shadow-lg active:scale-95 flex items-center gap-2"
+                                >
+                                    <Plus size={18} className="text-rose-500" />
+                                    Грүппт урих
+                                </button>
+                            </div>
+                        )}
                     </div>
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-12 mt-12 pt-10 border-t border-zinc-900/50">
-                        {/* About / Info */}
                         <div className="space-y-6">
                             <div className="space-y-4 text-zinc-400">
-                                <h3 className="text-sm font-bold uppercase tracking-[0.2em] text-rose-500/80">Мэдээлэл</h3>
-                                <div className="grid grid-cols-2 gap-4">
-                                    <div className="flex items-center gap-3 bg-zinc-900/30 p-4 rounded-2xl border border-zinc-800/50">
-                                        <Calendar size={18} className="text-zinc-500" />
+                                <h3 className="text-sm font-bold uppercase tracking-[0.2em] text-rose-500/80">Түвшин</h3>
+                                <div className="space-y-4 bg-zinc-900/30 p-6 rounded-3xl border border-zinc-800/50">
+                                    <div className="flex justify-between items-end mb-2">
                                         <div>
-                                            <p className="text-[10px] text-zinc-500 uppercase font-bold tracking-wider">Нас</p>
-                                            <p className="text-white font-bold">{profile.age || 'Нууц'}</p>
+                                            <p className="text-[10px] text-zinc-500 uppercase font-bold tracking-wider">Одоогийн Exp</p>
+                                            <p className="text-white font-bold">{profile.exp} XP</p>
+                                        </div>
+                                        <div className="text-right">
+                                            <p className="text-[10px] text-zinc-500 uppercase font-bold tracking-wider">Дараагийн түвшин</p>
+                                            <p className="text-rose-500 font-bold">{profile.nextLevel?.requiredExp || 0} XP</p>
                                         </div>
                                     </div>
-                                    <div className="flex items-center gap-3 bg-zinc-900/30 p-4 rounded-2xl border border-zinc-800/50">
-                                        <MapPin size={18} className="text-zinc-500" />
-                                        <div>
-                                            <p className="text-[10px] text-zinc-500 uppercase font-bold tracking-wider">Байршил</p>
-                                            <p className="text-white font-bold">{profile.location || 'Улаанбаатар'}</p>
-                                        </div>
+                                    <div className="w-full h-2 bg-zinc-800 rounded-full overflow-hidden">
+                                        <div
+                                            className="h-full bg-linear-to-r from-rose-500 to-purple-600 transition-all duration-1000"
+                                            style={{ width: `${Math.min(100, (profile.exp / (profile.nextLevel?.requiredExp || profile.exp)) * 100)}%` }}
+                                        />
                                     </div>
                                 </div>
                             </div>
-
-                            <div className="space-y-4">
-                                <h3 className="text-sm font-bold uppercase tracking-[0.2em] text-rose-500/80">Товч танилцуулга</h3>
-                                <p className="text-zinc-300 leading-relaxed bg-zinc-900/30 p-6 rounded-3xl border border-zinc-800/50 italic font-medium">
-                                    &quot;{profile.bio || 'Одоогоор танилцуулга бичээгүй байна.'}&quot;
-                                </p>
-                            </div>
                         </div>
 
-                        {/* Stats / Activity */}
                         <div className="space-y-6">
                             <h3 className="text-sm font-bold uppercase tracking-[0.2em] text-rose-500/80">Үзүүлэлт</h3>
                             <div className="grid grid-cols-2 gap-4">
                                 <div className="bg-zinc-900/30 p-8 rounded-3xl border border-zinc-800/50 text-center space-y-2">
-                                    <Heart size={24} className="mx-auto text-rose-500 opacity-50" />
-                                    <p className="text-3xl font-serif font-bold text-white">0</p>
-                                    <p className="text-[10px] text-zinc-500 uppercase font-bold tracking-wider">Нийт таалагдсан</p>
-                                </div>
-                                <div className="bg-zinc-900/30 p-8 rounded-3xl border border-zinc-800/50 text-center space-y-2">
-                                    <MessageCircle size={24} className="mx-auto text-zinc-500 opacity-50" />
-                                    <p className="text-3xl font-serif font-bold text-white">0</p>
+                                    <MessageCircle size={24} className="mx-auto text-rose-500 opacity-50" />
+                                    <p className="text-3xl font-serif font-bold text-white">{postsTotal || 0}</p>
                                     <p className="text-[10px] text-zinc-500 uppercase font-bold tracking-wider">Нийт түүх</p>
+                                </div>
+                                <div className="bg-zinc-900/30 p-8 rounded-3xl border border-zinc-800/50 text-center space-y-2 text-zinc-700">
+                                    <Heart size={24} className="mx-auto opacity-20" />
+                                    <p className="text-3xl font-serif font-bold italic opacity-20">0</p>
+                                    <p className="text-[10px] uppercase font-bold tracking-wider opacity-20">Таалагдсан</p>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </motion.div>
+
+            {/* User Posts Section */}
+            <div className="space-y-6">
+                <h3 className="text-sm font-bold uppercase tracking-[0.2em] text-rose-500/80 px-4">Хуваалцсан түүхүүд</h3>
+                <div className="grid grid-cols-1 gap-4">
+                    {posts?.map((post: { _id: string, title: string, description: string, createdAt: string, likeCount: number, commentCount: number }) => (
+                        <div
+                            key={post._id}
+                            className="bg-zinc-900/20 border border-zinc-800/50 rounded-3xl p-6 hover:bg-zinc-900/40 transition-colors group cursor-pointer"
+                        >
+                            <div className="flex justify-between items-start mb-2">
+                                <h4 className="text-xl font-serif font-bold text-white group-hover:text-rose-400 transition-colors">{post.title}</h4>
+                                <span className="text-[10px] text-zinc-600 font-bold uppercase">{new Date(post.createdAt).toLocaleDateString()}</span>
+                            </div>
+                            <p className="text-zinc-500 text-sm line-clamp-2 leading-relaxed">{post.description}</p>
+                            <div className="flex gap-4 mt-4 pt-4 border-t border-zinc-800/30">
+                                <div className="flex items-center gap-1.5 text-zinc-600">
+                                    <Heart size={14} />
+                                    <span className="text-xs font-bold">{post.likeCount}</span>
+                                </div>
+                                <div className="flex items-center gap-1.5 text-zinc-600">
+                                    <MessageCircle size={14} />
+                                    <span className="text-xs font-bold">{post.commentCount}</span>
+                                </div>
+                            </div>
+                        </div>
+                    ))}
+                    {(!posts || posts.length === 0) && (
+                        <div className="text-center py-20 bg-zinc-950/20 rounded-4xl border border-zinc-900 border-dashed">
+                            <p className="text-zinc-500 text-sm">Одоогоор хуваалцсан түүх алга байна.</p>
+                        </div>
+                    )}
+                </div>
+            </div>
+
+            {/* Invite Modal */}
+            <AnimatePresence>
+                {isInviteModalOpen && (
+                    <div className="fixed inset-0 z-100 flex items-center justify-center p-6">
+                        <motion.div 
+                            initial={{ opacity: 0 }} 
+                            animate={{ opacity: 1 }} 
+                            exit={{ opacity: 0 }}
+                            onClick={() => setIsInviteModalOpen(false)}
+                            className="absolute inset-0 bg-black/80 backdrop-blur-sm"
+                        />
+                        <motion.div
+                            initial={{ opacity: 0, scale: 0.9, y: 20 }}
+                            animate={{ opacity: 1, scale: 1, y: 0 }}
+                            exit={{ opacity: 0, scale: 0.9, y: 20 }}
+                            className="relative w-full max-w-md bg-zinc-950 border border-zinc-900 rounded-[2.5rem] overflow-hidden shadow-2xl"
+                        >
+                            <div className="p-8 border-b border-zinc-900 flex justify-between items-center">
+                                <h3 className="text-xl font-serif font-bold text-white">Грүппт урих</h3>
+                                <button onClick={() => setIsInviteModalOpen(false)} className="text-zinc-500 hover:text-white transition-colors">
+                                    <X size={20} />
+                                </button>
+                            </div>
+                            <div className="p-8 space-y-4 max-h-[400px] overflow-y-auto">
+                                {isGroupsLoading ? (
+                                    <div className="flex justify-center py-10">
+                                        <div className="w-6 h-6 border-2 border-rose-500 border-t-transparent rounded-full animate-spin" />
+                                    </div>
+                                ) : myGroups.length > 0 ? (
+                                    myGroups.map((group: GroupChat) => (
+                                        <button
+                                            key={group._id}
+                                            onClick={() => handleInvite(group._id)}
+                                            className="w-full flex items-center gap-4 p-4 rounded-2xl bg-zinc-900/40 border border-zinc-900/50 hover:bg-rose-500/10 hover:border-rose-500/30 transition-all text-left group"
+                                        >
+                                            <div className="w-12 h-12 rounded-xl bg-zinc-800 flex items-center justify-center text-rose-500">
+                                                <Users size={20} />
+                                            </div>
+                                            <div className="flex-1">
+                                                <p className="font-bold text-white group-hover:text-rose-500 transition-colors">{group.title}</p>
+                                                <p className="text-[10px] text-zinc-600 uppercase font-bold tracking-widest">{group.members?.length || 0} гишүүнтэй</p>
+                                            </div>
+                                        </button>
+                                    ))
+                                ) : (
+                                    <div className="text-center py-10">
+                                        <p className="text-zinc-500 italic">Та одоогоор грүпп чатад байхгүй байна.</p>
+                                    </div>
+                                )}
+                            </div>
+                        </motion.div>
+                    </div>
+                )}
+            </AnimatePresence>
         </div>
     );
 }
