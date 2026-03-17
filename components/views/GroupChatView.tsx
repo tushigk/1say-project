@@ -389,7 +389,7 @@ export function GroupChatView({ onNavigateToProfile, selectedChatId, setSelected
                                 </div>
                             </div>
 
-                    <div className="flex-1 overflow-y-auto p-8 space-y-6 scroll-smooth">
+                    <div className="flex-1 overflow-y-auto p-4 md:p-8 space-y-6 scroll-smooth">
                         {messages.map((msg) => {
                             const isMine = msg.sender._id === currentUser?._id;
                             return (
@@ -430,8 +430,8 @@ export function GroupChatView({ onNavigateToProfile, selectedChatId, setSelected
                         <div ref={messagesEndRef} />
                     </div>
 
-                    <form onSubmit={handleSendMessage} className="p-8 bg-transparent">
-                        <div className="flex items-center gap-4 bg-zinc-900/80 border border-zinc-800/50 rounded-4xl px-6 py-3 backdrop-blur-xl shadow-2xl focus-within:ring-2 focus-within:ring-rose-500/20 transition-all">
+                    <form onSubmit={handleSendMessage} className="p-4 md:p-8 bg-transparent">
+                        <div className="flex items-center gap-3 md:gap-4 bg-zinc-900/80 border border-zinc-800/50 rounded-3xl md:rounded-4xl px-4 md:px-6 py-3 backdrop-blur-xl shadow-2xl focus-within:ring-2 focus-within:ring-rose-500/20 transition-all">
                             <button type="button" className="text-zinc-500 hover:text-rose-500 transition-colors transform active:scale-90">
                                 <ImageIcon size={22} />
                             </button>

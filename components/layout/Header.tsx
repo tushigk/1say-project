@@ -1,7 +1,8 @@
 'use client';
 
 import React from 'react';
-import { Flame, Menu, X, Search, Bell } from 'lucide-react';
+import { Flame, Menu, X, Search } from 'lucide-react';
+import { NotificationDropdown } from './NotificationDropdown';
 
 interface HeaderProps {
     isMobileMenuOpen: boolean;
@@ -24,15 +25,12 @@ export function Header({ isMobileMenuOpen, setIsMobileMenuOpen, activeTabTitle }
                         />
                     </div>
 
-                    <button className="w-10 h-10 rounded-2xl bg-zinc-900/50 flex items-center justify-center text-zinc-400 hover:text-white hover:bg-zinc-800 transition-all border border-zinc-800/50 relative">
-                        <Bell size={20} />
-                        <span className="absolute top-2 right-2 w-2 h-2 bg-rose-500 rounded-full border-2 border-zinc-950"></span>
-                    </button>
+                    <NotificationDropdown />
                 </div>
             </header>
 
             {/* Mobile Header */}
-            <div className="md:hidden fixed top-0 left-0 right-0 h-16 border-b border-zinc-800/50 bg-black/60 backdrop-blur-xl z-100 flex items-center justify-between px-6">
+            <div className="md:hidden fixed top-0 left-0 right-0 h-20 border-b border-zinc-800/50 bg-black/60 backdrop-blur-xl z-100 flex items-center justify-between px-6">
                 <div className="flex items-center gap-3">
                     <div className="w-8 h-8 rounded-xl bg-linear-to-br from-rose-500 to-purple-600 flex items-center justify-center">
                         <Flame size={18} className="text-white fill-white/20" />
@@ -40,12 +38,15 @@ export function Header({ isMobileMenuOpen, setIsMobileMenuOpen, activeTabTitle }
                     <span className="font-serif text-xl font-bold text-white tracking-tighter">Noir</span>
                 </div>
 
-                <button
-                    onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-                    className="w-10 h-10 rounded-xl bg-zinc-900/50 flex items-center justify-center text-zinc-400"
-                >
-                    {isMobileMenuOpen ? <X size={20} /> : <Menu size={20} />}
-                </button>
+                <div className="flex items-center gap-2">
+                    <NotificationDropdown />
+                    <button
+                        onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+                        className="w-10 h-10 rounded-xl bg-zinc-900/50 flex items-center justify-center text-zinc-400"
+                    >
+                        {isMobileMenuOpen ? <X size={20} /> : <Menu size={20} />}
+                    </button>
+                </div>
             </div>
         </>
     );

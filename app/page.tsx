@@ -1,6 +1,7 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect, Suspense, useMemo } from 'react';
+import { useSearchParams, useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Sidebar } from '@/components/layout/Sidebar';
 import { Header } from '@/components/layout/Header';
@@ -15,23 +16,31 @@ import { useAuth } from '@/components/providers/AuthProvider';
 
 type Tab = 'discover' | 'stories' | 'chat' | 'groups' | 'profile';
 
-export default function AppInterface() {
+function AppContent() {
   const { logout } = useAuth();
-  const [activeTab, setActiveTab] = useState<Tab>('discover');
-  const [prevTab, setPrevTab] = useState<Tab>('discover');
-  const [viewingUserId, setViewingUserId] = useState<string | null>(null);
-  const [selectedChatId, setSelectedChatId] = useState<string | null>(null);
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  
+  // Derived state from URL - the source of truth
+  const activeTab = useMemo(() => {
+    const tab = searchParams.get('tab');
+    if (tab && ['discover', 'stories', 'chat', 'groups', 'profile'].includes(tab)) {
+      return tab as Tab;
+    }
+    return 'discover';
+  }, [searchParams]);
+
+  const selectedChatId = searchParams.get('chatId');
+  const viewingUserId = searchParams.get('userId');
+
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const navigateToProfile = (userId: string) => {
-    setPrevTab(activeTab);
-    setViewingUserId(userId);
-    setActiveTab('profile');
+    router.push(`/?tab=profile&userId=${userId}`);
   };
 
-  const navigateToChat = (chatId: string) => {
-    setSelectedChatId(chatId);
-    setActiveTab('chat');
+  const navigateToChat = (chatId: string, type: 'direct' | 'group' = 'direct') => {
+    router.push(`/?tab=${type === 'group' ? 'groups' : 'chat'}&chatId=${chatId}`);
   };
 
   const getTabTitle = () => {
@@ -61,22 +70,21 @@ export default function AppInterface() {
           <ChatView 
             onNavigateToProfile={navigateToProfile} 
             selectedChatId={selectedChatId} 
-            setSelectedChatId={setSelectedChatId}
+            setSelectedChatId={(id) => router.push(`/?tab=chat${id ? `&chatId=${id}` : ''}`)}
           />
         )}
         {activeTab === 'groups' && (
           <GroupChatView 
             onNavigateToProfile={navigateToProfile} 
             selectedChatId={selectedChatId} 
-            setSelectedChatId={setSelectedChatId}
+            setSelectedChatId={(id) => router.push(`/?tab=groups${id ? `&chatId=${id}` : ''}`)}
           />
         )}
         {activeTab === 'profile' && viewingUserId && (
           <ProfileView 
             userId={viewingUserId} 
             onBack={() => {
-              setActiveTab(prevTab === 'profile' ? 'discover' : prevTab);
-              setViewingUserId(null);
+              router.push('/?tab=discover');
             }} 
             onNavigateToChat={navigateToChat}
           />
@@ -93,7 +101,7 @@ export default function AppInterface() {
 
       <Sidebar 
         activeTab={activeTab} 
-        setActiveTab={setActiveTab} 
+        setActiveTab={(tab) => router.push(`/?tab=${tab}`)} 
         onNavigateToProfile={navigateToProfile}
       />
 
@@ -121,10 +129,10 @@ export default function AppInterface() {
               </div>
 
               <nav className="space-y-1">
-                <NavItem icon={<Heart />} label="Танилцах" isActive={activeTab === 'discover'} onClick={() => { setActiveTab('discover'); setIsMobileMenuOpen(false); }} />
-                <NavItem icon={<BookOpen />} label="Түүхүүд" isActive={activeTab === 'stories'} onClick={() => { setActiveTab('stories'); setIsMobileMenuOpen(false); }} />
-                <NavItem icon={<MessageCircle />} label="Чат" isActive={activeTab === 'chat'} onClick={() => { setActiveTab('chat'); setIsMobileMenuOpen(false); }} badge="3" />
-                <NavItem icon={<Users />} label="Грүпп чат" isActive={activeTab === 'groups'} onClick={() => { setActiveTab('groups'); setIsMobileMenuOpen(false); }} />
+                <NavItem icon={<Heart />} label="Танилцах" isActive={activeTab === 'discover'} onClick={() => { router.push('/?tab=discover'); setIsMobileMenuOpen(false); }} />
+                <NavItem icon={<BookOpen />} label="Түүхүүд" isActive={activeTab === 'stories'} onClick={() => { router.push('/?tab=stories'); setIsMobileMenuOpen(false); }} />
+                <NavItem icon={<MessageCircle />} label="Чат" isActive={activeTab === 'chat'} onClick={() => { router.push('/?tab=chat'); setIsMobileMenuOpen(false); }} />
+                <NavItem icon={<Users />} label="Грүпп чат" isActive={activeTab === 'groups'} onClick={() => { router.push('/?tab=groups'); setIsMobileMenuOpen(false); }} />
               </nav>
 
               <div className="mt-auto pb-10">
@@ -151,12 +159,20 @@ export default function AppInterface() {
           activeTabTitle={getTabTitle()}
         />
 
-        <div className="flex-1 overflow-y-auto scroll-smooth">
+        <div className={`flex-1 ${(['chat', 'groups'].includes(activeTab)) ? 'overflow-hidden' : 'overflow-y-auto scroll-smooth'}`}>
           <AnimatePresence mode="wait">
             {renderContent()}
           </AnimatePresence>
         </div>
       </main>
     </div>
+  );
+}
+
+export default function AppInterface() {
+  return (
+    <Suspense fallback={<div className="h-screen bg-zinc-950 flex items-center justify-center"><div className="w-8 h-8 border-4 border-rose-500 border-t-transparent rounded-full animate-spin" /></div>}>
+      <AppContent />
+    </Suspense>
   );
 }

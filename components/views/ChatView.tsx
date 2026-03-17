@@ -81,7 +81,7 @@ export function ChatView({ onNavigateToProfile, selectedChatId, setSelectedChatI
         };
 
         socket.on('chat:message', handleNewMessage);
-        
+
         return () => {
             socket.off('chat:message', handleNewMessage);
         };
@@ -106,7 +106,7 @@ export function ChatView({ onNavigateToProfile, selectedChatId, setSelectedChatI
 
     const activeChat = chats.find(c => c._id === selectedChatId);
 
-    const messages: Message[] = [...(messagesData?.data || messagesData || [])].sort((a, b) => 
+    const messages: Message[] = [...(messagesData?.data || messagesData || [])].sort((a, b) =>
         new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
     );
 
@@ -167,10 +167,6 @@ export function ChatView({ onNavigateToProfile, selectedChatId, setSelectedChatI
                         <div className="w-10 h-10 rounded-2xl bg-zinc-900 flex items-center justify-center text-zinc-400">
                             <Search size={18} />
                         </div>
-                    </div>
-                    <div className="flex gap-2 p-1 bg-zinc-900/50 rounded-2xl border border-zinc-800/50">
-                        <button className="flex-1 py-2 text-xs font-bold uppercase tracking-widest bg-zinc-800 text-white rounded-xl shadow-sm">Бүгд</button>
-                        <button className="flex-1 py-2 text-xs font-bold uppercase tracking-widest text-zinc-500 hover:text-zinc-300 transition-colors">Уншаагүй</button>
                     </div>
                 </div>
 
@@ -236,7 +232,7 @@ export function ChatView({ onNavigateToProfile, selectedChatId, setSelectedChatI
                 <div className="flex flex-1 flex-col relative bg-zinc-950 md:bg-transparent">
                     {!activeChat ? (
                         <div className="flex-1 flex flex-col items-center justify-center gap-4">
-                            <button 
+                            <button
                                 onClick={() => setSelectedChatId?.(null)}
                                 className="md:hidden absolute top-6 left-6 w-10 h-10 rounded-xl bg-zinc-900 flex items-center justify-center text-zinc-400"
                             >
@@ -248,7 +244,7 @@ export function ChatView({ onNavigateToProfile, selectedChatId, setSelectedChatI
                         <>
                             <div className="h-20 border-b border-zinc-900/50 flex items-center justify-between px-6 md:px-8 bg-black/10 backdrop-blur-md shrink-0">
                                 <div className="flex items-center gap-3 md:gap-4">
-                                    <button 
+                                    <button
                                         onClick={() => setSelectedChatId?.(null)}
                                         className="md:hidden w-10 h-10 rounded-xl bg-zinc-900/50 flex items-center justify-center text-zinc-400 active:scale-95 transition-all"
                                     >
@@ -290,7 +286,7 @@ export function ChatView({ onNavigateToProfile, selectedChatId, setSelectedChatI
                                 </div>
                             </div>
 
-                            <div className="flex-1 overflow-y-auto p-8 space-y-6 scroll-smooth">
+                            <div className="flex-1 overflow-y-auto p-4 md:p-8 space-y-6 scroll-smooth">
                                 {messages.map((msg) => {
                                     const isMine = msg.sender._id === currentUser?._id;
                                     return (
@@ -320,8 +316,8 @@ export function ChatView({ onNavigateToProfile, selectedChatId, setSelectedChatI
                                 <div ref={messagesEndRef} />
                             </div>
 
-                            <form onSubmit={handleSendMessage} className="p-8 bg-transparent">
-                                <div className="flex items-center gap-4 bg-zinc-900/80 border border-zinc-800/50 rounded-4xl px-6 py-3 backdrop-blur-xl shadow-2xl focus-within:ring-2 focus-within:ring-rose-500/20 transition-all">
+                            <form onSubmit={handleSendMessage} className="p-4 md:p-8 bg-transparent">
+                                <div className="flex items-center gap-3 md:gap-4 bg-zinc-900/80 border border-zinc-800/50 rounded-3xl md:rounded-4xl px-4 md:px-6 py-3 backdrop-blur-xl shadow-2xl focus-within:ring-2 focus-within:ring-rose-500/20 transition-all">
                                     <button type="button" className="text-zinc-500 hover:text-rose-500 transition-colors transform active:scale-90">
                                         <ImageIcon size={22} />
                                     </button>

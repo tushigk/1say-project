@@ -125,3 +125,13 @@ body {
 .shadow-glow-strong {
   box-shadow: 0 0 40px rgba(212, 17, 33, 0.4);
 }
+
+@keyframes wiggle {
+  0%, 100% { transform: rotate(0deg); }
+  25% { transform: rotate(-10deg); }
+  75% { transform: rotate(10deg); }
+}
+
+.animate-wiggle {
+  animation: wiggle 0.5s ease-in-out infinite;
+}
