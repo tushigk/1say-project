@@ -20,8 +20,7 @@ function AppContent() {
   const { logout } = useAuth();
   const searchParams = useSearchParams();
   const router = useRouter();
-  
-  // Derived state from URL - the source of truth
+
   const activeTab = useMemo(() => {
     const tab = searchParams.get('tab');
     if (tab && ['discover', 'stories', 'chat', 'groups', 'profile'].includes(tab)) {
@@ -67,25 +66,25 @@ function AppContent() {
         {activeTab === 'discover' && <DiscoverView onNavigateToProfile={navigateToProfile} />}
         {activeTab === 'stories' && <StoriesView onNavigateToProfile={navigateToProfile} />}
         {activeTab === 'chat' && (
-          <ChatView 
-            onNavigateToProfile={navigateToProfile} 
-            selectedChatId={selectedChatId} 
+          <ChatView
+            onNavigateToProfile={navigateToProfile}
+            selectedChatId={selectedChatId}
             setSelectedChatId={(id) => router.push(`/?tab=chat${id ? `&chatId=${id}` : ''}`)}
           />
         )}
         {activeTab === 'groups' && (
-          <GroupChatView 
-            onNavigateToProfile={navigateToProfile} 
-            selectedChatId={selectedChatId} 
+          <GroupChatView
+            onNavigateToProfile={navigateToProfile}
+            selectedChatId={selectedChatId}
             setSelectedChatId={(id) => router.push(`/?tab=groups${id ? `&chatId=${id}` : ''}`)}
           />
         )}
         {activeTab === 'profile' && viewingUserId && (
-          <ProfileView 
-            userId={viewingUserId} 
+          <ProfileView
+            userId={viewingUserId}
             onBack={() => {
               router.push('/?tab=discover');
-            }} 
+            }}
             onNavigateToChat={navigateToChat}
           />
         )}
@@ -95,17 +94,15 @@ function AppContent() {
 
   return (
     <div className="flex h-screen bg-zinc-950 text-zinc-200 overflow-hidden noise-bg font-sans">
-      {/* Decorative Orbs */}
       <div className="fixed top-[-10%] left-[-10%] w-[40%] h-[40%] bg-rose-900/10 blur-[120px] rounded-full z-0 pointer-events-none"></div>
       <div className="fixed bottom-[-10%] right-[-10%] w-[30%] h-[30%] bg-purple-900/10 blur-[120px] rounded-full z-0 pointer-events-none"></div>
 
-      <Sidebar 
-        activeTab={activeTab} 
-        setActiveTab={(tab) => router.push(`/?tab=${tab}`)} 
+      <Sidebar
+        activeTab={activeTab}
+        setActiveTab={(tab) => router.push(`/?tab=${tab}`)}
         onNavigateToProfile={navigateToProfile}
       />
 
-      {/* Mobile Sidebar Overlay */}
       <AnimatePresence>
         {isMobileMenuOpen && (
           <>
@@ -141,7 +138,7 @@ function AppContent() {
                     logout();
                     setIsMobileMenuOpen(false);
                   }}
-                  className="w-full flex items-center gap-3 px-6 py-4 rounded-2xl text-zinc-500 hover:text-rose-500 hover:bg-rose-500/5 transition-all outline-none"
+                  className="w-full flex items-center gap-3 px-6 py-4 rounded-2xl text-zinc-500 hover:text-rose-500 hover:bg-rose-500/5 transition-all outline-none cursor-pointer"
                 >
                   <LogOut size={20} />
                   <span className="text-sm font-bold uppercase tracking-widest">Гарах</span>

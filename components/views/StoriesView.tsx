@@ -65,7 +65,7 @@ function CommentsSection({ storyId, mutatePosts, currentUser, onNavigateToProfil
             <div className="space-y-4">
                 {data?.data?.map(comment => (
                     <div key={comment._id} className="bg-zinc-900/30 p-4 rounded-2xl flex gap-4 group">
-                        <div 
+                        <div
                             className="w-8 h-8 rounded-lg overflow-hidden relative shrink-0 cursor-pointer"
                             onClick={() => onNavigateToProfile?.(comment.createdBy?._id)}
                         >
@@ -78,7 +78,7 @@ function CommentsSection({ storyId, mutatePosts, currentUser, onNavigateToProfil
                         </div>
                         <div className="flex-1">
                             <div className="flex items-center justify-between">
-                                <p 
+                                <p
                                     className="font-bold text-white text-sm cursor-pointer hover:text-rose-500 transition-colors"
                                     onClick={() => onNavigateToProfile?.(comment.createdBy?._id)}
                                 >
@@ -210,7 +210,7 @@ export function StoriesView({ onNavigateToProfile }: { onNavigateToProfile?: (id
                 </div>
                 <button
                     onClick={() => setIsCreating(true)}
-                    className="px-6 py-3.5 bg-rose-600 hover:bg-rose-500 text-white rounded-2xl font-bold transition-all flex items-center gap-2 shadow-[0_10px_20px_rgba(225,29,72,0.2)] active:scale-95 z-10"
+                    className="px-6 cursor-pointer py-3.5 bg-rose-600 hover:bg-rose-500 text-white rounded-2xl font-bold transition-all flex items-center gap-2 shadow-[0_10px_20px_rgba(225,29,72,0.2)] active:scale-95 z-10"
                 >
                     <Plus size={20} />
                     Түүх бичих
@@ -231,7 +231,7 @@ export function StoriesView({ onNavigateToProfile }: { onNavigateToProfile?: (id
                             <div className="flex-1 space-y-4">
                                 <div className="flex items-center justify-between">
                                     <div className="flex items-center gap-3">
-                                        <div 
+                                        <div
                                             className="w-12 h-12 rounded-2xl overflow-hidden relative ring-4 ring-zinc-900/50 cursor-pointer"
                                             onClick={(e) => {
                                                 e.stopPropagation();
@@ -247,7 +247,7 @@ export function StoriesView({ onNavigateToProfile }: { onNavigateToProfile?: (id
                                             />
                                         </div>
                                         <div>
-                                            <p 
+                                            <p
                                                 className="font-bold text-white tracking-wide cursor-pointer hover:text-rose-500 transition-colors"
                                                 onClick={(e) => {
                                                     e.stopPropagation();
@@ -292,7 +292,7 @@ export function StoriesView({ onNavigateToProfile }: { onNavigateToProfile?: (id
                                 <div className="flex items-center gap-6 pt-4 border-t border-zinc-800/50">
                                     <button
                                         onClick={(e) => handleLike(story, e)}
-                                        className={`flex items-center gap-2 transition-all group/btn ${story.likedByMe ? 'text-rose-500' : 'text-zinc-500 hover:text-rose-500'}`}
+                                        className={`flex cursor-pointer items-center gap-2 transition-all group/btn ${story.likedByMe ? 'text-rose-500' : 'text-zinc-500 hover:text-rose-500'}`}
                                     >
                                         <div className={`p-2 rounded-xl transition-colors ${story.likedByMe ? 'bg-rose-500/20' : 'group-hover/btn:bg-rose-500/10'}`}>
                                             <Heart size={20} className={story.likedByMe ? 'fill-rose-500' : 'group-hover/btn:fill-current'} />
@@ -415,7 +415,7 @@ export function StoriesView({ onNavigateToProfile }: { onNavigateToProfile?: (id
                                 {/* Story content */}
                                 <div className="space-y-6">
                                     <div className="flex items-center gap-3">
-                                        <div 
+                                        <div
                                             className="w-12 h-12 rounded-xl overflow-hidden relative ring-2 ring-zinc-900 cursor-pointer"
                                             onClick={() => onNavigateToProfile?.(selectedStory.createdBy?._id)}
                                         >
@@ -428,7 +428,7 @@ export function StoriesView({ onNavigateToProfile }: { onNavigateToProfile?: (id
                                             />
                                         </div>
                                         <div>
-                                            <p 
+                                            <p
                                                 className="font-bold text-white tracking-wide cursor-pointer hover:text-rose-500 transition-colors"
                                                 onClick={() => onNavigateToProfile?.(selectedStory.createdBy?._id)}
                                             >

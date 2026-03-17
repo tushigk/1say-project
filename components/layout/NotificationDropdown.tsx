@@ -104,7 +104,7 @@ export function NotificationDropdown() {
         <div className="relative">
             <button
                 onClick={() => setIsOpen(!isOpen)}
-                className={`relative w-10 h-10 rounded-2xl flex items-center justify-center transition-all duration-300 border ${
+                className={`relative w-10 h-10 rounded-2xl flex items-center justify-center transition-all duration-300 border cursor-pointer ${
                     isOpen 
                     ? 'bg-rose-500 text-white border-rose-400 shadow-[0_0_20px_rgba(244,63,94,0.3)]' 
                     : 'bg-zinc-900/50 text-zinc-400 hover:text-white hover:bg-zinc-800 border-zinc-800/50'
@@ -188,14 +188,14 @@ export function NotificationDropdown() {
                                                         <div className="flex gap-2">
                                                             <button
                                                                 onClick={() => handleRespondInvite(invite.room._id, true)}
-                                                                className="flex-1 py-2.5 rounded-xl bg-rose-500 hover:bg-rose-600 text-white transition-all text-[9px] font-black uppercase tracking-[0.2em] border border-rose-400/20 flex items-center justify-center gap-2"
+                                                                className="flex-1 py-2.5 rounded-xl bg-rose-500 hover:bg-rose-600 text-white transition-all text-[9px] font-black uppercase tracking-[0.2em] border border-rose-400/20 flex items-center justify-center gap-2 cursor-pointer"
                                                             >
                                                                 <Check size={14} />
                                                                 Зөвшөөрөх
                                                             </button>
                                                             <button
                                                                 onClick={() => handleRespondInvite(invite.room._id, false)}
-                                                                className="flex-1 py-2.5 rounded-xl bg-zinc-900 hover:bg-zinc-800 text-zinc-400 hover:text-white transition-all text-[9px] font-black uppercase tracking-[0.2em] border border-zinc-800 flex items-center justify-center gap-2"
+                                                                className="flex-1 py-2.5 rounded-xl bg-zinc-900 hover:bg-zinc-800 text-zinc-400 hover:text-white transition-all text-[9px] font-black uppercase tracking-[0.2em] border border-zinc-800 flex items-center justify-center gap-2 cursor-pointer"
                                                             >
                                                                 <X size={14} />
                                                                 Татгалзах
@@ -225,7 +225,7 @@ export function NotificationDropdown() {
                                                                     router.push(`/?tab=${chat.type === 'group' ? 'groups' : 'chat'}&chatId=${chat._id}`);
                                                                     setIsOpen(false);
                                                                 }}
-                                                                className="w-full text-left p-3 rounded-3xl bg-zinc-900/30 border border-zinc-900/50 hover:bg-zinc-900/60 hover:border-zinc-800 transition-all group"
+                                                                className="w-full text-left p-3 rounded-3xl bg-zinc-900/30 border border-zinc-900/50 hover:bg-zinc-900/60 hover:border-zinc-800 transition-all group cursor-pointer"
                                                             >
                                                                 <div className="flex items-center gap-3">
                                                                     <div className="w-10 h-10 rounded-xl overflow-hidden relative border border-zinc-800/50">
@@ -258,7 +258,7 @@ export function NotificationDropdown() {
                                             router.push('/?tab=chat');
                                             setIsOpen(false);
                                         }}
-                                        className="w-full py-3 rounded-2xl bg-zinc-900 hover:bg-zinc-800 text-zinc-500 hover:text-white text-[9px] font-black uppercase tracking-[0.2em] transition-all border border-zinc-800/50"
+                                        className="w-full py-3 rounded-2xl bg-zinc-900 hover:bg-zinc-800 text-zinc-500 hover:text-white text-[9px] font-black uppercase tracking-[0.2em] transition-all border border-zinc-800/50 cursor-pointer"
                                     >
                                         Бүх чатыг үзэх
                                     </button>

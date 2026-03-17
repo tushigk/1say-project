@@ -164,9 +164,6 @@ export function ChatView({ onNavigateToProfile, selectedChatId, setSelectedChatI
                 <div className="p-8 border-b border-zinc-900/50">
                     <div className="flex items-center justify-between mb-6">
                         <h2 className="text-2xl font-serif font-bold text-white">Зурвасууд</h2>
-                        <div className="w-10 h-10 rounded-2xl bg-zinc-900 flex items-center justify-center text-zinc-400">
-                            <Search size={18} />
-                        </div>
                     </div>
                 </div>
 
@@ -273,17 +270,7 @@ export function ChatView({ onNavigateToProfile, selectedChatId, setSelectedChatI
                                         </div>
                                     </div>
                                 </div>
-                                <div className="flex items-center gap-3">
-                                    <button className="w-10 h-10 rounded-xl bg-zinc-900/50 text-zinc-400 hover:text-white transition-colors flex items-center justify-center">
-                                        <Phone size={18} />
-                                    </button>
-                                    <button className="w-10 h-10 rounded-xl bg-zinc-900/50 text-zinc-400 hover:text-white transition-colors flex items-center justify-center">
-                                        <Video size={18} />
-                                    </button>
-                                    <button className="w-10 h-10 rounded-xl bg-zinc-900/50 text-zinc-400 hover:text-white transition-colors flex items-center justify-center">
-                                        <MoreVertical size={18} />
-                                    </button>
-                                </div>
+
                             </div>
 
                             <div className="flex-1 overflow-y-auto p-4 md:p-8 space-y-6 scroll-smooth">

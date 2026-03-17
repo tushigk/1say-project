@@ -86,7 +86,7 @@ export function GroupChatView({ onNavigateToProfile, selectedChatId, setSelected
 
         socket.on('chat:message', handleNewMessage);
         socket.on('notification:new', handleUpdate);
-        
+
         return () => {
             socket.off('chat:message', handleNewMessage);
             socket.off('notification:new', handleUpdate);
@@ -112,7 +112,7 @@ export function GroupChatView({ onNavigateToProfile, selectedChatId, setSelected
 
     const activeChat = chats.find(c => c._id === selectedChatId);
 
-    const messages: Message[] = [...(messagesData?.data || messagesData || [])].sort((a, b) => 
+    const messages: Message[] = [...(messagesData?.data || messagesData || [])].sort((a, b) =>
         new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
     );
 
@@ -197,18 +197,18 @@ export function GroupChatView({ onNavigateToProfile, selectedChatId, setSelected
                             <h2 className="text-2xl font-serif font-bold text-white">Грүппүүд</h2>
                             <p className="text-[10px] font-black text-rose-500 uppercase tracking-widest">Таны нэгдсэн өрөө</p>
                         </div>
-                        <button 
+                        <button
                             onClick={() => setIsCreateModalOpen(true)}
-                            className="w-10 h-10 rounded-2xl bg-zinc-900 hover:bg-zinc-800 text-rose-500 flex items-center justify-center transition-colors border border-zinc-800/50"
+                            className=" cursor-pointer w-10 h-10 rounded-2xl bg-zinc-900 hover:bg-zinc-800 text-rose-500 flex items-center justify-center transition-colors border border-zinc-800/50"
                         >
                             <Plus size={18} />
                         </button>
                     </div>
                     <div className="relative group/search">
                         <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-600 group-focus-within/search:text-rose-500 transition-colors" size={16} />
-                        <input 
-                            type="text" 
-                            placeholder="Хайх..." 
+                        <input
+                            type="text"
+                            placeholder="Хайх..."
                             className="w-full bg-zinc-900/50 border border-zinc-800/50 rounded-2xl py-3 pl-12 pr-4 text-xs font-medium text-white focus:outline-none focus:ring-2 focus:ring-rose-500/20 transition-all"
                         />
                     </div>
@@ -230,11 +230,11 @@ export function GroupChatView({ onNavigateToProfile, selectedChatId, setSelected
                                 >
                                     <div className="flex items-center gap-3">
                                         <div className="w-10 h-10 rounded-xl overflow-hidden relative border border-rose-500/20">
-                                            <Image 
-                                                src={`https://picsum.photos/seed/${invite._id}/100/100`} 
-                                                alt="Group" 
-                                                fill 
-                                                className="object-cover" 
+                                            <Image
+                                                src={`https://picsum.photos/seed/${invite._id}/100/100`}
+                                                alt="Group"
+                                                fill
+                                                className="object-cover"
                                             />
                                         </div>
                                         <div className="flex-1 min-w-0">
@@ -243,13 +243,13 @@ export function GroupChatView({ onNavigateToProfile, selectedChatId, setSelected
                                         </div>
                                     </div>
                                     <div className="flex gap-2">
-                                        <button 
+                                        <button
                                             onClick={() => handleInviteResponse(invite._id, true)}
                                             className="flex-1 py-2 bg-rose-500 hover:bg-rose-600 text-white text-[9px] font-black uppercase tracking-widest rounded-xl transition-colors"
                                         >
                                             Зөвшөөрөх
                                         </button>
-                                        <button 
+                                        <button
                                             onClick={() => handleInviteResponse(invite._id, false)}
                                             className="flex-1 py-2 bg-zinc-900 hover:bg-zinc-800 text-zinc-400 text-[9px] font-black uppercase tracking-widest rounded-xl transition-colors border border-zinc-800"
                                         >
@@ -266,68 +266,68 @@ export function GroupChatView({ onNavigateToProfile, selectedChatId, setSelected
                             <span className="text-[10px] font-black text-zinc-600 uppercase tracking-widest">Миний Грүппүүд</span>
                         </div>
                         {chats.length > 0 ? (
-                        chats.map((chat) => (
-                            <motion.div
-                                key={chat._id}
-                                onClick={() => setSelectedChatId?.(chat._id)}
-                                className={`flex items-center gap-4 p-4 rounded-3xl cursor-pointer transition-all ${chat._id === selectedChatId
-                                    ? 'bg-rose-500/10 border border-rose-500/20'
-                                    : (chat.unreadCount || 0) > 0
-                                        ? 'bg-zinc-900/40 border border-rose-500/10 shadow-[0_0_15px_rgba(244,63,94,0.05)]'
-                                        : 'hover:bg-zinc-900/40 border border-transparent hover:border-zinc-800/50'
-                                    }`}
-                            >
-                                <div className="relative shrink-0">
-                                    <div className="w-14 h-14 rounded-2xl overflow-hidden relative ring-2 ring-zinc-800/50">
-                                        <Image
-                                            src={`https://picsum.photos/seed/${chat._id}/100/100`}
-                                            alt={chat.title || 'Group'}
-                                            fill
-                                            className="object-cover"
-                                            referrerPolicy="no-referrer"
-                                        />
-                                    </div>
-                                    <div className="absolute -bottom-1 -right-1 w-5 h-5 bg-rose-600 rounded-lg flex items-center justify-center border-2 border-zinc-950">
-                                        <Users size={10} className="text-white" />
-                                    </div>
-                                </div>
-                                <div className="flex-1 min-w-0">
-                                    <div className="flex justify-between items-baseline mb-1">
-                                        <h4 className="font-bold text-white truncate text-sm">{chat.title || 'Грүпп чат'}</h4>
-                                        <span className="text-[10px] font-bold text-zinc-500">
-                                            {chat.lastMessage ? new Date(chat.lastMessage.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : ''}
-                                        </span>
-                                    </div>
-                                    <p className={`text-xs truncate ${(chat.unreadCount || 0) > 0 ? 'text-zinc-200 font-bold' : 'text-zinc-500'}`}>
-                                        {chat.lastMessage ? (
-                                            <span className="flex items-center gap-1.5">
-                                                {(chat.unreadCount || 0) > 0 && <span className="text-[10px] font-black text-rose-500 uppercase tracking-tighter shrink-0">Шинэ:</span>}
-                                                <span className="truncate">{chat.lastMessage.body}</span>
-                                            </span>
-                                        ) : 'Чат эхлээгүй байна...'}
-                                    </p>
-                                </div>
-                                {(chat.unreadCount || 0) > 0 && (
-                                    <div className="shrink-0 flex flex-col items-center gap-1">
-                                        <div className="w-2 h-2 rounded-full bg-rose-500 shadow-[0_0_8px_rgba(244,63,94,0.6)] animate-pulse" />
-                                        <div className="px-1.5 py-0.5 min-w-[18px] h-4 rounded-full bg-zinc-800 flex items-center justify-center text-[8px] font-black text-zinc-300 border border-zinc-700/50">
-                                            {chat.unreadCount}
+                            chats.map((chat) => (
+                                <motion.div
+                                    key={chat._id}
+                                    onClick={() => setSelectedChatId?.(chat._id)}
+                                    className={`flex items-center gap-4 p-4 rounded-3xl cursor-pointer transition-all ${chat._id === selectedChatId
+                                        ? 'bg-rose-500/10 border border-rose-500/20'
+                                        : (chat.unreadCount || 0) > 0
+                                            ? 'bg-zinc-900/40 border border-rose-500/10 shadow-[0_0_15px_rgba(244,63,94,0.05)]'
+                                            : 'hover:bg-zinc-900/40 border border-transparent hover:border-zinc-800/50'
+                                        }`}
+                                >
+                                    <div className="relative shrink-0">
+                                        <div className="w-14 h-14 rounded-2xl overflow-hidden relative ring-2 ring-zinc-800/50">
+                                            <Image
+                                                src={`https://picsum.photos/seed/${chat._id}/100/100`}
+                                                alt={chat.title || 'Group'}
+                                                fill
+                                                className="object-cover"
+                                                referrerPolicy="no-referrer"
+                                            />
+                                        </div>
+                                        <div className="absolute -bottom-1 -right-1 w-5 h-5 bg-rose-600 rounded-lg flex items-center justify-center border-2 border-zinc-950">
+                                            <Users size={10} className="text-white" />
                                         </div>
                                     </div>
-                                )}
-                            </motion.div>
-                        ))
-                    ) : (
-                        <div className="h-full flex flex-col items-center justify-center p-10 text-center space-y-4">
-                            <div className="w-16 h-16 rounded-full bg-zinc-900/50 flex items-center justify-center border border-zinc-800/50">
-                                <Users size={24} className="text-zinc-700" />
+                                    <div className="flex-1 min-w-0">
+                                        <div className="flex justify-between items-baseline mb-1">
+                                            <h4 className="font-bold text-white truncate text-sm">{chat.title || 'Грүпп чат'}</h4>
+                                            <span className="text-[10px] font-bold text-zinc-500">
+                                                {chat.lastMessage ? new Date(chat.lastMessage.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : ''}
+                                            </span>
+                                        </div>
+                                        <p className={`text-xs truncate ${(chat.unreadCount || 0) > 0 ? 'text-zinc-200 font-bold' : 'text-zinc-500'}`}>
+                                            {chat.lastMessage ? (
+                                                <span className="flex items-center gap-1.5">
+                                                    {(chat.unreadCount || 0) > 0 && <span className="text-[10px] font-black text-rose-500 uppercase tracking-tighter shrink-0">Шинэ:</span>}
+                                                    <span className="truncate">{chat.lastMessage.body}</span>
+                                                </span>
+                                            ) : 'Чат эхлээгүй байна...'}
+                                        </p>
+                                    </div>
+                                    {(chat.unreadCount || 0) > 0 && (
+                                        <div className="shrink-0 flex flex-col items-center gap-1">
+                                            <div className="w-2 h-2 rounded-full bg-rose-500 shadow-[0_0_8px_rgba(244,63,94,0.6)] animate-pulse" />
+                                            <div className="px-1.5 py-0.5 min-w-[18px] h-4 rounded-full bg-zinc-800 flex items-center justify-center text-[8px] font-black text-zinc-300 border border-zinc-700/50">
+                                                {chat.unreadCount}
+                                            </div>
+                                        </div>
+                                    )}
+                                </motion.div>
+                            ))
+                        ) : (
+                            <div className="h-full flex flex-col items-center justify-center p-10 text-center space-y-4">
+                                <div className="w-16 h-16 rounded-full bg-zinc-900/50 flex items-center justify-center border border-zinc-800/50">
+                                    <Users size={24} className="text-zinc-700" />
+                                </div>
+                                <div className="space-y-1">
+                                    <p className="text-sm font-bold text-zinc-400">Грүпп байхгүй</p>
+                                    <p className="text-[10px] text-zinc-600 leading-relaxed uppercase tracking-widest">Та одоогоор ямар нэгэн грүппт нэгдээгүй байна.</p>
+                                </div>
                             </div>
-                            <div className="space-y-1">
-                                <p className="text-sm font-bold text-zinc-400">Грүпп байхгүй</p>
-                                <p className="text-[10px] text-zinc-600 leading-relaxed uppercase tracking-widest">Та одоогоор ямар нэгэн грүппт нэгдээгүй байна.</p>
-                            </div>
-                        </div>
-                    )}
+                        )}
                     </div>
                 </div>
             </div>
@@ -336,7 +336,7 @@ export function GroupChatView({ onNavigateToProfile, selectedChatId, setSelected
                 <div className="flex flex-1 flex-col relative bg-zinc-950 md:bg-transparent">
                     {!activeChat ? (
                         <div className="flex-1 flex flex-col items-center justify-center gap-4">
-                            <button 
+                            <button
                                 onClick={() => setSelectedChatId?.(null)}
                                 className="md:hidden absolute top-6 left-6 w-10 h-10 rounded-xl bg-zinc-900 flex items-center justify-center text-zinc-400"
                             >
@@ -348,7 +348,7 @@ export function GroupChatView({ onNavigateToProfile, selectedChatId, setSelected
                         <>
                             <div className="h-20 border-b border-zinc-900/50 flex items-center justify-between px-6 md:px-8 bg-black/10 backdrop-blur-md shrink-0">
                                 <div className="flex items-center gap-3 md:gap-4">
-                                    <button 
+                                    <button
                                         onClick={() => setSelectedChatId?.(null)}
                                         className="md:hidden w-10 h-10 rounded-xl bg-zinc-900/50 flex items-center justify-center text-zinc-400 active:scale-95 transition-all"
                                     >
@@ -379,86 +379,79 @@ export function GroupChatView({ onNavigateToProfile, selectedChatId, setSelected
                                         </div>
                                     </div>
                                 </div>
-                                <div className="flex items-center gap-2 md:gap-3">
-                                    <button className="w-9 h-9 md:w-10 md:h-10 rounded-xl bg-zinc-900/50 text-zinc-400 hover:text-white transition-colors flex items-center justify-center border border-zinc-800/50">
-                                        <Plus size={18} />
-                                    </button>
-                                    <button className="w-9 h-9 md:w-10 md:h-10 rounded-xl bg-zinc-900/50 text-zinc-400 hover:text-white transition-colors flex items-center justify-center border border-zinc-800/50">
-                                        <MoreVertical size={18} />
-                                    </button>
-                                </div>
+
                             </div>
 
-                    <div className="flex-1 overflow-y-auto p-4 md:p-8 space-y-6 scroll-smooth">
-                        {messages.map((msg) => {
-                            const isMine = msg.sender._id === currentUser?._id;
-                            return (
-                                <div key={msg._id} className={`flex gap-4 max-w-[70%] ${isMine ? 'ml-auto flex-row-reverse' : ''}`}>
-                                    {!isMine && (
-                                        <div 
-                                            className="w-8 h-8 rounded-xl overflow-hidden relative shrink-0 mt-auto border border-zinc-800 cursor-pointer hover:scale-110 transition-transform"
-                                            onClick={() => onNavigateToProfile?.(msg.sender._id)}
-                                        >
-                                            <Image
-                                                src={msg.sender.avatar || `https://picsum.photos/seed/${msg.sender._id}/100/100`}
-                                                alt={msg.sender.username}
-                                                fill
-                                                className="object-cover"
-                                                referrerPolicy="no-referrer"
-                                            />
+                            <div className="flex-1 overflow-y-auto p-4 md:p-8 space-y-6 scroll-smooth">
+                                {messages.map((msg) => {
+                                    const isMine = msg.sender._id === currentUser?._id;
+                                    return (
+                                        <div key={msg._id} className={`flex gap-4 max-w-[70%] ${isMine ? 'ml-auto flex-row-reverse' : ''}`}>
+                                            {!isMine && (
+                                                <div
+                                                    className="w-8 h-8 rounded-xl overflow-hidden relative shrink-0 mt-auto border border-zinc-800 cursor-pointer hover:scale-110 transition-transform"
+                                                    onClick={() => onNavigateToProfile?.(msg.sender._id)}
+                                                >
+                                                    <Image
+                                                        src={msg.sender.avatar || `https://picsum.photos/seed/${msg.sender._id}/100/100`}
+                                                        alt={msg.sender.username}
+                                                        fill
+                                                        className="object-cover"
+                                                        referrerPolicy="no-referrer"
+                                                    />
+                                                </div>
+                                            )}
+                                            <div className="space-y-1.5 flex flex-col">
+                                                {!isMine && (
+                                                    <span
+                                                        className="text-[10px] font-black text-rose-500 uppercase tracking-widest mb-0.5 ml-1 cursor-pointer hover:text-rose-400"
+                                                        onClick={() => onNavigateToProfile?.(msg.sender._id)}
+                                                    >
+                                                        {msg.sender.username}
+                                                    </span>
+                                                )}
+                                                <div className={`${isMine ? 'bg-zinc-100 text-zinc-950 font-medium' : 'glass-card text-zinc-200 border border-zinc-800/40'} p-4 rounded-3xl ${isMine ? 'rounded-br-none' : 'rounded-bl-none'} text-sm leading-relaxed transition-all shadow-xl`}>
+                                                    {msg.body}
+                                                </div>
+                                                <span className={`text-[9px] font-bold text-zinc-600 uppercase mt-1 ${isMine ? 'text-right mr-1' : 'ml-1'}`}>
+                                                    {new Date(msg.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                                                </span>
+                                            </div>
                                         </div>
-                                    )}
-                                    <div className="space-y-1.5 flex flex-col">
-                                        {!isMine && (
-                                            <span 
-                                                className="text-[10px] font-black text-rose-500 uppercase tracking-widest mb-0.5 ml-1 cursor-pointer hover:text-rose-400"
-                                                onClick={() => onNavigateToProfile?.(msg.sender._id)}
-                                            >
-                                                {msg.sender.username}
-                                            </span>
-                                        )}
-                                        <div className={`${isMine ? 'bg-zinc-100 text-zinc-950 font-medium' : 'glass-card text-zinc-200 border border-zinc-800/40'} p-4 rounded-3xl ${isMine ? 'rounded-br-none' : 'rounded-bl-none'} text-sm leading-relaxed transition-all shadow-xl`}>
-                                            {msg.body}
-                                        </div>
-                                        <span className={`text-[9px] font-bold text-zinc-600 uppercase mt-1 ${isMine ? 'text-right mr-1' : 'ml-1'}`}>
-                                            {new Date(msg.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-                                        </span>
-                                    </div>
-                                </div>
-                            );
-                        })}
-                        <div ref={messagesEndRef} />
-                    </div>
+                                    );
+                                })}
+                                <div ref={messagesEndRef} />
+                            </div>
 
-                    <form onSubmit={handleSendMessage} className="p-4 md:p-8 bg-transparent">
-                        <div className="flex items-center gap-3 md:gap-4 bg-zinc-900/80 border border-zinc-800/50 rounded-3xl md:rounded-4xl px-4 md:px-6 py-3 backdrop-blur-xl shadow-2xl focus-within:ring-2 focus-within:ring-rose-500/20 transition-all">
-                            <button type="button" className="text-zinc-500 hover:text-rose-500 transition-colors transform active:scale-90">
-                                <ImageIcon size={22} />
-                            </button>
-                            <input
-                                ref={inputRef}
-                                type="text"
-                                value={messageBody}
-                                onChange={(e) => setMessageBody(e.target.value)}
-                                placeholder="Грүппт зурвас бичих..."
-                                className="flex-1 bg-transparent border-none focus:outline-none text-sm text-zinc-100 placeholder:text-zinc-600 px-2 font-medium"
-                            />
-                            <button type="button" className="text-zinc-500 hover:text-rose-500 transition-colors transform active:scale-90">
-                                <Smile size={22} />
-                            </button>
-                            <button
-                                type="submit"
-                                disabled={!messageBody.trim() || isSending}
-                                className="w-12 h-12 bg-white disabled:opacity-20 disabled:bg-zinc-800 rounded-2xl flex items-center justify-center text-zinc-950 hover:bg-zinc-200 transition-all ml-1 shadow-2xl transform active:scale-90"
-                            >
-                                {isSending ? (
-                                    <div className="w-4 h-4 border-2 border-black border-t-transparent rounded-full animate-spin" />
-                                ) : (
-                                    <Send size={18} className="ml-0.5" />
-                                )}
-                            </button>
-                        </div>
-                    </form>
+                            <form onSubmit={handleSendMessage} className="p-4 md:p-8 bg-transparent">
+                                <div className="flex items-center gap-3 md:gap-4 bg-zinc-900/80 border border-zinc-800/50 rounded-3xl md:rounded-4xl px-4 md:px-6 py-3 backdrop-blur-xl shadow-2xl focus-within:ring-2 focus-within:ring-rose-500/20 transition-all">
+                                    <button type="button" className="text-zinc-500 hover:text-rose-500 transition-colors transform active:scale-90">
+                                        <ImageIcon size={22} />
+                                    </button>
+                                    <input
+                                        ref={inputRef}
+                                        type="text"
+                                        value={messageBody}
+                                        onChange={(e) => setMessageBody(e.target.value)}
+                                        placeholder="Грүппт зурвас бичих..."
+                                        className="flex-1 bg-transparent border-none focus:outline-none text-sm text-zinc-100 placeholder:text-zinc-600 px-2 font-medium"
+                                    />
+                                    <button type="button" className="text-zinc-500 hover:text-rose-500 transition-colors transform active:scale-90">
+                                        <Smile size={22} />
+                                    </button>
+                                    <button
+                                        type="submit"
+                                        disabled={!messageBody.trim() || isSending}
+                                        className="w-12 h-12 bg-white disabled:opacity-20 disabled:bg-zinc-800 rounded-2xl flex items-center justify-center text-zinc-950 hover:bg-zinc-200 transition-all ml-1 shadow-2xl transform active:scale-90"
+                                    >
+                                        {isSending ? (
+                                            <div className="w-4 h-4 border-2 border-black border-t-transparent rounded-full animate-spin" />
+                                        ) : (
+                                            <Send size={18} className="ml-0.5" />
+                                        )}
+                                    </button>
+                                </div>
+                            </form>
                         </>
                     )}
                 </div>
@@ -473,7 +466,7 @@ export function GroupChatView({ onNavigateToProfile, selectedChatId, setSelected
                     </div>
                 </div>
             )}
-            <CreateGroupModal 
+            <CreateGroupModal
                 isOpen={isCreateModalOpen}
                 onClose={() => setIsCreateModalOpen(false)}
                 onSubmit={handleCreateGroup}

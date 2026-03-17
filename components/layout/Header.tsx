@@ -42,7 +42,7 @@ export function Header({ isMobileMenuOpen, setIsMobileMenuOpen, activeTabTitle }
                     <NotificationDropdown />
                     <button
                         onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-                        className="w-10 h-10 rounded-xl bg-zinc-900/50 flex items-center justify-center text-zinc-400"
+                        className="w-10 h-10 rounded-xl bg-zinc-900/50 flex items-center justify-center text-zinc-400 cursor-pointer"
                     >
                         {isMobileMenuOpen ? <X size={20} /> : <Menu size={20} />}
                     </button>

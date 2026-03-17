@@ -112,7 +112,7 @@ export function Sidebar({ activeTab, setActiveTab, onNavigateToProfile }: Sideba
 
                 <button
                     onClick={logout}
-                    className="w-full flex items-center justify-center gap-2 py-3 rounded-2xl bg-zinc-900/50 border border-zinc-800/50 text-zinc-500 hover:text-rose-500 hover:border-rose-500/30 transition-all text-xs font-bold uppercase tracking-widest group"
+                    className="w-full flex items-center justify-center gap-2 py-3 rounded-2xl bg-zinc-900/50 border border-zinc-800/50 text-zinc-500 hover:text-rose-500 hover:border-rose-500/30 transition-all text-xs font-bold uppercase tracking-widest group cursor-pointer"
                 >
                     <LogOut size={14} className="group-hover:-translate-x-1 transition-transform" />
                     Гарах

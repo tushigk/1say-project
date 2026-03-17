@@ -15,7 +15,7 @@ export function NavItem({ icon, label, isActive, onClick, badge }: NavItemProps)
     return (
         <button
             onClick={onClick}
-            className={`w-full group flex items-center justify-between px-4 py-3 rounded-2xl transition-all relative overflow-hidden ${isActive
+            className={`w-full group flex items-center justify-between px-4 py-3 rounded-2xl transition-all relative overflow-hidden cursor-pointer ${isActive
                 ? 'text-white'
                 : 'text-zinc-500 hover:text-zinc-200'
                 }`}
