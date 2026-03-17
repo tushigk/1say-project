@@ -8,16 +8,25 @@ import { DiscoverView } from '@/components/views/DiscoverView';
 import { StoriesView } from '@/components/views/StoriesView';
 import { ChatView } from '@/components/views/ChatView';
 import { GroupChatView } from '@/components/views/GroupChatView';
+import { ProfileView } from '@/components/views/ProfileView';
 import { Heart, BookOpen, MessageCircle, Users, LogOut } from 'lucide-react';
 import { NavItem } from '@/components/layout/NavItem';
 import { useAuth } from '@/components/providers/AuthProvider';
 
-type Tab = 'discover' | 'stories' | 'chat' | 'groups';
+type Tab = 'discover' | 'stories' | 'chat' | 'groups' | 'profile';
 
 export default function AppInterface() {
   const { logout } = useAuth();
   const [activeTab, setActiveTab] = useState<Tab>('discover');
+  const [prevTab, setPrevTab] = useState<Tab>('discover');
+  const [viewingUserId, setViewingUserId] = useState<string | null>(null);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
+  const navigateToProfile = (userId: string) => {
+    setPrevTab(activeTab);
+    setViewingUserId(userId);
+    setActiveTab('profile');
+  };
 
   const getTabTitle = () => {
     switch (activeTab) {
@@ -25,6 +34,7 @@ export default function AppInterface() {
       case 'stories': return 'Түүхүүд';
       case 'chat': return 'Зурвасууд';
       case 'groups': return 'Грүпп чат';
+      case 'profile': return 'Профайл';
       default: return 'Noir';
     }
   };
@@ -39,10 +49,19 @@ export default function AppInterface() {
         transition={{ duration: 0.4, ease: [0.23, 1, 0.32, 1] }}
         className="h-full"
       >
-        {activeTab === 'discover' && <DiscoverView />}
-        {activeTab === 'stories' && <StoriesView />}
+        {activeTab === 'discover' && <DiscoverView onNavigateToProfile={navigateToProfile} />}
+        {activeTab === 'stories' && <StoriesView onNavigateToProfile={navigateToProfile} />}
         {activeTab === 'chat' && <ChatView />}
         {activeTab === 'groups' && <GroupChatView />}
+        {activeTab === 'profile' && viewingUserId && (
+          <ProfileView 
+            userId={viewingUserId} 
+            onBack={() => {
+              setActiveTab(prevTab === 'profile' ? 'discover' : prevTab);
+              setViewingUserId(null);
+            }} 
+          />
+        )}
       </motion.div>
     );
   };

@@ -8,7 +8,7 @@ import useSWR from 'swr';
 import { useAuth, User } from '@/components/providers/AuthProvider';
 import { ImagePicker } from '../form/image-picker';
 
-function CommentsSection({ storyId, mutatePosts, currentUser }: { storyId: string, mutatePosts: () => void, currentUser: User | null }) {
+function CommentsSection({ storyId, mutatePosts, currentUser, onNavigateToProfile }: { storyId: string, mutatePosts: () => void, currentUser: User | null, onNavigateToProfile?: (id: string) => void }) {
     const { data, mutate } = useSWR<NetworkCommentsResponse>(
         storyId ? `network/comments/${storyId}` : null,
         () => networkApi.listNetworkComments(storyId)
@@ -65,7 +65,10 @@ function CommentsSection({ storyId, mutatePosts, currentUser }: { storyId: strin
             <div className="space-y-4">
                 {data?.data?.map(comment => (
                     <div key={comment._id} className="bg-zinc-900/30 p-4 rounded-2xl flex gap-4 group">
-                        <div className="w-8 h-8 rounded-lg overflow-hidden relative shrink-0">
+                        <div 
+                            className="w-8 h-8 rounded-lg overflow-hidden relative shrink-0 cursor-pointer"
+                            onClick={() => onNavigateToProfile?.(comment.createdBy?._id)}
+                        >
                             <Image
                                 src={`https://picsum.photos/seed/${comment.createdBy?._id}/100/100`}
                                 alt="Avatar"
@@ -75,7 +78,12 @@ function CommentsSection({ storyId, mutatePosts, currentUser }: { storyId: strin
                         </div>
                         <div className="flex-1">
                             <div className="flex items-center justify-between">
-                                <p className="font-bold text-white text-sm">{comment.createdBy?.username}</p>
+                                <p 
+                                    className="font-bold text-white text-sm cursor-pointer hover:text-rose-500 transition-colors"
+                                    onClick={() => onNavigateToProfile?.(comment.createdBy?._id)}
+                                >
+                                    {comment.createdBy?.username}
+                                </p>
                                 <p className="text-[10px] text-zinc-500">{new Date(comment.createdAt).toLocaleDateString()}</p>
                             </div>
                             <p className="text-zinc-400 mt-1 text-sm">{comment.message}</p>
@@ -99,15 +107,15 @@ function CommentsSection({ storyId, mutatePosts, currentUser }: { storyId: strin
     );
 }
 
-export function StoriesView() {
+export function StoriesView({ onNavigateToProfile }: { onNavigateToProfile?: (id: string) => void }) {
     const { user } = useAuth();
     const [page, setPage] = useState(1);
     const LIMIT = 10;
 
     const { data, mutate, isValidating } = useSWR<NetworkPostsResponse>(
         [`network/posts`, page],
-        () => networkApi.listNetworkPosts({ 
-            page, 
+        () => networkApi.listNetworkPosts({
+            page,
             limit: LIMIT
         }),
         { keepPreviousData: true }
@@ -223,7 +231,13 @@ export function StoriesView() {
                             <div className="flex-1 space-y-4">
                                 <div className="flex items-center justify-between">
                                     <div className="flex items-center gap-3">
-                                        <div className="w-12 h-12 rounded-2xl overflow-hidden relative ring-4 ring-zinc-900/50">
+                                        <div 
+                                            className="w-12 h-12 rounded-2xl overflow-hidden relative ring-4 ring-zinc-900/50 cursor-pointer"
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                onNavigateToProfile?.(story.createdBy?._id);
+                                            }}
+                                        >
                                             <Image
                                                 src={`https://picsum.photos/seed/${story.createdBy?._id}/100/100`}
                                                 alt="Avatar"
@@ -233,7 +247,15 @@ export function StoriesView() {
                                             />
                                         </div>
                                         <div>
-                                            <p className="font-bold text-white tracking-wide">{story.createdBy?.username}</p>
+                                            <p 
+                                                className="font-bold text-white tracking-wide cursor-pointer hover:text-rose-500 transition-colors"
+                                                onClick={(e) => {
+                                                    e.stopPropagation();
+                                                    onNavigateToProfile?.(story.createdBy?._id);
+                                                }}
+                                            >
+                                                {story.createdBy?.username}
+                                            </p>
                                             <div className="flex items-center gap-2 text-[10px] text-zinc-500 font-bold uppercase tracking-wider">
                                                 <Clock size={12} className="text-rose-500/80" />
                                                 {new Date(story.createdAt).toLocaleDateString()}
@@ -302,7 +324,7 @@ export function StoriesView() {
                             disabled={isValidating}
                             className="px-8 py-3 bg-zinc-900 hover:bg-zinc-800 text-white rounded-2xl font-bold transition-all border border-zinc-800 disabled:opacity-50"
                         >
-                            {isValidating ? 'Уншиж байна...' : 'Дахиад үзэх'}
+                            {isValidating ? 'Уншиж байна...' : 'Цааш үзэх'}
                         </button>
                     </div>
                 )}
@@ -393,7 +415,10 @@ export function StoriesView() {
                                 {/* Story content */}
                                 <div className="space-y-6">
                                     <div className="flex items-center gap-3">
-                                        <div className="w-12 h-12 rounded-xl overflow-hidden relative ring-2 ring-zinc-900">
+                                        <div 
+                                            className="w-12 h-12 rounded-xl overflow-hidden relative ring-2 ring-zinc-900 cursor-pointer"
+                                            onClick={() => onNavigateToProfile?.(selectedStory.createdBy?._id)}
+                                        >
                                             <Image
                                                 src={`https://picsum.photos/seed/${selectedStory.createdBy?._id}/100/100`}
                                                 alt="Avatar"
@@ -403,7 +428,12 @@ export function StoriesView() {
                                             />
                                         </div>
                                         <div>
-                                            <p className="font-bold text-white tracking-wide">{selectedStory.createdBy?.username}</p>
+                                            <p 
+                                                className="font-bold text-white tracking-wide cursor-pointer hover:text-rose-500 transition-colors"
+                                                onClick={() => onNavigateToProfile?.(selectedStory.createdBy?._id)}
+                                            >
+                                                {selectedStory.createdBy?.username}
+                                            </p>
                                             <div className="text-xs text-zinc-500 font-medium">
                                                 {new Date(selectedStory.createdAt).toLocaleString()}
                                             </div>
@@ -422,7 +452,7 @@ export function StoriesView() {
 
                                 <div className="h-px bg-zinc-900" />
 
-                                <CommentsSection storyId={selectedStory._id} mutatePosts={() => mutate()} currentUser={user} />
+                                <CommentsSection storyId={selectedStory._id} mutatePosts={() => mutate()} currentUser={user} onNavigateToProfile={onNavigateToProfile} />
                             </div>
                         </motion.div>
                     </div>

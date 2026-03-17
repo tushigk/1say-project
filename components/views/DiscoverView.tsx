@@ -14,7 +14,7 @@ const profiles = [
     { id: 6, name: 'Мөнхөө', age: 29, location: 'Улаанбаатар', image: 'boy3', bio: 'Хөгжилтэй, нээлттэй. Хамтдаа хөгжилдөх найз эсвэл түүнээс илүү харилцаа.' },
 ];
 
-export function DiscoverView() {
+export function DiscoverView({ onNavigateToProfile }: { onNavigateToProfile?: (id: string) => void }) {
     return (
         <div className="p-6 md:p-10 max-w-7xl mx-auto space-y-10">
             <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
@@ -46,8 +46,9 @@ export function DiscoverView() {
                             src={`https://picsum.photos/seed/${profile.image}/600/800`}
                             alt={profile.name}
                             fill
-                            className="object-cover transition-transform duration-700 group-hover:scale-110"
+                            className="object-cover transition-transform duration-700 group-hover:scale-110 cursor-pointer"
                             referrerPolicy="no-referrer"
+                            onClick={() => onNavigateToProfile?.(String(profile.id))}
                         />
 
                         {/* Gradient Overlays */}
@@ -57,7 +58,10 @@ export function DiscoverView() {
                         <div className="absolute bottom-0 left-0 right-0 p-8 space-y-4">
                             <div className="flex justify-between items-end">
                                 <div className="space-y-1">
-                                    <h3 className="text-3xl font-serif font-bold text-white tracking-tight">
+                                    <h3 
+                                        className="text-3xl font-serif font-bold text-white tracking-tight cursor-pointer hover:text-rose-500 transition-colors"
+                                        onClick={() => onNavigateToProfile?.(String(profile.id))}
+                                    >
                                         {profile.name}, <span className="text-rose-500">{profile.age}</span>
                                     </h3>
                                     <div className="flex items-center gap-1.5 text-sm text-zinc-300 font-medium">
