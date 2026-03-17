@@ -98,20 +98,17 @@ function CommentsSection({ storyId, mutatePosts, currentUser }: { storyId: strin
         </div>
     );
 }
-type CategoryType = "breakup" | "friends" | "all";
 
 export function StoriesView() {
     const { user } = useAuth();
     const [page, setPage] = useState(1);
     const LIMIT = 10;
-    const [activeCategory, setActiveCategory] = useState<CategoryType>("all");
 
     const { data, mutate, isValidating } = useSWR<NetworkPostsResponse>(
-        [`network/posts`, page, activeCategory],
+        [`network/posts`, page],
         () => networkApi.listNetworkPosts({ 
             page, 
-            limit: LIMIT, 
-            category: activeCategory === "all" ? undefined : activeCategory 
+            limit: LIMIT
         }),
         { keepPreviousData: true }
     );
@@ -131,18 +128,11 @@ export function StoriesView() {
         }
     }, [data, page]);
 
-    const categories: { label: string; value: CategoryType }[] = [
-        { label: 'Бүх', value: 'all' },
-        { label: 'Шинэ найзууд', value: 'friends' },
-        { label: 'Хөгжилтэй', value: 'breakup' },
-    ];
-
     const [isCreating, setIsCreating] = useState(false);
     const [selectedStory, setSelectedStory] = useState<NetworkPost | null>(null);
 
     const [title, setTitle] = useState('');
     const [description, setDescription] = useState('');
-    const [category, setCategory] = useState('friends');
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [image, setImage] = useState<{ id?: string; url?: string } | null>(null);
 
@@ -153,14 +143,12 @@ export function StoriesView() {
             await networkApi.createNetworkPost({
                 title,
                 description,
-                category,
                 image: image?.id
             });
             await mutate();
             setIsCreating(false);
             setTitle('');
             setDescription('');
-            setCategory('friends');
             setImage(null);
         } catch (error) {
             console.error("Failed to create post", error);
@@ -207,38 +195,18 @@ export function StoriesView() {
 
     return (
         <div className="p-6 md:p-10 max-w-4xl mx-auto space-y-10 relative">
-            <div className="flex flex-col gap-6 border-b border-zinc-900 pb-10">
-                <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
-                    <div className="space-y-2">
-                        <h1 className="text-4xl font-serif text-white tracking-tight">Түүхүүд</h1>
-                        <p className="text-zinc-500">Бусдын хуваалцсан нандин, романтик түүхүүдийг унших.</p>
-                    </div>
-                    <button
-                        onClick={() => setIsCreating(true)}
-                        className="px-6 py-3.5 bg-rose-600 hover:bg-rose-500 text-white rounded-2xl font-bold transition-all flex items-center gap-2 shadow-[0_10px_20px_rgba(225,29,72,0.2)] active:scale-95 z-10"
-                    >
-                        <Plus size={20} />
-                        Түүх бичих
-                    </button>
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 border-b border-zinc-900 pb-10">
+                <div className="space-y-2">
+                    <h1 className="text-4xl font-serif text-white tracking-tight">Түүхүүд</h1>
+                    <p className="text-zinc-500">Бусдын хуваалцсан нандин, романтик түүхүүдийг унших.</p>
                 </div>
-
-                <div className="flex items-center gap-2 overflow-x-auto no-scrollbar pb-2">
-                    {categories.map((cat) => (
-                        <button
-                            key={cat.label}
-                            onClick={() => {
-                                setActiveCategory(cat.value);
-                                setPage(1);
-                            }}
-                            className={`px-4 py-2 rounded-xl text-sm font-bold transition-all whitespace-nowrap border ${activeCategory === cat.value
-                                ? 'bg-rose-600 border-rose-600 text-white'
-                                : 'bg-zinc-900 border-zinc-800 text-zinc-400 hover:border-zinc-700'
-                                }`}
-                        >
-                            {cat.label}
-                        </button>
-                    ))}
-                </div>
+                <button
+                    onClick={() => setIsCreating(true)}
+                    className="px-6 py-3.5 bg-rose-600 hover:bg-rose-500 text-white rounded-2xl font-bold transition-all flex items-center gap-2 shadow-[0_10px_20px_rgba(225,29,72,0.2)] active:scale-95 z-10"
+                >
+                    <Plus size={20} />
+                    Түүх бичих
+                </button>
             </div>
 
             <div className="space-y-8">
@@ -273,9 +241,6 @@ export function StoriesView() {
                                         </div>
                                     </div>
                                     <div className="flex items-center gap-3">
-                                        <span className="px-3 py-1 rounded-full bg-rose-500/10 text-rose-500 text-[10px] font-bold uppercase tracking-widest border border-rose-500/20">
-                                            {story.category}
-                                        </span>
                                         {user?._id === story.createdBy?._id && (
                                             <button
                                                 onClick={(e) => handleDeletePost(story._id, e)}
@@ -378,15 +343,6 @@ export function StoriesView() {
                                         placeholder="Гарчиг" required
                                         className="w-full bg-zinc-900/50 border border-zinc-800 rounded-xl px-4 py-3 text-white placeholder-zinc-500 focus:outline-none focus:border-rose-500 transition-colors"
                                     />
-                                </div>
-                                <div>
-                                    <select
-                                        value={category} onChange={e => setCategory(e.target.value)}
-                                        className="w-full bg-zinc-900/50 border border-zinc-800 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-rose-500 transition-colors appearance-none"
-                                    >
-                                        <option value="friends">Шинэ найзууд</option>
-                                        <option value="breakup">Хөгжилтэй</option>
-                                    </select>
                                 </div>
                                 <div className="pt-2">
                                     <ImagePicker label="Зураг оруулах" value={image} onChange={(v) => setImage(v)} />

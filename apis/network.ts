@@ -24,7 +24,6 @@ export interface NetworkPost {
     createdBy: UserInfo;
     createdAt: string;
     updatedAt: string;
-    category: string;
     likedByMe: boolean;
     image?: NetworkPostImage;
 }
@@ -53,12 +52,11 @@ export interface NetworkCommentsResponse {
 }
 
 export const networkApi = {
-    listNetworkPosts: async (params?: { page?: number; limit?: number; search?: string; category?: string }): Promise<NetworkPostsResponse> => {
+    listNetworkPosts: async (params?: { page?: number; limit?: number; search?: string }): Promise<NetworkPostsResponse> => {
         const qs = new URLSearchParams();
         if (params?.page) qs.set("page", String(params.page));
         if (params?.limit) qs.set("limit", String(params.limit));
         if (params?.search) qs.set("search", params.search);
-        if (params?.category) qs.set("category", params.category);
 
         const url = qs.toString() ? `/network/posts?${qs.toString()}` : "/network/posts";
         return (await appHttpRequest.get(url)) as NetworkPostsResponse;
@@ -68,7 +66,7 @@ export const networkApi = {
         return (await appHttpRequest.get(`/network/posts/${id}`)) as NetworkPost;
     },
 
-    createNetworkPost: async (data: { title: string; description: string; image?: string; category?: string }): Promise<NetworkPost> => {
+    createNetworkPost: async (data: { title: string; description: string; image?: string }): Promise<NetworkPost> => {
         return (await appHttpRequest.post("/network/posts", data)) as NetworkPost;
     },
 

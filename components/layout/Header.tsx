@@ -13,11 +13,7 @@ export function Header({ isMobileMenuOpen, setIsMobileMenuOpen, activeTabTitle }
     return (
         <>
             {/* Desktop Header Top Bar */}
-            <header className="hidden md:flex h-20 items-center justify-between px-10 border-b border-zinc-900/50 bg-black/20 backdrop-blur-xl relative z-20">
-                <h2 className="text-xl font-serif font-medium text-white tracking-tight">
-                    {activeTabTitle}
-                </h2>
-
+            <header className="hidden md:flex h-20 items-center justify-end px-10 border-b border-zinc-900/50 bg-black/20 backdrop-blur-xl relative z-20">
                 <div className="flex items-center gap-4">
                     <div className="relative group">
                         <Search size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-500 group-focus-within:text-rose-500 transition-colors" />
