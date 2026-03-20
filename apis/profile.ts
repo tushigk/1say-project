@@ -33,3 +33,12 @@ export const updateUser = async (
     const res = await appHttpRequest.put(`/${id}`, data);
     return res;
 };
+export const updateAvatar = async (formData: FormData) => {
+    const res = await appHttpRequest.put("/me/avatar", formData);
+    return res;
+};
+
+export const uploadAvatar = async (formData: FormData) => {
+    const res = await appHttpRequest.post("/me/avatar", formData);
+    return res;
+};

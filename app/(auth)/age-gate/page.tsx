@@ -7,6 +7,7 @@ import TermOfServiceModal from "../../../components/auth/TermOfServiceModal";
 import { Lock, ArrowRight, ShieldCheck, Flame, Sparkles } from "lucide-react";
 import { motion } from "framer-motion";
 import AuthBanner from "../../../components/auth/AuthBanner";
+import Image from "next/image";
 
 export default function AgeGatePage() {
     const router = useRouter();
@@ -33,14 +34,11 @@ export default function AgeGatePage() {
             >
                 {/* Branding */}
                 <div className="flex flex-col items-center mb-12">
-                    <div className="w-24 h-24 rounded-[2.5rem] bg-white text-black flex items-center justify-center font-black text-4xl mb-6 shadow-2xl group transition-transform hover:rotate-6">
-                        N
-                    </div>
+                    <Image src="/logo.png" alt="Logo" width={100} height={100} />
                     <div className="flex items-center gap-2 text-accent-crimson mb-2">
                         <Sparkles size={14} className="animate-pulse" />
-                        <span className="text-[10px] font-black uppercase tracking-[0.5em]">Private Access</span>
                     </div>
-                    <h1 className="text-5xl font-serif font-bold text-white tracking-tighter">Noir Club</h1>
+                    <h1 className="text-5xl font-serif font-bold text-white tracking-tighter">Шөнийн таалал</h1>
                 </div>
 
                 <div className="space-y-6 mb-12">

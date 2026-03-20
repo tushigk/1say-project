@@ -111,7 +111,7 @@ export function Sidebar({ activeTab, setActiveTab, onNavigateToProfile }: Sideba
                     <div className="flex items-center gap-3 p-2 rounded-2xl hover:bg-zinc-800/50 transition-colors">
                         <div className="w-11 h-11 rounded-2xl overflow-hidden relative ring-2 ring-zinc-800 group-hover:ring-rose-500/50 transition-all">
                             <Image
-                                src="https://picsum.photos/seed/myprofile/100/100"
+                                src={user?.avatar || `https://ui-avatars.com/api/?name=${user?.username || 'User'}&background=random`}
                                 alt="Profile"
                                 fill
                                 className="object-cover"
@@ -120,7 +120,6 @@ export function Sidebar({ activeTab, setActiveTab, onNavigateToProfile }: Sideba
                         </div>
                         <div className="flex-1 min-w-0">
                             <p className="text-sm font-semibold text-white truncate">{user?.username || 'Хэрэглэгч'}</p>
-                            <p className="text-[11px] text-zinc-500 font-medium">Алтан гишүүн</p>
                         </div>
                     </div>
                 </div>

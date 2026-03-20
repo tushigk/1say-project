@@ -168,7 +168,7 @@ export function NotificationDropdown() {
                                                         <div className="flex items-center gap-4">
                                                             <div className="w-12 h-12 rounded-2xl overflow-hidden relative border border-rose-500/20 shadow-lg ring-2 ring-rose-500/10">
                                                                 <Image
-                                                                    src={invite.invitedBy.avatar || `https://picsum.photos/seed/${invite.invitedBy.username}/100/100`}
+                                                                    src={invite.invitedBy.avatar || `https://ui-avatars.com/api/?name=${invite.invitedBy.username || 'User'}&background=random`}
                                                                     alt="Inviter"
                                                                     fill
                                                                     className="object-cover"
@@ -215,7 +215,7 @@ export function NotificationDropdown() {
                                                 <div className="space-y-2">
                                                     {unreadChats.slice(0, 5)?.map((chat) => {
                                                         const title = chat.title || chat.counterpart?.username || 'Нууц хэрэглэгч';
-                                                        const avatar = chat.counterpart?.avatar || `https://picsum.photos/seed/${chat._id}/100/100`;
+                                                        const avatar = chat.counterpart?.avatar || `https://ui-avatars.com/api/?name=${title || 'User'}&background=random`;
 
                                                         return (
                                                             <button

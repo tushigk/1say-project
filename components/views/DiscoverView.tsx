@@ -17,6 +17,7 @@ interface MembershipUser {
     exp: number;
     isOnline: boolean;
     createdAt: string;
+    avatar?: string;
 }
 
 interface MembershipResponse {
@@ -26,10 +27,10 @@ interface MembershipResponse {
     totalPages: number;
 }
 
-export function DiscoverView({ 
+export function DiscoverView({
     onNavigateToProfile,
-    onNavigateToChat 
-}: { 
+    onNavigateToChat
+}: {
     onNavigateToProfile?: (id: string) => void,
     onNavigateToChat?: (chatId: string) => void
 }) {
@@ -120,8 +121,8 @@ export function DiscoverView({
                                 key={filter.id}
                                 onClick={() => handleFilterChange(filter.id as 'male' | 'female' | 'all')}
                                 className={`px-6 py-2.5 rounded-xl text-xs font-bold uppercase tracking-wider transition-all duration-300 ${selectedGender === filter.id
-                                        ? 'bg-rose-500 text-white shadow-lg shadow-rose-500/20'
-                                        : 'text-zinc-500 hover:text-white'
+                                    ? 'bg-rose-500 text-white shadow-lg shadow-rose-500/20'
+                                    : 'text-zinc-500 hover:text-white'
                                     }`}
                             >
                                 {filter.label}
@@ -142,7 +143,7 @@ export function DiscoverView({
                         className="group relative h-[500px] rounded-[2.5rem] overflow-hidden bg-zinc-900 border border-zinc-800/50 hover:border-rose-500/50 transition-all duration-500 shadow-2xl"
                     >
                         <Image
-                            src={`https://picsum.photos/seed/${profile._id}/600/800`}
+                            src={profile.avatar || `https://ui-avatars.com/api/?name=${profile.username}&background=random`}
                             alt={profile.username}
                             fill
                             className="object-cover transition-transform duration-700 group-hover:scale-110 cursor-pointer"
@@ -177,7 +178,7 @@ export function DiscoverView({
                             </p>
 
                             <div className="pt-2 flex gap-3">
-                                <button 
+                                <button
                                     onClick={() => handleGreet(profile._id)}
                                     disabled={isGreeting === profile._id}
                                     className="flex-1 py-4 bg-white text-black hover:bg-rose-500 hover:text-white rounded-2xl transition-all duration-300 font-bold flex items-center justify-center gap-2 transform active:scale-95 shadow-lg disabled:opacity-50"
@@ -190,9 +191,6 @@ export function DiscoverView({
                                             Мэндчилэх
                                         </>
                                     )}
-                                </button>
-                                <button className="w-14 py-4 bg-white/10 hover:bg-white/20 backdrop-blur-md rounded-2xl transition-all flex items-center justify-center text-white border border-white/10">
-                                    <Sparkles size={20} />
                                 </button>
                             </div>
                         </div>

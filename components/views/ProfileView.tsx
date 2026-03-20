@@ -7,8 +7,10 @@ import Image from 'next/image';
 import useSWR from 'swr';
 import { profileApi, chatApi } from '@/apis';
 import { toast } from 'react-hot-toast';
-import { Plus, Users, X } from 'lucide-react';
+import { Plus, Users, X, Camera } from 'lucide-react';
 import { useAuth } from '@/components/providers/AuthProvider';
+import { mutate } from 'swr';
+import { siteUrl } from '@/config/site';
 
 interface GroupChat {
     _id: string;
@@ -34,6 +36,37 @@ export function ProfileView({ userId, onBack, onNavigateToChat }: ProfileViewPro
         userId ? `profile/public/${userId}` : null,
         () => profileApi.getPublicUserProfile(userId)
     );
+
+    const fileInputRef = React.useRef<HTMLInputElement>(null);
+    const [isUploading, setIsUploading] = React.useState(false);
+
+    const handleAvatarClick = () => {
+        if (currentUser?._id === profile?._id) {
+            fileInputRef.current?.click();
+        }
+    };
+
+    const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+        if (!file) return;
+
+        setIsUploading(true);
+        const formData = new FormData();
+        formData.append('file', file);
+
+        try {
+            await profileApi.updateAvatar(formData);
+            toast.success("Аватар амжилттай шинэчлэгдлээ");
+            mutate(`profile/public/${userId}`);
+            mutate(`${siteUrl}/users/me`);
+        } catch (error: unknown) {
+            console.error("Avatar Upload Error:", error);
+            const message = error instanceof Error ? error.message : "Аватар хуулахад алдаа гарлаа";
+            toast.error(message);
+        } finally {
+            setIsUploading(false);
+        }
+    };
 
     if (isLoading) {
         return (
@@ -133,12 +166,31 @@ export function ProfileView({ userId, onBack, onNavigateToChat }: ProfileViewPro
                 <div className="px-8 pb-10 -mt-16 relative z-10">
                     <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
                         <div className="flex flex-col md:flex-row items-center md:items-end gap-6 text-center md:text-left">
-                            <div className="w-32 h-32 rounded-3xl overflow-hidden relative border-4 border-zinc-950 shadow-2xl bg-zinc-900">
+                            <div 
+                                onClick={handleAvatarClick}
+                                className={`w-32 h-32 rounded-3xl overflow-hidden relative border-4 border-zinc-950 shadow-2xl bg-zinc-900 ${currentUser?._id === profile._id ? 'cursor-pointer group/avatar' : ''}`}
+                            >
                                 <Image
-                                    src={profile.avatar || `https://picsum.photos/seed/${profile._id}/200/200`}
+                                    src={profile.avatar || `https://ui-avatars.com/api/?name=${profile.username}&background=random`}
                                     alt={profile.username}
                                     fill
-                                    className="object-cover"
+                                    className={`object-cover transition-transform duration-500 ${currentUser?._id === profile._id ? 'group-hover/avatar:scale-110' : ''}`}
+                                />
+                                {currentUser?._id === profile._id && (
+                                    <div className="absolute inset-0 bg-black/40 opacity-0 group-hover/avatar:opacity-100 transition-opacity flex items-center justify-center">
+                                        {isUploading ? (
+                                            <div className="w-6 h-6 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                                        ) : (
+                                            <Camera className="text-white" size={24} />
+                                        )}
+                                    </div>
+                                )}
+                                <input
+                                    type="file"
+                                    ref={fileInputRef}
+                                    className="hidden"
+                                    accept="image/*"
+                                    onChange={handleFileChange}
                                 />
                             </div>
                             <div className="space-y-1 pb-2">

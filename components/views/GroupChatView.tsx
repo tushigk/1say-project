@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Search, MoreVertical, ImageIcon, Smile, Send, Users, Plus, MessageSquare, ChevronLeft } from 'lucide-react';
+import { Search, ImageIcon, Smile, Send, Users, Plus, MessageSquare, ChevronLeft } from 'lucide-react';
 import Image from 'next/image';
 import useSWR from 'swr';
 import { chatApi } from '@/apis';
@@ -231,7 +231,7 @@ export function GroupChatView({ onNavigateToProfile, selectedChatId, setSelected
                                     <div className="flex items-center gap-3">
                                         <div className="w-10 h-10 rounded-xl overflow-hidden relative border border-rose-500/20">
                                             <Image
-                                                src={`https://picsum.photos/seed/${invite._id}/100/100`}
+                                                src={`https://ui-avatars.com/api/?name=${invite.title || 'Group'}&background=random&color=fff`}
                                                 alt="Group"
                                                 fill
                                                 className="object-cover"
@@ -280,7 +280,7 @@ export function GroupChatView({ onNavigateToProfile, selectedChatId, setSelected
                                     <div className="relative shrink-0">
                                         <div className="w-14 h-14 rounded-2xl overflow-hidden relative ring-2 ring-zinc-800/50">
                                             <Image
-                                                src={`https://picsum.photos/seed/${chat._id}/100/100`}
+                                                src={`https://ui-avatars.com/api/?name=${chat.title || 'Group'}&background=random&color=fff`}
                                                 alt={chat.title || 'Group'}
                                                 fill
                                                 className="object-cover"
@@ -356,7 +356,7 @@ export function GroupChatView({ onNavigateToProfile, selectedChatId, setSelected
                                     </button>
                                     <div className="w-10 h-10 md:w-12 md:h-12 rounded-2xl overflow-hidden relative border-2 border-zinc-800">
                                         <Image
-                                            src={`https://picsum.photos/seed/${activeChat._id}/150/150`}
+                                            src={`https://ui-avatars.com/api/?name=${activeChat.title || 'Group'}&background=random&color=fff`}
                                             alt={activeChat.title || 'Group'}
                                             fill
                                             className="object-cover"
@@ -369,7 +369,7 @@ export function GroupChatView({ onNavigateToProfile, selectedChatId, setSelected
                                             <div className="hidden sm:flex -space-x-2">
                                                 {activeChat.participants?.slice(0, 3)?.map((p, i) => (
                                                     <div key={i} className="w-5 h-5 rounded-full border border-zinc-900 overflow-hidden relative">
-                                                        <Image src={p.avatar || `https://picsum.photos/seed/${p._id}/50/50`} alt="user" fill className="object-cover" />
+                                                        <Image src={p.avatar || `https://ui-avatars.com/api/?name=${p.username || 'User'}&background=random`} alt="user" fill className="object-cover" />
                                                     </div>
                                                 ))}
                                             </div>
@@ -393,7 +393,7 @@ export function GroupChatView({ onNavigateToProfile, selectedChatId, setSelected
                                                     onClick={() => onNavigateToProfile?.(msg.sender._id)}
                                                 >
                                                     <Image
-                                                        src={msg.sender.avatar || `https://picsum.photos/seed/${msg.sender._id}/100/100`}
+                                                        src={msg.sender.avatar || `https://ui-avatars.com/api/?name=${msg.sender.username || 'User'}&background=random`}
                                                         alt={msg.sender.username}
                                                         fill
                                                         className="object-cover"

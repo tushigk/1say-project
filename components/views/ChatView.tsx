@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Search, MoreVertical, ImageIcon, Smile, Send, Phone, Video, MessageCircle, ChevronLeft } from 'lucide-react';
+import { ImageIcon, Smile, Send, MessageCircle, ChevronLeft } from 'lucide-react';
 import Image from 'next/image';
 
 import useSWR from 'swr';
@@ -190,7 +190,7 @@ export function ChatView({ onNavigateToProfile, selectedChatId, setSelectedChatI
                                         }}
                                     >
                                         <Image
-                                            src={display.avatar || `https://picsum.photos/seed/${chat._id}/100/100`}
+                                            src={display.avatar || `https://ui-avatars.com/api/?name=${display.name || 'User'}&background=random`}
                                             alt={display.name}
                                             fill
                                             className="object-cover"
@@ -255,7 +255,7 @@ export function ChatView({ onNavigateToProfile, selectedChatId, setSelectedChatI
                                         }}
                                     >
                                         <Image
-                                            src={getChatDisplay(activeChat).avatar || `https://picsum.photos/seed/${activeChat._id}/150/150`}
+                                            src={getChatDisplay(activeChat).avatar || `https://ui-avatars.com/api/?name=${getChatDisplay(activeChat).name || 'User'}&background=random`}
                                             alt={getChatDisplay(activeChat).name}
                                             fill
                                             className="object-cover"
@@ -281,7 +281,7 @@ export function ChatView({ onNavigateToProfile, selectedChatId, setSelectedChatI
                                             {!isMine && (
                                                 <div className="w-8 h-8 rounded-xl overflow-hidden relative shrink-0 mt-auto border border-zinc-800">
                                                     <Image
-                                                        src={msg.sender.avatar || `https://picsum.photos/seed/${msg.sender._id}/100/100`}
+                                                        src={msg.sender.avatar || `https://ui-avatars.com/api/?name=${msg.sender.username || 'User'}&background=random`}
                                                         alt={msg.sender.username}
                                                         fill
                                                         className="object-cover"

@@ -70,7 +70,7 @@ function CommentsSection({ storyId, mutatePosts, currentUser, onNavigateToProfil
                             onClick={() => onNavigateToProfile?.(comment.createdBy?._id)}
                         >
                             <Image
-                                src={`https://picsum.photos/seed/${comment.createdBy?._id}/100/100`}
+                                src={comment.createdBy?.avatar || `https://ui-avatars.com/api/?name=${comment.createdBy?.username || 'User'}&background=random`}
                                 alt="Avatar"
                                 fill
                                 className="object-cover"
@@ -239,7 +239,7 @@ export function StoriesView({ onNavigateToProfile }: { onNavigateToProfile?: (id
                                             }}
                                         >
                                             <Image
-                                                src={`https://picsum.photos/seed/${story.createdBy?._id}/100/100`}
+                                                src={story.createdBy?.avatar || `https://ui-avatars.com/api/?name=${story.createdBy?.username || 'User'}&background=random`}
                                                 alt="Avatar"
                                                 fill
                                                 className="object-cover grayscale group-hover:grayscale-0 transition-all duration-500"
@@ -420,7 +420,7 @@ export function StoriesView({ onNavigateToProfile }: { onNavigateToProfile?: (id
                                             onClick={() => onNavigateToProfile?.(selectedStory.createdBy?._id)}
                                         >
                                             <Image
-                                                src={`https://picsum.photos/seed/${selectedStory.createdBy?._id}/100/100`}
+                                                src={selectedStory.createdBy?.avatar || `https://ui-avatars.com/api/?name=${selectedStory.createdBy?.username || 'User'}&background=random`}
                                                 alt="Avatar"
                                                 fill
                                                 className="object-cover"
