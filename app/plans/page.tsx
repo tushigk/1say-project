@@ -9,6 +9,7 @@ import { useAuth } from "@/components/providers/AuthProvider";
 import * as membershipApi from "@/apis/membership";
 import { IMembershipPlan } from "@/components/models/membership";
 import { userApi } from "../../apis/index";
+import Image from "next/image";
 
 type MembershipListResponse = {
     currentPage: number;
@@ -117,13 +118,7 @@ export default function PlansPage() {
                 {/* Fixed Header/Navigation */}
                 <nav className="fixed top-0 inset-x-0 z-50 px-4 py-4 md:px-12 md:py-6 flex items-center justify-between pointer-events-auto bg-black/40 backdrop-blur-2xl border-b border-white/5">
                     <div className="flex items-center gap-3 md:gap-4 cursor-pointer group" onClick={() => router.push("/")}>
-                        <div className="w-10 h-10 md:w-12 md:h-12 rounded-2xl bg-linear-to-br from-rose-500 via-rose-600 to-purple-700 flex items-center justify-center shadow-[0_8px_20px_rgba(225,29,72,0.3)] rotate-3 group-hover:rotate-6 transition-all duration-500">
-                            <Flame size={20} className="text-white fill-white/20 md:w-6 md:h-6" />
-                        </div>
-                        <div className="leading-tight">
-                            <span className="block font-serif text-xl md:text-3xl font-bold tracking-tighter text-white">Noir</span>
-                            <span className="text-[7px] md:text-[9px] uppercase tracking-[0.3em] text-rose-500/80 font-bold">Premium Club</span>
-                        </div>
+                        <Image src="/logo.png" alt="Logo" width={100} height={100} />
                     </div>
 
                     {isAuthenticated && (
