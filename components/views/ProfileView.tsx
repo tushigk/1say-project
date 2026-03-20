@@ -165,10 +165,10 @@ export function ProfileView({ userId, onBack, onNavigateToChat }: ProfileViewPro
 
                 <div className="px-8 pb-10 -mt-16 relative z-10">
                     <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
-                        <div className="flex flex-col md:flex-row items-center md:items-end gap-6 text-center md:text-left">
-                            <div 
+                        <div className="flex flex-col md:flex-row items-center md:items-end gap-6 text-center md:text-left min-w-0 flex-1">
+                            <div
                                 onClick={handleAvatarClick}
-                                className={`w-32 h-32 rounded-3xl overflow-hidden relative border-4 border-zinc-950 shadow-2xl bg-zinc-900 ${currentUser?._id === profile._id ? 'cursor-pointer group/avatar' : ''}`}
+                                className={`shrink-0 w-32 h-32 rounded-3xl overflow-hidden relative border-4 border-zinc-950 shadow-2xl bg-zinc-900 ${currentUser?._id === profile._id ? 'cursor-pointer group/avatar' : ''}`}
                             >
                                 <Image
                                     src={profile.avatar || `https://ui-avatars.com/api/?name=${profile.username}&background=random`}
@@ -193,19 +193,21 @@ export function ProfileView({ userId, onBack, onNavigateToChat }: ProfileViewPro
                                     onChange={handleFileChange}
                                 />
                             </div>
-                            <div className="space-y-1 pb-2">
-                                <div className="flex items-center gap-2 justify-center md:justify-start">
-                                    <h2 className="text-4xl font-serif font-bold text-white tracking-tight">{profile.username}</h2>
-                                    <div className="px-2 py-0.5 bg-rose-500/10 text-rose-500 border border-rose-500/20 rounded-md text-[10px] font-bold uppercase tracking-widest">
+                            <div className="space-y-1 pb-2 min-w-0 w-full md:w-auto md:flex-1 px-2 md:px-0">
+                                <div className="flex items-center gap-2 justify-center md:justify-start min-w-0 overflow-hidden">
+                                    <h2 className="text-2xl md:text-4xl font-serif font-bold text-white tracking-tight truncate min-w-0" title={profile.username}>
+                                        {profile.username?.length > 10 ? `${profile.username.substring(0, 10)}...` : profile.username}
+                                    </h2>
+                                    <div className="shrink-0 px-2 py-0.5 bg-rose-500/10 text-rose-500 border border-rose-500/20 rounded-md text-[10px] font-bold uppercase tracking-widest">
                                         {profile.level?.title || 'Level 1'}
                                     </div>
                                 </div>
-                                <p className="text-zinc-500 font-medium capitalize">{profile.gender === 'male' ? 'Эрэгтэй' : profile.gender === 'female' ? 'Эмэгтэй' : profile.gender}</p>
+                                <p className="text-zinc-500 font-medium capitalize truncate min-w-0 w-full md:w-auto">{profile.gender === 'male' ? 'Эрэгтэй' : profile.gender === 'female' ? 'Эмэгтэй' : profile.gender}</p>
                             </div>
                         </div>
 
                         {currentUser?._id !== profile._id && (
-                            <div className="flex flex-wrap gap-3 justify-center md:justify-start">
+                            <div className="flex flex-wrap gap-3 justify-center md:justify-start shrink-0">
                                 <button
                                     onClick={handlePM}
                                     disabled={isActionLoading}

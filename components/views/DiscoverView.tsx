@@ -162,7 +162,7 @@ export function DiscoverView({
                                         className="text-3xl font-serif font-bold text-white tracking-tight cursor-pointer hover:text-rose-500 transition-colors"
                                         onClick={() => onNavigateToProfile?.(String(profile._id))}
                                     >
-                                        {profile.username}{profile.age ? <>, <span className="text-rose-500">{profile.age}</span></> : ''}
+                                        {profile.username?.length > 10 ? `${profile.username.substring(0, 10)}...` : profile.username}{profile.age ? <>, <span className="text-rose-500">{profile.age}</span></> : ''}
                                     </h3>
                                     <div className="flex items-center gap-1.5 text-sm text-zinc-300 font-medium">
                                         <div className={`w-2 h-2 rounded-full ${profile.isOnline ? 'bg-green-500' : 'bg-zinc-500'}`} />
