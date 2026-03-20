@@ -109,7 +109,7 @@ export function Sidebar({ activeTab, setActiveTab, onNavigateToProfile }: Sideba
                     className="rounded-3xl p-1.5 bg-zinc-900/50 border border-zinc-800/50 hover:border-rose-500/30 transition-all cursor-pointer group"
                 >
                     <div className="flex items-center gap-3 p-2 rounded-2xl hover:bg-zinc-800/50 transition-colors">
-                        <div className="w-11 h-11 rounded-2xl overflow-hidden relative ring-2 ring-zinc-800 group-hover:ring-rose-500/50 transition-all">
+                        <div className="w-11 h-11 shrink-0 rounded-2xl overflow-hidden relative ring-2 ring-zinc-800 group-hover:ring-rose-500/50 transition-all">
                             <Image
                                 src={user?.avatar || `https://ui-avatars.com/api/?name=${user?.username || 'User'}&background=random`}
                                 alt="Profile"

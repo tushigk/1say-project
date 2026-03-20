@@ -18,7 +18,7 @@ import Image from 'next/image';
 type Tab = 'discover' | 'stories' | 'chat' | 'groups' | 'profile';
 
 function AppContent() {
-  const { logout } = useAuth();
+  const { logout, user } = useAuth();
   const searchParams = useSearchParams();
   const router = useRouter();
 
@@ -145,16 +145,41 @@ function AppContent() {
                 <NavItem icon={<Users />} label="Грүпп чат" isActive={activeTab === 'groups'} onClick={() => { router.push('/?tab=groups'); setIsMobileMenuOpen(false); }} />
               </nav>
 
-              <div className="mt-auto pb-10">
+              <div className="mt-auto p-6 space-y-4">
+                <div
+                  onClick={() => {
+                    if (user?._id) {
+                      navigateToProfile(user._id);
+                    }
+                    setIsMobileMenuOpen(false);
+                  }}
+                  className="rounded-3xl p-1.5 bg-zinc-900/50 border border-zinc-800/50 hover:border-rose-500/30 transition-all cursor-pointer group"
+                >
+                  <div className="flex items-center gap-3 p-2 rounded-2xl hover:bg-zinc-800/50 transition-colors">
+                    <div className="w-11 h-11 shrink-0 rounded-2xl overflow-hidden relative ring-2 ring-zinc-800 group-hover:ring-rose-500/50 transition-all">
+                      <Image
+                        src={user?.avatar || `https://ui-avatars.com/api/?name=${user?.username || 'User'}&background=random`}
+                        alt="Profile"
+                        fill
+                        className="object-cover"
+                        referrerPolicy="no-referrer"
+                      />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-sm font-semibold text-white truncate">{user?.username || 'Хэрэглэгч'}</p>
+                    </div>
+                  </div>
+                </div>
+
                 <button
                   onClick={() => {
                     logout();
                     setIsMobileMenuOpen(false);
                   }}
-                  className="w-full flex items-center gap-3 px-6 py-4 rounded-2xl text-zinc-500 hover:text-rose-500 hover:bg-rose-500/5 transition-all outline-none cursor-pointer"
+                  className="w-full flex items-center justify-center gap-2 py-3 rounded-2xl bg-zinc-900/50 border border-zinc-800/50 text-zinc-500 hover:text-rose-500 hover:border-rose-500/30 transition-all text-xs font-bold uppercase tracking-widest group cursor-pointer"
                 >
-                  <LogOut size={20} />
-                  <span className="text-sm font-bold uppercase tracking-widest">Гарах</span>
+                  <LogOut size={14} className="group-hover:-translate-x-1 transition-transform" />
+                  Гарах
                 </button>
               </div>
             </motion.div>
