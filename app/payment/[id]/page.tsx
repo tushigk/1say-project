@@ -92,7 +92,7 @@ export default function PaymentPage({ params: paramsPromise }: { params: Promise
         if (isPaidStatus(res)) {
           message.success("Багц амжилттай идэвхжлээ");
           globalMutate("swr.membership.status");
-          router.replace("/payment-success");
+          router.replace("/");
         }
       },
     }
@@ -106,7 +106,7 @@ export default function PaymentPage({ params: paramsPromise }: { params: Promise
       if (isPaidStatus(res)) {
         message.success("Багц амжилттай идэвхжлээ");
         globalMutate("swr.membership.status");
-        router.replace("/payment-success");
+        router.replace("/");
       } else {
         message.error("⏳ Төлбөр хараахан баталгаажаагүй байна.");
       }
