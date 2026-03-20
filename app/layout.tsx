@@ -20,33 +20,33 @@ const notoSans = Noto_Sans({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL('https://afterkiss.space'),
-  title: "Шөнө дундын яриа: Өөрийгөө чөлөөл 🔥",
+  metadataBase: new URL('https://shunu.zurhai.com'),
+  title: "Шөнийн таалал: Өөрийгөө чөлөөл 🔥",
   description:
-    "Хориотой сэдвээр нээлттэй ярилцаж, өөрийн нууцлаг эротик ертөнцийг нээх VIP бүс. Сэрэл хөдөлгөм тестүүд болон нийтлэлүүд. Одоо нэгдэхэд 50% хямдарлаа.",
+    "Хориотой сэдвээр нээлттэй ярилцаж, өөрийн нууцлаг эротик ертөнцийг нээх VIP бүс. Сэрэл хөдөлгөм тестүүд болон нийтлэлүүд.",
   openGraph: {
-    title: "Шөнө дундын яриа: Өөрийгөө чөлөөл 🔥",
+    title: "Шөнийн таалал: Өөрийгөө чөлөөл 🔥",
     description:
-      "Хориотой сэдвээр нээлттэй ярилцаж, өөрийн нууцлаг эротик ертөнцийг нээх VIP бүс. Сэрэл хөдөлгөм тестүүд болон нийтлэлүүд. Одоо нэгдэхэд 50% хямдарлаа.",
-    url: "https://afterkiss.space",
-    siteName: "AfterKiss",
+      "Хориотой сэдвээр нээлттэй ярилцаж, өөрийн нууцлаг эротик ертөнцийг нээх VIP бүс. Сэрэл хөдөлгөм тестүүд болон нийтлэлүүд.",
+    url: "https://shunu.zurhai.com",
+    siteName: "Шөнийн таалал",
     locale: "mn_MN",
     type: "website",
     images: [
       {
-        url: "https://afterkiss.space/OgImage.jpeg",
+        url: "https://shunu.zurhai.com/OgImage.jpeg",
         width: 1200,
         height: 630,
-        alt: "Шөнө дундын яриа",
+        alt: "Шөнийн таалал",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Шөнө дундын яриа: Өөрийгөө чөлөөл 🔥",
+    title: "Шөнийн таалал: Өөрийгөө чөлөөл 🔥",
     description:
-      "Хориотой сэдвээр нээлттэй ярилцаж, өөрийн нууцлаг эротик ертөнцийг нээх VIP бүс. Сэрэл хөдөлгөм тестүүд болон нийтлэлүүд. Одоо нэгдэхэд 50% хямдарлаа.",
-    images: ["https://afterkiss.space/OgImage.jpeg"],
+      "Хориотой сэдвээр нээлттэй ярилцаж, өөрийн нууцлаг эротик ертөнцийг нээх VIP бүс. Сэрэл хөдөлгөм тестүүд болон нийтлэлүүд.",
+    images: ["https://shunu.zurhai.com/OgImage.jpeg"],
   },
   robots: {
     index: true,
@@ -60,9 +60,9 @@ export const metadata: Metadata = {
     },
   },
   icons: {
-    icon: "https://afterkiss.space/favicon.jpeg",
-    shortcut: "https://afterkiss.space/favicon.jpeg",
-    apple: "https://afterkiss.space/favicon.jpeg",
+    icon: "https://shunu.zurhai.com/favicon.jpeg",
+    shortcut: "https://shunu.zurhai.com/favicon.jpeg",
+    apple: "https://shunu.zurhai.com/favicon.jpeg",
   },
   keywords: [
     "Хайр",
