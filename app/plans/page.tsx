@@ -260,15 +260,15 @@ export default function PlansPage() {
                                                     onClick={() => handleChoosePlan(plan._id)}
                                                     disabled={!!loadingById[plan._id]}
                                                     className={`
-                                                        w-full h-16 rounded-2xl text-[11px] font-black uppercase tracking-[0.2em] transition-all duration-500
+                                                        w-full h-16 rounded-2xl text-[11px] font-black uppercase tracking-[0.2em] cursor-pointer transition-all duration-500
                                                         ${isBest
-                                                            ? 'bg-white text-black hover:bg-zinc-200 shadow-[0_20px_40px_-10px_rgba(255,255,255,0.1)]'
+                                                            ? 'bg-white text-black hover:bg-zinc-200 cursor-pointer shadow-[0_20px_40px_-10px_rgba(255,255,255,0.1)]'
                                                             : 'bg-white/5 border border-white/10 text-white hover:bg-white hover:text-black hover:border-white shadow-none'
                                                         }
                                                     `}
                                                 >
                                                     {loadingById[plan._id] ? (
-                                                        <div className="flex items-center justify-center gap-3">
+                                                        <div className="flex items-center justify-center gap-3 cursor-pointer">
                                                             <div className="w-4 h-4 border-2 border-current/20 border-t-current rounded-full animate-spin" />
                                                             <span>Process...</span>
                                                         </div>
