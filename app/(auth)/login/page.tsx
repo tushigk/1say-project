@@ -79,13 +79,12 @@ export default function LoginPage() {
                                     className="relative mb-5"
                                 >
                                     <div className="absolute inset-0 rounded-full bg-white/10 blur-2xl" />
-                                    <div className="relative flex h-24 w-24 items-center justify-center rounded-full border border-white/10 bg-white/5 shadow-[0_10px_40px_rgba(255,255,255,0.06)] backdrop-blur-xl">
+                                    <div className="relative flex overflow-hidden h-24 w-24 items-center justify-center rounded-full border border-white/10 bg-white/5 shadow-[0_10px_40px_rgba(255,255,255,0.06)] backdrop-blur-xl">
                                         <Image
-                                            src="/logo.png"
+                                            src="/logo.jpeg"
                                             alt="Noir Logo"
-                                            width={68}
-                                            height={68}
-                                            className="object-contain"
+                                            fill
+                                            className="object-cover"
                                             priority
                                         />
                                     </div>
