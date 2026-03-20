@@ -271,13 +271,6 @@ export default function PaymentPage({ params: paramsPromise }: { params: Promise
                     <span className="text-[8px] font-black uppercase tracking-[0.2em] text-zinc-500">Instant Activation</span>
                   </div>
                 </div>
-
-                <div className="p-5 rounded-2xl bg-black/40 border border-white/5">
-                  <div className="flex items-center justify-between">
-                    <span className="text-[9px] font-bold uppercase tracking-widest text-zinc-600">Нэхэмжлэх №</span>
-                    <span className="text-[10px] font-mono text-zinc-400 truncate max-w-[120px]">{invoiceId || "--"}</span>
-                  </div>
-                </div>
               </div>
             </motion.div>
           </div>
