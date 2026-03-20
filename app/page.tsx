@@ -13,6 +13,7 @@ import { ProfileView } from '@/components/views/ProfileView';
 import { Heart, BookOpen, MessageCircle, Users, LogOut } from 'lucide-react';
 import { NavItem } from '@/components/layout/NavItem';
 import { useAuth } from '@/components/providers/AuthProvider';
+import Image from 'next/image';
 
 type Tab = 'discover' | 'stories' | 'chat' | 'groups' | 'profile';
 
@@ -120,9 +121,16 @@ function AppContent() {
               transition={{ type: 'spring', damping: 25, stiffness: 200 }}
               className="md:hidden fixed inset-y-0 left-0 w-[280px] bg-zinc-950 border-r border-zinc-900 z-120 p-6 flex flex-col"
             >
-              <div className="flex items-center gap-3 mb-10 mt-4">
-                <div className="w-10 h-10 rounded-xl bg-linear-to-br from-rose-500 to-purple-600 flex items-center justify-center font-bold text-white">N</div>
-                <span className="font-serif text-2xl font-bold text-white tracking-tighter">Noir</span>
+              <div className="flex items-center justify-center mb-10 mt-4">
+                <div className="relative flex h-14 w-full items-center justify-center rounded-3xl border border-white/10 bg-white/5 backdrop-blur-xl shadow-[0_10px_30px_rgba(255,255,255,0.06)]">
+                  <Image
+                    src="/logo.png"
+                    fill
+                    alt="Logo"
+                    className="object-contain"
+                    priority
+                  />
+                </div>
               </div>
 
               <nav className="space-y-1">

@@ -1,8 +1,10 @@
 'use client';
 
 import React from 'react';
-import { Flame, Menu, X, Search } from 'lucide-react';
+import Image from 'next/image';
+import { Menu, X, Search } from 'lucide-react';
 import { NotificationDropdown } from './NotificationDropdown';
+import { useRouter } from 'next/navigation';
 
 interface HeaderProps {
     isMobileMenuOpen: boolean;
@@ -11,13 +13,16 @@ interface HeaderProps {
 }
 
 export function Header({ isMobileMenuOpen, setIsMobileMenuOpen, activeTabTitle }: HeaderProps) {
+    const router = useRouter();
     return (
         <>
-            {/* Desktop Header Top Bar */}
             <header className="hidden md:flex h-20 items-center justify-end px-10 border-b border-zinc-900/50 bg-black/20 backdrop-blur-xl relative z-20">
                 <div className="flex items-center gap-4">
                     <div className="relative group">
-                        <Search size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-500 group-focus-within:text-rose-500 transition-colors" />
+                        <Search
+                            size={18}
+                            className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-500 group-focus-within:text-rose-500 transition-colors"
+                        />
                         <input
                             type="text"
                             placeholder="Хайх..."
@@ -29,13 +34,19 @@ export function Header({ isMobileMenuOpen, setIsMobileMenuOpen, activeTabTitle }
                 </div>
             </header>
 
-            {/* Mobile Header */}
             <div className="md:hidden fixed top-0 left-0 right-0 h-20 border-b border-zinc-800/50 bg-black/60 backdrop-blur-xl z-100 flex items-center justify-between px-6">
-                <div className="flex items-center gap-3">
-                    <div className="w-8 h-8 rounded-xl bg-linear-to-br from-rose-500 to-purple-600 flex items-center justify-center">
-                        <Flame size={18} className="text-white fill-white/20" />
+                <div className="flex items-center">
+                    <div className="relative flex h-10 w-10 items-center justify-center rounded-2xl border border-white/10 bg-white/5 backdrop-blur-xl shadow-[0_8px_20px_rgba(255,255,255,0.05)]">
+                        <Image
+                            src="/logo.png"
+                            alt="Logo"
+                            width={24}
+                            height={24}
+                            className="object-contain"
+                            priority
+                            onClick={() => router.push('/')}
+                        />
                     </div>
-                    <span className="font-serif text-xl font-bold text-white tracking-tighter">Noir</span>
                 </div>
 
                 <div className="flex items-center gap-2">
