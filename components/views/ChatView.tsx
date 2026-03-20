@@ -168,7 +168,7 @@ export function ChatView({ onNavigateToProfile, selectedChatId, setSelectedChatI
                 </div>
 
                 <div className="flex-1 overflow-y-auto p-4 space-y-2">
-                    {chats.map((chat) => {
+                    {chats?.map((chat) => {
                         const display = getChatDisplay(chat);
                         return (
                             <motion.div
@@ -274,7 +274,7 @@ export function ChatView({ onNavigateToProfile, selectedChatId, setSelectedChatI
                             </div>
 
                             <div className="flex-1 overflow-y-auto p-4 md:p-8 space-y-6 scroll-smooth">
-                                {messages.map((msg) => {
+                                {messages?.map((msg) => {
                                     const isMine = msg.sender._id === currentUser?._id;
                                     return (
                                         <div key={msg._id} className={`flex gap-4 max-w-[70%] ${isMine ? 'ml-auto flex-row-reverse' : ''}`}>

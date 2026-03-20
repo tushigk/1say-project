@@ -221,7 +221,7 @@ export function GroupChatView({ onNavigateToProfile, selectedChatId, setSelected
                                 <div className="w-1.5 h-1.5 rounded-full bg-rose-500 animate-pulse" />
                                 <span className="text-[10px] font-black text-rose-500 uppercase tracking-widest">Урилгууд ({invites.length})</span>
                             </div>
-                            {invites.map((invite: Invite) => (
+                            {invites?.map((invite: Invite) => (
                                 <motion.div
                                     key={invite._id}
                                     initial={{ opacity: 0, x: -20 }}
@@ -266,7 +266,7 @@ export function GroupChatView({ onNavigateToProfile, selectedChatId, setSelected
                             <span className="text-[10px] font-black text-zinc-600 uppercase tracking-widest">Миний Грүппүүд</span>
                         </div>
                         {chats.length > 0 ? (
-                            chats.map((chat) => (
+                            chats?.map((chat) => (
                                 <motion.div
                                     key={chat._id}
                                     onClick={() => setSelectedChatId?.(chat._id)}
@@ -367,7 +367,7 @@ export function GroupChatView({ onNavigateToProfile, selectedChatId, setSelected
                                         <h3 className="font-bold text-white tracking-wide truncate max-w-[120px] md:max-w-none">{activeChat.title || 'Грүпп чат'}</h3>
                                         <div className="flex items-center gap-2">
                                             <div className="hidden sm:flex -space-x-2">
-                                                {activeChat.participants?.slice(0, 3).map((p, i) => (
+                                                {activeChat.participants?.slice(0, 3)?.map((p, i) => (
                                                     <div key={i} className="w-5 h-5 rounded-full border border-zinc-900 overflow-hidden relative">
                                                         <Image src={p.avatar || `https://picsum.photos/seed/${p._id}/50/50`} alt="user" fill className="object-cover" />
                                                     </div>
@@ -383,7 +383,7 @@ export function GroupChatView({ onNavigateToProfile, selectedChatId, setSelected
                             </div>
 
                             <div className="flex-1 overflow-y-auto p-4 md:p-8 space-y-6 scroll-smooth">
-                                {messages.map((msg) => {
+                                {messages?.map((msg) => {
                                     const isMine = msg.sender._id === currentUser?._id;
                                     return (
                                         <div key={msg._id} className={`flex gap-4 max-w-[70%] ${isMine ? 'ml-auto flex-row-reverse' : ''}`}>

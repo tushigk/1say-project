@@ -164,7 +164,7 @@ export default function PlansPage() {
                 <div className="w-full max-w-6xl px-4">
                     {isLoading && (
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
-                            {[1, 2, 3].map((i) => (
+                            {[1, 2, 3]?.map((i) => (
                                 <div key={i} className="h-[650px] rounded-[3rem] bg-white/5 animate-pulse border border-white/5 relative overflow-hidden">
                                     <div className="absolute inset-x-0 top-0 h-48 bg-white/5" />
                                 </div>
@@ -187,7 +187,7 @@ export default function PlansPage() {
 
                     {!isLoading && !error && displayedPlans.length > 0 && (
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 lg:gap-12 items-stretch">
-                            {displayedPlans.map((plan) => {
+                            {displayedPlans?.map((plan) => {
                                 const isBest = plan._id === bestValueId;
 
                                 return (
@@ -241,7 +241,7 @@ export default function PlansPage() {
                                             {/* Benefits List */}
                                             <div className="px-10 py-8 flex-1">
                                                 <ul className="space-y-5">
-                                                    {benefits.map((benefit, idx) => (
+                                                    {benefits?.map((benefit, idx) => (
                                                         <li key={idx} className="flex items-center gap-4 group/item">
                                                             <div className={`flex-shrink-0 w-5 h-5 rounded-full flex items-center justify-center border ${isBest ? 'border-accent-crimson/40 bg-accent-crimson/5 text-accent-crimson' : 'border-white/10 bg-white/5 text-zinc-500'}`}>
                                                                 <svg className="w-2.5 h-2.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={4}><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" /></svg>

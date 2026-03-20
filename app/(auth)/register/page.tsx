@@ -91,7 +91,7 @@ export default function RegisterPage() {
                     />
 
                     <div className="flex gap-3">
-                        {['male', 'female'].map((g) => (
+                        {['male', 'female']?.map((g) => (
                             <button
                                 key={g}
                                 type="button"

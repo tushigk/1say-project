@@ -154,7 +154,7 @@ export function ProfileView({ userId, onBack, onNavigateToChat }: ProfileViewPro
 
                         {currentUser?._id !== profile._id && (
                             <div className="flex flex-wrap gap-3 justify-center md:justify-start">
-                                <button 
+                                <button
                                     onClick={handlePM}
                                     disabled={isActionLoading}
                                     className="px-8 py-3.5 bg-rose-600 hover:bg-rose-500 disabled:opacity-50 text-white rounded-2xl font-bold transition-all shadow-lg active:scale-95 flex items-center gap-2"
@@ -162,7 +162,7 @@ export function ProfileView({ userId, onBack, onNavigateToChat }: ProfileViewPro
                                     {isActionLoading ? <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" /> : <MessageCircle size={18} />}
                                     Мэндчилэх
                                 </button>
-                                <button 
+                                <button
                                     onClick={openInviteModal}
                                     disabled={isActionLoading}
                                     className="px-8 py-3.5 bg-zinc-900 hover:bg-zinc-800 disabled:opacity-50 text-white rounded-2xl font-bold transition-all border border-zinc-800 shadow-lg active:scale-95 flex items-center gap-2"
@@ -256,9 +256,9 @@ export function ProfileView({ userId, onBack, onNavigateToChat }: ProfileViewPro
             <AnimatePresence>
                 {isInviteModalOpen && (
                     <div className="fixed inset-0 z-100 flex items-center justify-center p-6">
-                        <motion.div 
-                            initial={{ opacity: 0 }} 
-                            animate={{ opacity: 1 }} 
+                        <motion.div
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
                             exit={{ opacity: 0 }}
                             onClick={() => setIsInviteModalOpen(false)}
                             className="absolute inset-0 bg-black/80 backdrop-blur-sm"
@@ -281,7 +281,7 @@ export function ProfileView({ userId, onBack, onNavigateToChat }: ProfileViewPro
                                         <div className="w-6 h-6 border-2 border-rose-500 border-t-transparent rounded-full animate-spin" />
                                     </div>
                                 ) : myGroups.length > 0 ? (
-                                    myGroups.map((group: GroupChat) => (
+                                    myGroups?.map((group: GroupChat) => (
                                         <button
                                             key={group._id}
                                             onClick={() => handleInvite(group._id)}

@@ -57,7 +57,7 @@ export function NotificationDropdown() {
 
     const invites: Invite[] = useMemo(() => invitesData?.data || invitesData || [], [invitesData]);
     const chats: Chat[] = useMemo(() => chatsData?.data || chatsData || [], [chatsData]);
-    
+
     const unreadChats = useMemo(() => chats.filter((c) => (c.unreadCount || 0) > 0), [chats]);
     const totalUnreadCount = unreadChats.reduce((acc, c) => acc + (c.unreadCount || 0), 0);
     const badgeCount = totalUnreadCount + invites.length;
@@ -104,11 +104,10 @@ export function NotificationDropdown() {
         <div className="relative">
             <button
                 onClick={() => setIsOpen(!isOpen)}
-                className={`relative w-10 h-10 rounded-2xl flex items-center justify-center transition-all duration-300 border cursor-pointer ${
-                    isOpen 
-                    ? 'bg-rose-500 text-white border-rose-400 shadow-[0_0_20px_rgba(244,63,94,0.3)]' 
-                    : 'bg-zinc-900/50 text-zinc-400 hover:text-white hover:bg-zinc-800 border-zinc-800/50'
-                }`}
+                className={`relative w-10 h-10 rounded-2xl flex items-center justify-center transition-all duration-300 border cursor-pointer ${isOpen
+                        ? 'bg-rose-500 text-white border-rose-400 shadow-[0_0_20px_rgba(244,63,94,0.3)]'
+                        : 'bg-zinc-900/50 text-zinc-400 hover:text-white hover:bg-zinc-800 border-zinc-800/50'
+                    }`}
             >
                 <Bell size={20} className={badgeCount > 0 ? 'animate-wiggle' : ''} />
                 {badgeCount > 0 && (
@@ -121,14 +120,14 @@ export function NotificationDropdown() {
             <AnimatePresence>
                 {isOpen && (
                     <>
-                        <motion.div 
+                        <motion.div
                             initial={{ opacity: 0 }}
                             animate={{ opacity: 1 }}
                             exit={{ opacity: 0 }}
                             onClick={() => setIsOpen(false)}
-                            className="fixed inset-0 z-40 bg-black/20 backdrop-blur-[2px]" 
+                            className="fixed inset-0 z-40 bg-black/20 backdrop-blur-[2px]"
                         />
-                        <motion.div 
+                        <motion.div
                             initial={{ opacity: 0, y: 10, scale: 0.95 }}
                             animate={{ opacity: 1, y: 0, scale: 1 }}
                             exit={{ opacity: 0, y: 10, scale: 0.95 }}
@@ -164,15 +163,15 @@ export function NotificationDropdown() {
                                                     <div className="w-1.5 h-1.5 rounded-full bg-rose-500 animate-pulse" />
                                                     <span className="text-[10px] font-black text-rose-500 uppercase tracking-widest">Шинэ урилгууд</span>
                                                 </div>
-                                                {invites.map((invite) => (
+                                                {invites?.map((invite) => (
                                                     <div key={invite._id} className="p-4 rounded-3xl bg-rose-500/5 border border-rose-500/10 space-y-4 group hover:bg-rose-500/10 transition-colors">
                                                         <div className="flex items-center gap-4">
                                                             <div className="w-12 h-12 rounded-2xl overflow-hidden relative border border-rose-500/20 shadow-lg ring-2 ring-rose-500/10">
-                                                                <Image 
-                                                                    src={invite.invitedBy.avatar || `https://picsum.photos/seed/${invite.invitedBy.username}/100/100`} 
-                                                                    alt="Inviter" 
-                                                                    fill 
-                                                                    className="object-cover" 
+                                                                <Image
+                                                                    src={invite.invitedBy.avatar || `https://picsum.photos/seed/${invite.invitedBy.username}/100/100`}
+                                                                    alt="Inviter"
+                                                                    fill
+                                                                    className="object-cover"
                                                                 />
                                                             </div>
                                                             <div className="min-w-0 flex-1">
@@ -214,7 +213,7 @@ export function NotificationDropdown() {
                                                     <span className="text-[10px] font-black text-zinc-600 uppercase tracking-widest">Уншаагүй зурвасууд</span>
                                                 </div>
                                                 <div className="space-y-2">
-                                                    {unreadChats.slice(0, 5).map((chat) => {
+                                                    {unreadChats.slice(0, 5)?.map((chat) => {
                                                         const title = chat.title || chat.counterpart?.username || 'Нууц хэрэглэгч';
                                                         const avatar = chat.counterpart?.avatar || `https://picsum.photos/seed/${chat._id}/100/100`;
 
@@ -250,10 +249,10 @@ export function NotificationDropdown() {
                                     </div>
                                 )}
                             </div>
-                            
+
                             {badgeCount > 0 && (
                                 <div className="p-4 bg-zinc-900/20 border-t border-zinc-900/50">
-                                    <button 
+                                    <button
                                         onClick={() => {
                                             router.push('/?tab=chat');
                                             setIsOpen(false);

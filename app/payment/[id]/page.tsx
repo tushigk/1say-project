@@ -351,13 +351,13 @@ export default function PaymentPage({ params: paramsPromise }: { params: Promise
 
                     {invoiceLoading ? (
                       <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
-                        {[1, 2, 3].map((i) => (
+                        {[1, 2, 3]?.map((i) => (
                           <div key={i} className="h-16 rounded-2xl bg-white/5 animate-pulse border border-white/5" />
                         ))}
                       </div>
                     ) : bankUrls.length > 0 ? (
                       <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
-                        {bankUrls.map((bank) => (
+                        {bankUrls?.map((bank) => (
                           <a
                             key={bank._id ?? bank.link}
                             href={bank.link}

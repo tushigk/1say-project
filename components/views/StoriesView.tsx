@@ -128,7 +128,7 @@ export function StoriesView({ onNavigateToProfile }: { onNavigateToProfile?: (id
                 setAllPosts(data.data);
             } else {
                 setAllPosts(prev => {
-                    const existingIds = new Set(prev.map(p => p._id));
+                    const existingIds = new Set(prev?.map(p => p._id));
                     const newPosts = data.data.filter(p => !existingIds.has(p._id));
                     return [...prev, ...newPosts];
                 });
@@ -182,7 +182,7 @@ export function StoriesView({ onNavigateToProfile }: { onNavigateToProfile?: (id
             await mutate(async (currentData) => {
                 if (!currentData) return currentData;
                 const newData = { ...currentData };
-                newData.data = newData.data.map(p =>
+                newData.data = newData.data?.map(p =>
                     p._id === story._id
                         ? { ...p, likedByMe: !p.likedByMe, likeCount: p.likedByMe ? Math.max(0, p.likeCount - 1) : p.likeCount + 1 }
                         : p
@@ -218,7 +218,7 @@ export function StoriesView({ onNavigateToProfile }: { onNavigateToProfile?: (id
             </div>
 
             <div className="space-y-8">
-                {allPosts.map((story: NetworkPost, index: number) => (
+                {allPosts?.map((story: NetworkPost, index: number) => (
                     <motion.div
                         key={story._id}
                         initial={{ opacity: 0, x: -20 }}

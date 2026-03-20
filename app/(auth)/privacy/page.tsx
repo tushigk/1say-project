@@ -66,7 +66,7 @@ const Page = () => {
               </div>
 
               <nav className="space-y-1 max-h-[60vh] overflow-y-auto pr-2 custom-scrollbar">
-                {toc.map((t) => (
+                {toc?.map((t) => (
                   <a
                     key={t.href}
                     href={t.href}

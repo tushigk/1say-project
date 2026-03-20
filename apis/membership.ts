@@ -25,3 +25,8 @@ export const createMemberShipInvoice = async (planId: string) => {
   const payload: { planId: string } = { planId };
   return await appHttpRequest.post("/purchase", payload);
 };
+
+export const listActiveMembershipUsers = async (params?: Record<string, string | number | undefined>) => {
+  const res = await appHttpRequest.get("/users", params);
+  return res;
+};
