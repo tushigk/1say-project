@@ -71,83 +71,75 @@ export default function RegisterPage() {
 
     return (
         <div className="relative min-h-screen overflow-hidden bg-[#07070a] text-white">
-            <AuthBanner />
-
-            {/* Background overlays */}
-            <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(255,255,255,0.06),transparent_30%),radial-gradient(circle_at_bottom_left,rgba(220,38,38,0.10),transparent_35%)]" />
-            <div className="absolute inset-0 bg-black/40 backdrop-blur-[2px]" />
-
-            {/* Decorative glow */}
-            <div className="absolute top-16 left-10 h-40 w-40 rounded-full bg-red-500/10 blur-3xl" />
-            <div className="absolute bottom-16 right-10 h-56 w-56 rounded-full bg-white/5 blur-3xl" />
-            <div className="absolute top-1/2 right-1/4 h-24 w-24 rounded-full bg-red-400/10 blur-2xl" />
-
-            {/* Tiny particles */}
-            <div className="absolute top-1/4 right-1/4 w-2 h-2 bg-red-400 rounded-full animate-ping opacity-20" />
-            <div className="absolute bottom-1/3 left-1/3 w-1.5 h-1.5 bg-white rounded-full animate-pulse opacity-20" />
-            <div className="absolute top-2/3 left-1/4 w-1 h-1 bg-white rounded-full animate-pulse opacity-20" />
-
+            {/* Main content */}
             <div className="relative z-10 flex min-h-screen items-center justify-center px-4 py-10 sm:px-6">
                 <motion.div
                     initial={{ opacity: 0, scale: 0.94, y: 30 }}
                     animate={{ opacity: 1, scale: 1, y: 0 }}
                     transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-                    className="w-full max-w-[560px]"
+                    className="w-full max-w-5xl"
                 >
-                    <div className="relative overflow-hidden rounded-[2.5rem] border border-white/10 bg-white/[0.06] p-8 shadow-[0_30px_80px_rgba(0,0,0,0.55)] backdrop-blur-2xl sm:p-10 md:p-12">
-                        {/* inner border */}
-                        <div className="pointer-events-none absolute inset-0 rounded-[2.5rem] border border-white/5" />
-                        <div className="pointer-events-none absolute -top-20 left-1/2 h-40 w-40 -translate-x-1/2 rounded-full bg-white/10 blur-3xl" />
-
-                        {/* Header */}
-                        <div className="mb-8 flex flex-col items-center text-center">
-                            <motion.div
-                                initial={{ opacity: 0, y: -10 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                transition={{ delay: 0.1, duration: 0.5 }}
-                                className="relative mb-5"
-                            >
-                                <div className="absolute inset-0 rounded-full bg-white/10 blur-2xl" />
-                                <div className="relative flex h-24 w-24 items-center justify-center rounded-full border border-white/10 bg-white/5 shadow-[0_10px_40px_rgba(255,255,255,0.06)] backdrop-blur-xl">
-                                    <Image
-                                        src="/logo.png"
-                                        alt="Noir Logo"
-                                        width={68}
-                                        height={68}
-                                        className="object-contain"
-                                        priority
-                                    />
-                                </div>
-                            </motion.div>
-
-                            <motion.div
-                                initial={{ opacity: 0, y: 8 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                transition={{ delay: 0.15, duration: 0.5 }}
-                                className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs font-medium text-zinc-300"
-                            >
-                                <Sparkles size={14} className="text-red-400" />
-                                Шөнийн таалал!
-                            </motion.div>
-
-                            <motion.h1
-                                initial={{ opacity: 0, y: 10 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                transition={{ delay: 0.2, duration: 0.5 }}
-                                className="mt-5 text-3xl font-bold tracking-tight sm:text-4xl"
-                            >
-                                Шинэ бүртгэл
-                            </motion.h1>
-
-                            <motion.p
-                                initial={{ opacity: 0, y: 10 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                transition={{ delay: 0.25, duration: 0.5 }}
-                                className="mt-2 max-w-md text-sm leading-relaxed text-zinc-400"
-                            >
-                                Noir-д нэгдэж өөрийн хувийн орон зайг нээгээрэй.
-                            </motion.p>
+                    <div className="relative overflow-hidden rounded-[2.5rem] border border-white/10 bg-white/[0.06] shadow-[0_30px_80px_rgba(0,0,0,0.55)] backdrop-blur-2xl grid md:grid-cols-2">
+                        {/* Banner Side */}
+                        <div className="relative block min-h-[240px] sm:min-h-[300px] md:h-auto md:min-h-[600px]">
+                            <AuthBanner />
                         </div>
+
+                        {/* Form Side */}
+                        <div className="relative flex flex-col justify-center p-8 sm:p-10 md:p-12">
+                            {/* inner border */}
+                            <div className="pointer-events-none absolute inset-0 md:rounded-l-none rounded-[2.5rem] border border-white/5" />
+                            <div className="pointer-events-none absolute -top-20 left-1/2 h-40 w-40 -translate-x-1/2 rounded-full bg-white/10 blur-3xl" />
+
+                            {/* Header */}
+                            <div className="hidden md:flex mb-8 flex-col items-center text-center">
+                                <motion.div
+                                    initial={{ opacity: 0, y: -10 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    transition={{ delay: 0.1, duration: 0.5 }}
+                                    className="relative mb-5"
+                                >
+                                    <div className="absolute inset-0 rounded-full bg-white/10 blur-2xl" />
+                                    <div className="relative flex h-24 w-24 items-center justify-center rounded-full border border-white/10 bg-white/5 shadow-[0_10px_40px_rgba(255,255,255,0.06)] backdrop-blur-xl">
+                                        <Image
+                                            src="/logo.png"
+                                            alt="Noir Logo"
+                                            width={68}
+                                            height={68}
+                                            className="object-contain"
+                                            priority
+                                        />
+                                    </div>
+                                </motion.div>
+
+                                <motion.div
+                                    initial={{ opacity: 0, y: 8 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    transition={{ delay: 0.15, duration: 0.5 }}
+                                    className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs font-medium text-zinc-300"
+                                >
+                                    <Sparkles size={14} className="text-red-400" />
+                                    Шөнийн таалал!
+                                </motion.div>
+
+                                <motion.h1
+                                    initial={{ opacity: 0, y: 10 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    transition={{ delay: 0.2, duration: 0.5 }}
+                                    className="mt-5 text-3xl font-bold tracking-tight sm:text-4xl"
+                                >
+                                    Шинэ бүртгэл
+                                </motion.h1>
+
+                                <motion.p
+                                    initial={{ opacity: 0, y: 10 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    transition={{ delay: 0.25, duration: 0.5 }}
+                                    className="mt-2 max-w-md text-sm leading-relaxed text-zinc-400"
+                                >
+                                    Noir-д нэгдэж өөрийн хувийн орон зайг нээгээрэй.
+                                </motion.p>
+                            </div>
 
                         {/* Form */}
                         <form className="space-y-5" onSubmit={handleSubmit}>
@@ -307,6 +299,7 @@ export default function RegisterPage() {
                                 Бүртгэлтэй юу?
                                 <span className="ml-1 font-bold text-white">Нэвтрэх</span>
                             </Link>
+                        </div>
                         </div>
                     </div>
                 </motion.div>

@@ -69,14 +69,6 @@ export default function AuthBanner({ className }: { className?: string }) {
                 </motion.div>
             </AnimatePresence>
 
-            {/* Premium Overlays */}
-            <div className="absolute inset-0 z-10 bg-black/40 backdrop-blur-[1px]" />
-
-            {/* Dark Gradients for Content Visibility */}
-            <div className="absolute inset-0 z-20 bg-linear-to-t from-[#050203] via-[#050203]/60 to-transparent" />
-            <div className="absolute inset-0 z-20 bg-linear-to-b from-[#050203]/40 via-transparent to-transparent" />
-
-            {/* Organic Noise/Grain Overlay */}
             <div className="absolute inset-0 z-30 opacity-[0.05] pointer-events-none mix-blend-overlay animate-grain bg-[url('https://www.transparenttextures.com/patterns/stardust.png')]" />
 
             <style jsx>{`
@@ -95,7 +87,7 @@ export default function AuthBanner({ className }: { className?: string }) {
             `}</style>
 
             {/* Subtle Title Display (Desktop Only) */}
-            <div className="hidden md:block absolute bottom-12 left-12 z-40">
+            {/* <div className="hidden md:block absolute bottom-12 left-12 z-40">
                 <AnimatePresence mode="wait">
                     <motion.div
                         key={currentIndex}
@@ -109,7 +101,7 @@ export default function AuthBanner({ className }: { className?: string }) {
                         </p>
                     </motion.div>
                 </AnimatePresence>
-            </div>
+            </div> */}
         </div>
     );
 }
