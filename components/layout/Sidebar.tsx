@@ -8,6 +8,7 @@ import { useAuth } from '../providers/AuthProvider';
 import useSWR from 'swr';
 import { chatApi } from '@/apis';
 import { useSocket } from '../providers/SocketProvider';
+import { useRouter } from 'next/navigation';
 
 interface Chat {
     _id: string;
@@ -24,6 +25,7 @@ interface SidebarProps {
 export function Sidebar({ activeTab, setActiveTab, onNavigateToProfile }: SidebarProps) {
     const { logout, user } = useAuth();
     const { socket } = useSocket();
+    const router = useRouter();
 
     const { data: chatsData, mutate: mutateChats } = useSWR(user ? 'chats' : null, () => chatApi.listChats());
 
@@ -56,8 +58,9 @@ export function Sidebar({ activeTab, setActiveTab, onNavigateToProfile }: Sideba
                         src="/logo.png"
                         alt="Logo"
                         fill
-                        className="object-contain"
+                        className="object-contain cursor-pointer"
                         priority
+                        onClick={() => router.push("/")}
                     />
                 </div>
             </div>

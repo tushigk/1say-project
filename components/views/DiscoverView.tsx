@@ -5,7 +5,8 @@ import { motion } from 'framer-motion';
 import { Heart, Sparkles, Users } from 'lucide-react';
 import Image from 'next/image';
 import useSWR from 'swr';
-import { membershipApi } from '@/apis';
+import { membershipApi, chatApi } from '@/apis';
+import toast from 'react-hot-toast';
 
 
 interface MembershipUser {
@@ -25,11 +26,18 @@ interface MembershipResponse {
     totalPages: number;
 }
 
-export function DiscoverView({ onNavigateToProfile }: { onNavigateToProfile?: (id: string) => void }) {
+export function DiscoverView({ 
+    onNavigateToProfile,
+    onNavigateToChat 
+}: { 
+    onNavigateToProfile?: (id: string) => void,
+    onNavigateToChat?: (chatId: string) => void
+}) {
     const [selectedGender, setSelectedGender] = React.useState<'male' | 'female' | 'all'>('all');
     const [page, setPage] = React.useState(1);
     const [users, setUsers] = React.useState<MembershipUser[]>([]);
     const [hasMore, setHasMore] = React.useState(true);
+    const [isGreeting, setIsGreeting] = React.useState<string | null>(null);
 
     const { isLoading, isValidating } = useSWR<MembershipResponse>(
         [`users`, selectedGender, page],
@@ -64,6 +72,24 @@ export function DiscoverView({ onNavigateToProfile }: { onNavigateToProfile?: (i
     const loadMore = () => {
         if (!isLoading && !isValidating && hasMore) {
             setPage(prev => prev + 1);
+        }
+    };
+
+    const handleGreet = async (userId: string) => {
+        setIsGreeting(userId);
+        try {
+            const res = await chatApi.createDirectChat(userId);
+            if (res?._id || res?.data?._id) {
+                const chatId = res?._id || res?.data?._id;
+                onNavigateToChat?.(chatId);
+            } else {
+                toast.error('Чат үүсгэхэд алдаа гарлаа.');
+            }
+        } catch (error) {
+            console.error('Greet error:', error);
+            toast.error('Алдаа гарлаа. Дахин оролдоно уу.');
+        } finally {
+            setIsGreeting(null);
         }
     };
 
@@ -151,9 +177,19 @@ export function DiscoverView({ onNavigateToProfile }: { onNavigateToProfile?: (i
                             </p>
 
                             <div className="pt-2 flex gap-3">
-                                <button className="flex-1 py-4 bg-white text-black hover:bg-rose-500 hover:text-white rounded-2xl transition-all duration-300 font-bold flex items-center justify-center gap-2 transform active:scale-95 shadow-lg">
-                                    <Heart size={20} className="fill-current" />
-                                    Мэндчилэх
+                                <button 
+                                    onClick={() => handleGreet(profile._id)}
+                                    disabled={isGreeting === profile._id}
+                                    className="flex-1 py-4 bg-white text-black hover:bg-rose-500 hover:text-white rounded-2xl transition-all duration-300 font-bold flex items-center justify-center gap-2 transform active:scale-95 shadow-lg disabled:opacity-50"
+                                >
+                                    {isGreeting === profile._id ? (
+                                        <div className="w-5 h-5 border-2 border-zinc-900 border-t-zinc-400 rounded-full animate-spin" />
+                                    ) : (
+                                        <>
+                                            <Heart size={20} className="fill-current" />
+                                            Мэндчилэх
+                                        </>
+                                    )}
                                 </button>
                                 <button className="w-14 py-4 bg-white/10 hover:bg-white/20 backdrop-blur-md rounded-2xl transition-all flex items-center justify-center text-white border border-white/10">
                                     <Sparkles size={20} />

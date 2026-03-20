@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect, Suspense, useMemo } from 'react';
+import React, { useState, Suspense, useMemo } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Sidebar } from '@/components/layout/Sidebar';
@@ -64,7 +64,12 @@ function AppContent() {
         transition={{ duration: 0.4, ease: [0.23, 1, 0.32, 1] }}
         className="h-full"
       >
-        {activeTab === 'discover' && <DiscoverView onNavigateToProfile={navigateToProfile} />}
+        {activeTab === 'discover' && (
+          <DiscoverView
+            onNavigateToProfile={navigateToProfile}
+            onNavigateToChat={navigateToChat}
+          />
+        )}
         {activeTab === 'stories' && <StoriesView onNavigateToProfile={navigateToProfile} />}
         {activeTab === 'chat' && (
           <ChatView
