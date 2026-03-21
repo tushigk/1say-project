@@ -124,7 +124,7 @@ export default function PaymentPage({ params: paramsPromise }: { params: Promise
   const selectedPlan: IMembershipPlan | null = invoiceRes?.plan ?? null;
 
   const payableAmount: number = Number(selectedPlan?.price ?? 0);
-  const originalPrice: number = Number(selectedPlan?.price ?? 0);
+  const originalPrice: number = payableAmount * 2; // Show 50% discount from nominal price
 
   const title = selectedPlan?.title ?? "Гишүүнчлэлийн багц";
   const months = selectedPlan?.months ?? 0;

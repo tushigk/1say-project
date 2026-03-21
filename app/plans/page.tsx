@@ -97,10 +97,11 @@ export default function PlansPage() {
     };
 
     const benefits = [
-        "Бүх хаалттай контентыг үзэх",
-        "Хязгааргүй чат, мессеж",
-        "Тусгай хэлэлцүүлэгт оролцох",
-        "Нууцлаг түүхүүдийг унших"
+        "Хязгааргүй зурвас илгээж, шинээр танилцах",
+        "Таны профайлыг хэн үзсэнийг цаг тухайд нь мэдэх",
+        "Түвшин болон Exp 2 дахин хурдан ахих боломж",
+        "Бусдаас ялгарах VIP тэмдэг, онцгой хүрээ",
+        "Зар сурталчилгаагүй, илүү тав тухтай орчин",
     ];
 
     return (
@@ -114,7 +115,7 @@ export default function PlansPage() {
                 <div className="absolute inset-0 bg-radial-gradient from-transparent via-transparent to-[#050203] opacity-80" />
             </div>
 
-            <main className="relative z-10 w-full container mx-auto px-4 py-20 md:py-32 flex flex-col items-center">
+            <main className="relative z-10 w-full container mx-auto px-4 py-28 md:py-32 flex flex-col items-center">
                 {/* Fixed Header/Navigation */}
                 <nav className="fixed top-0 inset-x-0 z-50 px-4 py-4 md:px-12 md:py-6 flex items-center justify-between pointer-events-auto bg-black/40 backdrop-blur-2xl border-b border-white/5">
                     <div className="flex items-center gap-3 md:gap-4 cursor-pointer group" onClick={() => router.push("/")}>
@@ -139,8 +140,8 @@ export default function PlansPage() {
                 <div className="text-center mb-24 max-w-3xl mx-auto space-y-8">
                     <div className="flex items-center justify-center gap-3">
                         <span className="h-px w-8 bg-accent-crimson/50" />
-                        <span className="px-5 py-2 rounded-full bg-white/5 border border-white/10 text-accent-champagne text-[10px] font-black tracking-[0.4em] uppercase backdrop-blur-2xl shadow-2xl">
-                            Membership Experience
+                        <span className="px-5 py-2 rounded-full bg-accent-crimson/10 border border-accent-crimson/20 text-accent-crimson text-[10px] font-black tracking-[0.4em] uppercase backdrop-blur-2xl shadow-2xl animate-pulse">
+                            Special Offer: 50% OFF
                         </span>
                         <span className="h-px w-8 bg-accent-crimson/50" />
                     </div>
@@ -151,7 +152,7 @@ export default function PlansPage() {
                     </h1>
 
                     <p className="text-zinc-500 text-lg md:text-xl font-light leading-relaxed max-w-2xl mx-auto">
-                        Хэтрүүлэггүйгээр хэлэхэд, энэ бол таны амьдралын хэв маягийг өөрчлөх <span className="text-white font-medium italic">онцгой боломж</span>.
+                        Хэтрүүлэггүйгээр хэлэхэд, энэ бол <span className="text-accent-crimson font-bold">50% ХӨНГӨЛӨЛТТЭЙ</span>-гөөр <span className="text-white font-medium italic">онцгой боломжийг</span> нээх таны хамгийн зөв цаг хугацаа.
                     </p>
                 </div>
 
@@ -216,6 +217,14 @@ export default function PlansPage() {
                                                 </h3>
 
                                                 <div className="flex flex-col items-center justify-center py-4">
+                                                    <div className="flex items-center gap-3 mb-2 translate-y-2">
+                                                        <span className="text-sm md:text-base text-zinc-600 line-through opacity-40 font-bold">
+                                                            ₮{(plan.price * 2).toLocaleString()}
+                                                        </span>
+                                                        <span className="bg-accent-crimson/15 text-accent-crimson text-[9px] font-black px-2.5 py-1 rounded-lg uppercase tracking-[0.2em] border border-accent-crimson/20">
+                                                            -50% Off
+                                                        </span>
+                                                    </div>
                                                     <div className="flex items-start">
                                                         <span className="text-xl font-bold text-zinc-600 mt-2 mr-1">₮</span>
                                                         <span className="text-6xl font-serif font-black tracking-tighter text-white">
