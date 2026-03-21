@@ -91,7 +91,7 @@ function CommentsSection({ storyId, mutatePosts, currentUser, onNavigateToProfil
                         {currentUser?._id === comment.createdBy?._id && (
                             <button
                                 onClick={() => deleteComment(comment._id)}
-                                className="text-zinc-600 hover:text-rose-500 opacity-0 group-hover:opacity-100 transition-all p-2"
+                                className="text-zinc-600 hover:text-rose-500 transition-all p-2"
                                 title="Устгах"
                             >
                                 <Trash2 size={16} />
@@ -266,7 +266,7 @@ export function StoriesView({ onNavigateToProfile }: { onNavigateToProfile?: (id
                                         {user?._id === story.createdBy?._id && (
                                             <button
                                                 onClick={(e) => handleDeletePost(story._id, e)}
-                                                className="text-zinc-600 hover:text-rose-500 opacity-0 group-hover:opacity-100 transition-colors"
+                                                className="text-zinc-600 hover:text-rose-500 transition-colors"
                                                 title="Устгах"
                                             >
                                                 <Trash2 size={18} />
@@ -305,12 +305,6 @@ export function StoriesView({ onNavigateToProfile }: { onNavigateToProfile?: (id
                                         </div>
                                         <span className="text-sm font-bold">{story.commentCount}</span>
                                     </div>
-                                    <button
-                                        onClick={(e) => { e.stopPropagation(); /* implement share */ }}
-                                        className="ml-auto p-2 rounded-xl text-zinc-600 hover:text-white hover:bg-zinc-800 transition-all"
-                                    >
-                                        <Share2 size={18} />
-                                    </button>
                                 </div>
                             </div>
                         </div>
