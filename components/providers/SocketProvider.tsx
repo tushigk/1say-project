@@ -24,7 +24,6 @@ export const SocketProvider = ({ children }: { children: React.ReactNode }) => {
     const [isConnected, setIsConnected] = useState(false);
     const socketRef = useRef<Socket | null>(null);
     const pathname = usePathname();
-    const publicRoutes = ['/login', '/register', '/age-gate', '/privacy', '/plans'];
 
     // Adjust state during render if authentication is lost. 
     // This avoids cascading renders from useEffect and keeps the UI in sync.
@@ -34,6 +33,7 @@ export const SocketProvider = ({ children }: { children: React.ReactNode }) => {
     }
 
     useEffect(() => {
+        const publicRoutes = ['/login', '/register', '/age-gate', '/privacy', '/plans'];
         // Skip socket connection on public routes
         const isPublicRoute = publicRoutes.includes(pathname) || pathname.startsWith('/payment');
 

@@ -3,7 +3,7 @@
 import { useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import useSWR from "swr";
-import { LogOut, Flame } from "lucide-react";
+import { LogOut, Flame, ArrowRight } from "lucide-react";
 import Button from "@/components/ui/Button";
 import { useAuth } from "@/components/providers/AuthProvider";
 import * as membershipApi from "@/apis/membership";
@@ -191,66 +191,85 @@ export default function PlansPage() {
                                         key={plan._id}
                                         className={`
                                             group relative flex flex-col rounded-[3rem] transition-all duration-700 ease-out
-                                            ${isBest ? 'scale-105 z-20 shadow-[0_40px_100px_-20px_rgba(0,0,0,0.8),0_0_80px_rgba(230,30,56,0.1)]' : 'hover:scale-[1.02] hover:-translate-y-2'}
+                                            ${isBest ? 'scale-105 z-20 shadow-[0_40px_100px_-20px_rgba(0,0,0,0.8),0_0_80px_rgba(230,30,56,0.15)]' : 'hover:scale-[1.02] hover:-translate-y-2 shadow-2xl'}
                                         `}
                                     >
                                         {/* Premium Backdrop & Border Integration */}
                                         <div className={`
                                             absolute inset-0 rounded-[3rem] overflow-hidden backdrop-blur-3xl border
-                                            ${isBest ? 'bg-[#0a0506]/95 border-white/10 ring-1 ring-accent-crimson/30 shadow-[inset_0_0_40px_rgba(230,30,56,0.05)]' : 'bg-white/[0.02] border-white/5 hover:border-white/10 hover:bg-white/[0.04]'}
+                                            ${isBest ? 'bg-[#0a0506]/95 border-white/20 ring-1 ring-accent-crimson/40 shadow-[inset_0_0_60px_rgba(230,30,56,0.08)]' : 'bg-white/[0.03] border-white/10 hover:border-white/20 hover:bg-white/[0.05]'}
                                             transition-all duration-500
                                         `} />
+
+                                        {/* Featured Image Background (Top Half) */}
+                                        <div className="absolute inset-0 opacity-20 group-hover:opacity-30 transition-opacity duration-700 pointer-events-none overflow-hidden rounded-[3rem]">
+                                            {plan.image?.url && (
+                                                <Image 
+                                                    src={plan.image.url} 
+                                                    alt={plan.title} 
+                                                    fill 
+                                                    className="object-cover scale-110 group-hover:scale-100 transition-transform duration-1000 blur-sm"
+                                                />
+                                            )}
+                                            <div className="absolute inset-0 bg-linear-to-b from-black/0 via-black/40 to-[#0a0506]" />
+                                        </div>
 
                                         {/* Content Wrapper */}
                                         <div className="relative z-20 flex flex-col h-full flex-1">
                                             {/* Tag for Highlighted Plan */}
                                             {isBest && (
-                                                <div className="mt-8 mx-auto self-center bg-accent-crimson text-white text-[9px] font-black px-4 py-1.5 rounded-full uppercase tracking-[0.3em] shadow-lg animate-bounce-subtle">
+                                                <div className="mt-8 mx-auto self-center bg-accent-crimson text-white text-[9px] font-black px-5 py-2 rounded-full uppercase tracking-[0.3em] shadow-lg shadow-accent-crimson/20 animate-bounce-subtle">
                                                     Хамгийн их эрэлттэй
                                                 </div>
                                             )}
 
                                             {/* Top Visual Section */}
                                             <div className="p-10 pb-4 text-center">
-                                                <h3 className={`text-sm tracking-[0.3em] uppercase font-black mb-6 ${isBest ? 'text-accent-crimson' : 'text-zinc-500'}`}>
+                                                <h3 className={`text-[10px] tracking-[0.4em] uppercase font-black mb-8 ${isBest ? 'text-accent-crimson' : 'text-zinc-500'}`}>
                                                     {plan.title}
                                                 </h3>
 
-                                                <div className="flex flex-col items-center justify-center py-4">
-                                                    <div className="flex items-center gap-3 mb-2 translate-y-2">
-                                                        <span className="text-sm md:text-base text-zinc-600 line-through opacity-40 font-bold">
-                                                            ₮{(plan.price * 2).toLocaleString()}
-                                                        </span>
-                                                        <span className="bg-accent-crimson/15 text-accent-crimson text-[9px] font-black px-2.5 py-1 rounded-lg uppercase tracking-[0.2em] border border-accent-crimson/20">
-                                                            -50% Off
+                                                <div className="flex flex-col items-center justify-center py-4 relative">
+                                                    {/* Price Background Glow */}
+                                                    <div className={`absolute -inset-4 rounded-full blur-3xl opacity-20 ${isBest ? 'bg-accent-crimson' : 'bg-white'}`} />
+                                                    
+                                                    <div className="relative flex flex-col items-center justify-center">
+                                                        <div className="flex items-center gap-3 mb-2 translate-y-2">
+                                                            <span className="text-sm md:text-base text-zinc-600 line-through opacity-40 font-bold">
+                                                                ₮{(plan.price * 2).toLocaleString()}
+                                                            </span>
+                                                            <div className="bg-accent-crimson/20 text-accent-crimson text-[9px] font-black px-2.5 py-1 rounded-lg uppercase tracking-[0.2em] border border-accent-crimson/20 flex items-center gap-1">
+                                                                <Flame size={10} />
+                                                                -50% Off
+                                                            </div>
+                                                        </div>
+                                                        <div className="flex items-start">
+                                                            <span className="text-xl font-bold text-zinc-600 mt-2 mr-1">₮</span>
+                                                            <span className="text-6xl md:text-7xl font-serif font-black tracking-tighter text-white">
+                                                                {plan.price.toLocaleString()}
+                                                            </span>
+                                                        </div>
+                                                        <span className="text-zinc-500 text-[10px] font-black uppercase tracking-[0.3em] mt-4 opacity-70 bg-white/5 px-3 py-1 rounded-full border border-white/5">
+                                                            {plan.months} сарын хугацаатай
                                                         </span>
                                                     </div>
-                                                    <div className="flex items-start">
-                                                        <span className="text-xl font-bold text-zinc-600 mt-2 mr-1">₮</span>
-                                                        <span className="text-6xl font-serif font-black tracking-tighter text-white">
-                                                            {plan.price.toLocaleString()}
-                                                        </span>
-                                                    </div>
-                                                    <span className="text-zinc-500 text-xs font-bold uppercase tracking-widest mt-3 opacity-60">
-                                                        {plan.months} сарын хугацаатай
-                                                    </span>
                                                 </div>
                                             </div>
 
                                             {/* Divider */}
-                                            <div className="px-12 py-2">
-                                                <div className={`h-px w-full ${isBest ? 'bg-gradient-to-r from-transparent via-accent-crimson/30 to-transparent' : 'bg-white/5'}`} />
+                                            <div className="px-12 py-4">
+                                                <div className={`h-px w-full ${isBest ? 'bg-gradient-to-r from-transparent via-accent-crimson/40 to-transparent' : 'bg-white/5'}`} />
                                             </div>
 
                                             {/* Benefits List */}
-                                            <div className="px-10 py-8 flex-1">
-                                                <ul className="space-y-5">
+                                            <div className="px-10 py-6 flex-1">
+                                                <ul className="space-y-4">
                                                     {benefits?.map((benefit, idx) => (
-                                                        <li key={idx} className="flex items-center gap-4 group/item">
-                                                            <div className={`flex-shrink-0 w-5 h-5 rounded-full flex items-center justify-center border ${isBest ? 'border-accent-crimson/40 bg-accent-crimson/5 text-accent-crimson' : 'border-white/10 bg-white/5 text-zinc-500'}`}>
+                                                        <li key={idx} className="flex items-start gap-4 group/item">
+                                                            <div className={`flex-shrink-0 w-5 h-5 rounded-full flex items-center justify-center border mt-0.5 ${isBest ? 'border-accent-crimson/40 bg-accent-crimson/10 text-accent-crimson shadow-[0_0_15px_rgba(230,30,56,0.3)]' : 'border-white/10 bg-white/5 text-zinc-500'}`}>
                                                                 <svg className="w-2.5 h-2.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={4}><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" /></svg>
                                                             </div>
-                                                            <span className={`text-sm font-medium transition-colors ${isBest ? 'text-zinc-300' : 'text-zinc-400 group-hover/item:text-zinc-300'}`}>
+                                                            <span className={`text-[13px] leading-relaxed font-medium transition-colors ${isBest ? 'text-zinc-200' : 'text-zinc-500 group-hover/item:text-zinc-300'}`}>
                                                                 {benefit}
                                                             </span>
                                                         </li>
@@ -264,19 +283,28 @@ export default function PlansPage() {
                                                     onClick={() => handleChoosePlan(plan._id)}
                                                     disabled={!!loadingById[plan._id]}
                                                     className={`
-                                                        w-full h-16 rounded-2xl text-[11px] font-black uppercase tracking-[0.2em] cursor-pointer transition-all duration-500
+                                                        w-full h-16 rounded-[2rem] text-[11px] font-black uppercase tracking-[0.2em] cursor-pointer transition-all duration-500 relative overflow-hidden group/btn
                                                         ${isBest
-                                                            ? 'bg-white text-black hover:bg-zinc-200 cursor-pointer shadow-[0_20px_40px_-10px_rgba(255,255,255,0.1)]'
+                                                            ? 'bg-white text-black hover:bg-zinc-200 cursor-pointer shadow-[0_20px_40px_-10px_rgba(255,255,255,0.15)] overflow-hidden'
                                                             : 'bg-white/5 border border-white/10 text-white hover:bg-white hover:text-black hover:border-white shadow-none'
                                                         }
                                                     `}
                                                 >
+                                                    {isBest && (
+                                                        <div className="absolute inset-0 bg-linear-to-r from-transparent via-white/40 to-transparent -translate-x-full group-hover/btn:animate-shimmer" />
+                                                    )}
+                                                    
                                                     {loadingById[plan._id] ? (
                                                         <div className="flex items-center justify-center gap-3 cursor-pointer">
                                                             <div className="w-4 h-4 border-2 border-current/20 border-t-current rounded-full animate-spin" />
                                                             <span>Process...</span>
                                                         </div>
-                                                    ) : "Сонгох"}
+                                                    ) : (
+                                                        <span className="flex items-center justify-center gap-2">
+                                                            Сонгох
+                                                            <ArrowRight size={14} className="group-hover/btn:translate-x-1 transition-transform" />
+                                                        </span>
+                                                    )}
                                                 </Button>
                                             </div>
                                         </div>
