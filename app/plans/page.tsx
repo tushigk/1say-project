@@ -206,7 +206,7 @@ export default function PlansPage() {
                                             {/* Tag for Highlighted Plan */}
                                             {isBest && (
                                                 <div className="mt-8 mx-auto self-center bg-accent-crimson text-white text-[9px] font-black px-4 py-1.5 rounded-full uppercase tracking-[0.3em] shadow-lg animate-bounce-subtle">
-                                                    Best Experience
+                                                    Хамгийн их эрэлттэй
                                                 </div>
                                             )}
 
