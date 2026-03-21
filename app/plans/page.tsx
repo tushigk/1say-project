@@ -59,7 +59,7 @@ export default function PlansPage() {
     const bestValueId = useMemo<string | undefined>(() => {
         if (!plans.length) return undefined;
 
-        const TARGET_PRICE = 40000;
+        const TARGET_PRICE = 50000;
 
         const exact = plans.find((p) => p.price === TARGET_PRICE);
         if (exact) return exact._id;
