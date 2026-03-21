@@ -2,6 +2,7 @@
 
 import React, { createContext, useContext, useEffect, useState, useRef } from "react";
 import { io, Socket } from "socket.io-client";
+import { usePathname } from "next/navigation";
 import { siteUrl } from "@/config/site";
 import { useAuth } from "./AuthProvider";
 
@@ -22,6 +23,8 @@ export const SocketProvider = ({ children }: { children: React.ReactNode }) => {
     const [socket, setSocket] = useState<Socket | null>(null);
     const [isConnected, setIsConnected] = useState(false);
     const socketRef = useRef<Socket | null>(null);
+    const pathname = usePathname();
+    const publicRoutes = ['/login', '/register', '/age-gate', '/privacy', '/plans'];
 
     // Adjust state during render if authentication is lost. 
     // This avoids cascading renders from useEffect and keeps the UI in sync.
@@ -31,7 +34,10 @@ export const SocketProvider = ({ children }: { children: React.ReactNode }) => {
     }
 
     useEffect(() => {
-        if (!isAuthenticated || !token) {
+        // Skip socket connection on public routes
+        const isPublicRoute = publicRoutes.includes(pathname) || pathname.startsWith('/payment');
+
+        if (!isAuthenticated || !token || isPublicRoute) {
             return;
         }
 
@@ -42,7 +48,7 @@ export const SocketProvider = ({ children }: { children: React.ReactNode }) => {
         });
 
         socketInstance.on("connect", () => {
-            console.log("[SOCKET] Connected");
+            console.log("[SOCKET] Connected at", pathname);
             setIsConnected(true);
         });
 
@@ -111,7 +117,7 @@ export const SocketProvider = ({ children }: { children: React.ReactNode }) => {
                 setIsConnected(false);
             });
         };
-    }, [isAuthenticated, token, logout, isCurrentSession]);
+    }, [isAuthenticated, token, logout, isCurrentSession, pathname]);
 
     return (
         <SocketContext.Provider value={{ socket, isConnected }}>

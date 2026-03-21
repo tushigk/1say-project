@@ -152,7 +152,7 @@ export default function PlansPage() {
                     </h1>
 
                     <p className="text-zinc-500 text-lg md:text-xl font-light leading-relaxed max-w-2xl mx-auto">
-                        Хэтрүүлэггүйгээр хэлэхэд, энэ бол <span className="text-accent-crimson font-bold">50% ХӨНГӨЛӨЛТТЭЙ</span>-гөөр <span className="text-white font-medium italic">онцгой боломжийг</span> нээх таны хамгийн зөв цаг хугацаа.
+                        Энэ бол <span className="text-accent-crimson font-bold">50% ХӨНГӨЛӨЛТТЭЙ</span>-гөөр <span className="text-white font-medium italic">онцгой боломжийг</span> нээх таны хамгийн зөв цаг хугацаа.
                     </p>
                 </div>
 
