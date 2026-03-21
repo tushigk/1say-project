@@ -76,15 +76,15 @@ function CommentsSection({ storyId, mutatePosts, currentUser, onNavigateToProfil
                                 className="object-cover"
                             />
                         </div>
-                        <div className="flex-1">
-                            <div className="flex items-center justify-between">
+                        <div className="flex-1 min-w-0">
+                            <div className="flex items-center justify-between gap-4">
                                 <p
-                                    className="font-bold text-white text-sm cursor-pointer hover:text-rose-500 transition-colors"
+                                    className="font-bold text-white text-sm cursor-pointer hover:text-rose-500 transition-colors truncate min-w-0 flex-1"
                                     onClick={() => onNavigateToProfile?.(comment.createdBy?._id)}
                                 >
                                     {comment.createdBy?.username}
                                 </p>
-                                <p className="text-[10px] text-zinc-500">{new Date(comment.createdAt).toLocaleDateString()}</p>
+                                <p className="text-[10px] text-zinc-500 shrink-0">{new Date(comment.createdAt).toLocaleDateString()}</p>
                             </div>
                             <p className="text-zinc-400 mt-1 text-sm">{comment.message}</p>
                         </div>
@@ -228,11 +228,11 @@ export function StoriesView({ onNavigateToProfile }: { onNavigateToProfile?: (id
                         className="group glass-card rounded-4xl p-8 hover:bg-zinc-900/40 transition-all border border-zinc-800/40 cursor-pointer"
                     >
                         <div className="flex flex-col md:flex-row gap-6">
-                            <div className="flex-1 space-y-4">
-                                <div className="flex items-center justify-between">
-                                    <div className="flex items-center gap-3">
+                            <div className="flex-1 space-y-4 min-w-0">
+                                <div className="flex items-center justify-between gap-4">
+                                    <div className="flex items-center gap-3 min-w-0 flex-1">
                                         <div
-                                            className="w-12 h-12 rounded-2xl overflow-hidden relative ring-4 ring-zinc-900/50 cursor-pointer"
+                                            className="w-12 h-12 rounded-2xl overflow-hidden relative ring-4 ring-zinc-900/50 cursor-pointer shrink-0"
                                             onClick={(e) => {
                                                 e.stopPropagation();
                                                 onNavigateToProfile?.(story.createdBy?._id);
@@ -246,9 +246,9 @@ export function StoriesView({ onNavigateToProfile }: { onNavigateToProfile?: (id
                                                 referrerPolicy="no-referrer"
                                             />
                                         </div>
-                                        <div>
+                                        <div className="min-w-0 flex-1">
                                             <p
-                                                className="font-bold text-white tracking-wide cursor-pointer hover:text-rose-500 transition-colors"
+                                                className="font-bold text-white tracking-wide cursor-pointer hover:text-rose-500 transition-colors truncate"
                                                 onClick={(e) => {
                                                     e.stopPropagation();
                                                     onNavigateToProfile?.(story.createdBy?._id);
@@ -275,11 +275,11 @@ export function StoriesView({ onNavigateToProfile }: { onNavigateToProfile?: (id
                                     </div>
                                 </div>
 
-                                <div className="space-y-3">
-                                    <h3 className="text-2xl font-serif font-bold text-rose-100 group-hover:text-rose-400 transition-colors">
+                                <div className="space-y-3 min-w-0">
+                                    <h3 className="text-2xl font-serif font-bold text-rose-100 group-hover:text-rose-400 transition-colors break-all line-clamp-2">
                                         {story.title}
                                     </h3>
-                                    <p className="text-zinc-400 leading-relaxed text-base line-clamp-3">
+                                    <p className="text-zinc-400 leading-relaxed text-base line-clamp-3 break-all">
                                         {story.description}
                                     </p>
                                     {story.image?.url && (
@@ -404,8 +404,8 @@ export function StoriesView({ onNavigateToProfile }: { onNavigateToProfile?: (id
                             exit={{ opacity: 0, scale: 0.95, x: 20 }}
                             className="relative w-full max-w-2xl max-h-full flex flex-col bg-zinc-950 border border-zinc-800 rounded-3xl shadow-2xl z-10 overflow-hidden"
                         >
-                            <div className="flex items-center justify-between p-5 md:p-6 border-b border-zinc-900">
-                                <h2 className="text-xl font-serif text-white truncate pr-4">{selectedStory.title}</h2>
+                            <div className="flex items-center justify-between p-5 md:p-6 border-b border-zinc-900 gap-4">
+                                <h2 className="text-xl font-serif text-white truncate pr-4 flex-1 min-w-0">{selectedStory.title}</h2>
                                 <button onClick={() => setSelectedStory(null)} className="p-2 text-zinc-400 hover:text-white rounded-full hover:bg-zinc-900 transition-colors shrink-0">
                                     <X size={20} />
                                 </button>
@@ -414,9 +414,9 @@ export function StoriesView({ onNavigateToProfile }: { onNavigateToProfile?: (id
                             <div className="flex-1 overflow-y-auto p-5 md:p-6 space-y-8 no-scrollbar">
                                 {/* Story content */}
                                 <div className="space-y-6">
-                                    <div className="flex items-center gap-3">
+                                    <div className="flex items-center gap-3 min-w-0">
                                         <div
-                                            className="w-12 h-12 rounded-xl overflow-hidden relative ring-2 ring-zinc-900 cursor-pointer"
+                                            className="w-12 h-12 rounded-xl overflow-hidden relative ring-2 ring-zinc-900 cursor-pointer shrink-0"
                                             onClick={() => onNavigateToProfile?.(selectedStory.createdBy?._id)}
                                         >
                                             <Image
@@ -427,9 +427,9 @@ export function StoriesView({ onNavigateToProfile }: { onNavigateToProfile?: (id
                                                 referrerPolicy="no-referrer"
                                             />
                                         </div>
-                                        <div>
+                                        <div className="min-w-0 flex-1">
                                             <p
-                                                className="font-bold text-white tracking-wide cursor-pointer hover:text-rose-500 transition-colors"
+                                                className="font-bold text-white tracking-wide cursor-pointer hover:text-rose-500 transition-colors truncate"
                                                 onClick={() => onNavigateToProfile?.(selectedStory.createdBy?._id)}
                                             >
                                                 {selectedStory.createdBy?.username}
@@ -439,7 +439,7 @@ export function StoriesView({ onNavigateToProfile }: { onNavigateToProfile?: (id
                                             </div>
                                         </div>
                                     </div>
-                                    <p className="text-zinc-300 leading-relaxed text-base md:text-lg whitespace-pre-wrap">
+                                    <p className="text-zinc-300 leading-relaxed text-base md:text-lg whitespace-pre-wrap break-all">
                                         {selectedStory.description}
                                     </p>
 
