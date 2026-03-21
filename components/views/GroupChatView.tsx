@@ -40,7 +40,7 @@ interface Chat {
         body: string;
         createdAt: string;
     };
-    unreadCount?: number;
+    unread?: boolean;
 }
 
 interface GroupChatViewProps {
@@ -272,8 +272,8 @@ export function GroupChatView({ onNavigateToProfile, selectedChatId, setSelected
                                     onClick={() => setSelectedChatId?.(chat._id)}
                                     className={`flex items-center gap-4 p-4 rounded-3xl cursor-pointer transition-all ${chat._id === selectedChatId
                                         ? 'bg-rose-500/10 border border-rose-500/20'
-                                        : (chat.unreadCount || 0) > 0
-                                            ? 'bg-zinc-900/40 border border-rose-500/10 shadow-[0_0_15px_rgba(244,63,94,0.05)]'
+                                        : chat.unread
+                                            ? 'bg-rose-500/10 border border-rose-500/50 shadow-[0_0_20px_rgba(244,63,94,0.15)] ring-1 ring-rose-500/20'
                                             : 'hover:bg-zinc-900/40 border border-transparent hover:border-zinc-800/50'
                                         }`}
                                 >
@@ -298,21 +298,18 @@ export function GroupChatView({ onNavigateToProfile, selectedChatId, setSelected
                                                 {chat.lastMessage ? new Date(chat.lastMessage.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : ''}
                                             </span>
                                         </div>
-                                        <p className={`text-xs truncate ${(chat.unreadCount || 0) > 0 ? 'text-zinc-200 font-bold' : 'text-zinc-500'}`}>
+                                        <p className={`text-xs truncate ${chat.unread ? 'text-zinc-200 font-bold' : 'text-zinc-500'}`}>
                                             {chat.lastMessage ? (
                                                 <span className="flex items-center gap-1.5">
-                                                    {(chat.unreadCount || 0) > 0 && <span className="text-[10px] font-black text-rose-500 uppercase tracking-tighter shrink-0">Шинэ:</span>}
+                                                    {chat.unread && <span className="w-2 h-2 shrink-0 rounded-full bg-red-500 shadow-[0_0_8px_rgba(239,68,68,0.8)]" />}
                                                     <span className="truncate">{chat.lastMessage.body}</span>
                                                 </span>
                                             ) : 'Чат эхлээгүй байна...'}
                                         </p>
                                     </div>
-                                    {(chat.unreadCount || 0) > 0 && (
-                                        <div className="shrink-0 flex flex-col items-center gap-1">
-                                            <div className="w-2 h-2 rounded-full bg-rose-500 shadow-[0_0_8px_rgba(244,63,94,0.6)] animate-pulse" />
-                                            <div className="px-1.5 py-0.5 min-w-[18px] h-4 rounded-full bg-zinc-800 flex items-center justify-center text-[8px] font-black text-zinc-300 border border-zinc-700/50">
-                                                {chat.unreadCount}
-                                            </div>
+                                    {chat.unread && (
+                                        <div className="shrink-0 flex items-center h-full">
+                                            <div className="w-3 h-3 rounded-full bg-rose-500 shadow-[0_0_10px_rgba(244,63,94,0.8)] animate-pulse" />
                                         </div>
                                     )}
                                 </motion.div>

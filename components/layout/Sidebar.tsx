@@ -13,7 +13,7 @@ import { useRouter } from 'next/navigation';
 interface Chat {
     _id: string;
     type: 'direct' | 'group';
-    unreadCount?: number;
+    unread?: boolean;
 }
 
 interface SidebarProps {
@@ -42,11 +42,11 @@ export function Sidebar({ activeTab, setActiveTab, onNavigateToProfile }: Sideba
 
     const chats: Chat[] = chatsData?.data || chatsData || [];
     const directUnreadCount = Array.isArray(chats)
-        ? chats.filter((c) => c.type === 'direct').reduce((acc, c) => acc + (c.unreadCount || 0), 0)
+        ? chats.filter((c) => c.type === 'direct' && c.unread).length
         : 0;
 
     const groupUnreadCount = Array.isArray(chats)
-        ? chats.filter((c) => c.type === 'group').reduce((acc, c) => acc + (c.unreadCount || 0), 0)
+        ? chats.filter((c) => c.type === 'group' && c.unread).length
         : 0;
 
     return (

@@ -39,7 +39,6 @@ export const SocketProvider = ({ children }: { children: React.ReactNode }) => {
             auth: {
                 token: token,
             },
-            transports: ["websocket"],
         });
 
         socketInstance.on("connect", () => {

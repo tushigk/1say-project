@@ -5,10 +5,11 @@ import { Bell, Check, X, Loader2, Inbox } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import useSWR from 'swr';
 import { chatApi } from '@/apis';
-import { useParams, useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { useSocket } from '@/components/providers/SocketProvider';
 import { toast } from 'react-hot-toast';
 import Image from 'next/image';
+import { useAuth } from '@/components/providers/AuthProvider';
 
 interface Invite {
     _id: string;
@@ -36,7 +37,7 @@ interface Chat {
     type: 'direct' | 'group';
     title?: string;
     memberCount: number;
-    unreadCount?: number;
+    unread?: boolean;
     lastMessage?: Message;
     counterpart?: {
         _id: string;
@@ -49,8 +50,9 @@ interface Chat {
 export function NotificationDropdown() {
     const [isOpen, setIsOpen] = useState(false);
     const router = useRouter();
-    const params = useParams();
+    const searchParams = useSearchParams();
     const { socket } = useSocket();
+    const { user: currentUser } = useAuth();
 
     const { data: invitesData, mutate: mutateInvites, isLoading: isInvitesLoading } = useSWR('invites', () => chatApi.listChatInvites());
     const { data: chatsData, mutate: mutateChats, isLoading: isChatsLoading } = useSWR('chats', () => chatApi.listChats());
@@ -58,8 +60,8 @@ export function NotificationDropdown() {
     const invites: Invite[] = useMemo(() => invitesData?.data || invitesData || [], [invitesData]);
     const chats: Chat[] = useMemo(() => chatsData?.data || chatsData || [], [chatsData]);
 
-    const unreadChats = useMemo(() => chats.filter((c) => (c.unreadCount || 0) > 0), [chats]);
-    const totalUnreadCount = unreadChats.reduce((acc, c) => acc + (c.unreadCount || 0), 0);
+    const unreadChats = useMemo(() => chats.filter((c) => c.unread), [chats]);
+    const totalUnreadCount = unreadChats.length;
     const badgeCount = totalUnreadCount + invites.length;
 
     useEffect(() => {
@@ -70,9 +72,18 @@ export function NotificationDropdown() {
             mutateChats();
         };
 
-        const onChatMessage = (msg: { room: string }) => {
-            if (params?.id && msg.room === params.id) return;
+        const onChatMessage = (msg: { room: string; sender?: { _id: string; username: string }; body?: string }) => {
+            const activeChatId = searchParams?.get('chatId');
+            if (activeChatId === msg.room) return;
+            
             mutateChats();
+            
+            // Notification toast
+            if (msg.sender && msg.sender._id !== currentUser?._id) {
+                toast(`Шинэ зурвас: ${msg.sender.username}\n${msg.body?.substring(0, 30)}...`, { icon: '💬' });
+            } else if (!msg.sender) {
+                toast('Шинэ зурвас ирлээ', { icon: '💬' });
+            }
         };
 
         socket.on('notification:new', handleUpdate);
@@ -82,7 +93,7 @@ export function NotificationDropdown() {
             socket.off('notification:new', handleUpdate);
             socket.off('chat:message', onChatMessage);
         };
-    }, [socket, mutateInvites, mutateChats, params?.id]);
+    }, [socket, mutateInvites, mutateChats, searchParams, currentUser]);
 
     const handleRespondInvite = async (chatId: string, accept: boolean) => {
         try {
