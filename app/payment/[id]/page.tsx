@@ -9,6 +9,7 @@ import { motion } from "framer-motion";
 import * as membershipApi from "@/apis/membership";
 import Button from "@/components/ui/Button";
 import { IMembershipPlan } from "@/components/models/membership";
+import { siteUrl } from "@/config/site";
 
 type BankUrl = {
   _id?: string;
@@ -92,6 +93,7 @@ export default function PaymentPage({ params: paramsPromise }: { params: Promise
         if (isPaidStatus(res)) {
           message.success("Багц амжилттай идэвхжлээ");
           globalMutate("swr.membership.status");
+          globalMutate(`${siteUrl}/users/me`);
           router.replace("/");
         }
       },
@@ -106,6 +108,7 @@ export default function PaymentPage({ params: paramsPromise }: { params: Promise
       if (isPaidStatus(res)) {
         message.success("Багц амжилттай идэвхжлээ");
         globalMutate("swr.membership.status");
+        globalMutate(`${siteUrl}/users/me`);
         router.replace("/");
       } else {
         message.error("⏳ Төлбөр хараахан баталгаажаагүй байна.");
@@ -147,8 +150,11 @@ export default function PaymentPage({ params: paramsPromise }: { params: Promise
 
   // Redirect if already paid
   useEffect(() => {
-    if (isPaidStatus(statusRes)) router.replace("/");
-  }, [statusRes, router]);
+    if (isPaidStatus(statusRes)) {
+      globalMutate(`${siteUrl}/users/me`);
+      router.replace("/");
+    }
+  }, [statusRes, router, globalMutate]);
 
   const isPaid = isPaidStatus(statusRes);
 
