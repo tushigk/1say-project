@@ -45,10 +45,59 @@ function CommentsSection({ storyId, mutatePosts, currentUser, onNavigateToProfil
     };
 
     return (
-        <div className="space-y-6">
+        <div className="space-y-6 h-full flex flex-col">
             <h3 className="text-lg font-bold text-white">Сэтгэгдлүүд ({data?.total || 0})</h3>
 
-            <form onSubmit={submitComment} className="flex gap-3">
+            <div className="flex-1 min-h-0 space-y-4">
+                {[...(data?.data || [])].reverse().map(comment => {
+                    const commentUser = comment.user || comment.createdBy;
+                    return (
+                        <div key={comment._id} className="bg-zinc-900/30 p-4 rounded-2xl flex gap-4 group">
+                            <div
+                                className="w-8 h-8 rounded-lg overflow-hidden relative shrink-0 cursor-pointer bg-zinc-800 flex items-center justify-center text-[10px] font-bold text-zinc-400 border border-zinc-700/50"
+                                onClick={() => commentUser?._id && onNavigateToProfile?.(commentUser._id)}
+                            >
+                                {comment.isAiGenerated ? (
+                                    <Image
+                                        src="/ai.jpeg"
+                                        alt="AI Avatar"
+                                        fill
+                                        className="object-cover"
+                                    />
+                                ) : (
+                                    <span className="uppercase">{(commentUser?.username || '??').substring(0, 2)}</span>
+                                )}
+                            </div>
+                            <div className="flex-1 min-w-0">
+                                <div className="flex items-center justify-between gap-4">
+                                    <p
+                                        className="font-bold text-white text-sm cursor-pointer hover:text-rose-500 transition-colors truncate min-w-0 flex-1"
+                                        onClick={() => commentUser?._id && onNavigateToProfile?.(commentUser._id)}
+                                    >
+                                        {commentUser?.username}
+                                    </p>
+                                    <p className="text-[10px] text-zinc-500 shrink-0">{new Date(comment.createdAt).toLocaleDateString()}</p>
+                                </div>
+                                <p className="text-zinc-400 mt-1 text-sm">{comment.message}</p>
+                            </div>
+                            {currentUser?._id === commentUser?._id && (
+                                <button
+                                    onClick={() => deleteComment(comment._id)}
+                                    className="text-zinc-600 hover:text-rose-500 transition-all p-2"
+                                    title="Устгах"
+                                >
+                                    <Trash2 size={16} />
+                                </button>
+                            )}
+                        </div>
+                    );
+                })}
+                {!data?.data?.length && (
+                    <p className="text-center text-zinc-500 py-8 text-sm">Одоогоор сэтгэгдэл алга байна.</p>
+                )}
+            </div>
+
+            <form onSubmit={submitComment} className="flex gap-3 sticky bottom-0 bg-zinc-950 pt-2">
                 <input
                     value={msg} onChange={e => setMsg(e.target.value)}
                     placeholder="Сэтгэгдэл бичих..."
@@ -61,48 +110,6 @@ function CommentsSection({ storyId, mutatePosts, currentUser, onNavigateToProfil
                     <Send size={18} />
                 </button>
             </form>
-
-            <div className="space-y-4">
-                {data?.data?.map(comment => (
-                    <div key={comment._id} className="bg-zinc-900/30 p-4 rounded-2xl flex gap-4 group">
-                        <div
-                            className="w-8 h-8 rounded-lg overflow-hidden relative shrink-0 cursor-pointer"
-                            onClick={() => onNavigateToProfile?.(comment.createdBy?._id)}
-                        >
-                            <Image
-                                src={comment.createdBy?.avatar || `https://ui-avatars.com/api/?name=${comment.createdBy?.username || 'User'}&background=random`}
-                                alt="Avatar"
-                                fill
-                                className="object-cover"
-                            />
-                        </div>
-                        <div className="flex-1 min-w-0">
-                            <div className="flex items-center justify-between gap-4">
-                                <p
-                                    className="font-bold text-white text-sm cursor-pointer hover:text-rose-500 transition-colors truncate min-w-0 flex-1"
-                                    onClick={() => onNavigateToProfile?.(comment.createdBy?._id)}
-                                >
-                                    {comment.createdBy?.username}
-                                </p>
-                                <p className="text-[10px] text-zinc-500 shrink-0">{new Date(comment.createdAt).toLocaleDateString()}</p>
-                            </div>
-                            <p className="text-zinc-400 mt-1 text-sm">{comment.message}</p>
-                        </div>
-                        {currentUser?._id === comment.createdBy?._id && (
-                            <button
-                                onClick={() => deleteComment(comment._id)}
-                                className="text-zinc-600 hover:text-rose-500 transition-all p-2"
-                                title="Устгах"
-                            >
-                                <Trash2 size={16} />
-                            </button>
-                        )}
-                    </div>
-                ))}
-                {!data?.data?.length && (
-                    <p className="text-center text-zinc-500 py-8 text-sm">Одоогоор сэтгэгдэл алга байна.</p>
-                )}
-            </div>
         </div>
     );
 }

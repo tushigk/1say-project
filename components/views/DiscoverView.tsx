@@ -7,6 +7,7 @@ import Image from 'next/image';
 import useSWR from 'swr';
 import { membershipApi, chatApi } from '@/apis';
 import toast from 'react-hot-toast';
+import { useAuth } from '@/components/providers/AuthProvider';
 
 
 interface MembershipUser {
@@ -34,11 +35,21 @@ export function DiscoverView({
     onNavigateToProfile?: (id: string) => void,
     onNavigateToChat?: (chatId: string) => void
 }) {
+    const { user } = useAuth();
     const [selectedGender, setSelectedGender] = React.useState<'male' | 'female' | 'all'>('all');
     const [page, setPage] = React.useState(1);
     const [users, setUsers] = React.useState<MembershipUser[]>([]);
     const [hasMore, setHasMore] = React.useState(true);
     const [isGreeting, setIsGreeting] = React.useState<string | null>(null);
+
+    const [hasSetInitialGender, setHasSetInitialGender] = React.useState(false);
+
+    React.useEffect(() => {
+        if (user?.gender && !hasSetInitialGender) {
+            setSelectedGender(user.gender === 'male' ? 'female' : 'male');
+            setHasSetInitialGender(true);
+        }
+    }, [user?.gender, hasSetInitialGender]);
 
     const { isLoading, isValidating } = useSWR<MembershipResponse>(
         [`users`, selectedGender, page],

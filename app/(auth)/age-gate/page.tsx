@@ -15,7 +15,7 @@ export default function AgeGatePage() {
 
     const handleEnter = () => {
         localStorage.setItem("age_verified", "true");
-        router.push("/login");
+        router.push("/register");
     };
 
     const handleLeave = () => {

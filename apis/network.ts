@@ -40,7 +40,10 @@ export interface NetworkComment {
     _id: string;
     message: string;
     postId?: string;
-    createdBy: UserInfo;
+    createdBy?: UserInfo;
+    user?: UserInfo;
+    isAiGenerated?: boolean;
+    aiModel?: string | null;
     createdAt: string;
     updatedAt: string;
 }
