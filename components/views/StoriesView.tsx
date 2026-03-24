@@ -2,11 +2,121 @@
 import React, { useState } from 'react';
 import { networkApi, NetworkPost, NetworkPostsResponse, NetworkCommentsResponse } from '@/apis/network';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Heart, MessageCircle, Clock, Plus, Share2, X, Send, Trash2 } from 'lucide-react';
+import { Heart, MessageCircle, Clock, Plus, X, Send, Trash2, Flag, AlertTriangle, CheckCircle2, Loader2 } from 'lucide-react';
 import Image from 'next/image';
 import useSWR from 'swr';
 import { useAuth, User } from '@/components/providers/AuthProvider';
 import { ImagePicker } from '../form/image-picker';
+
+type ReportModalState = { phase: 'idle' } | { phase: 'confirm'; storyId: string } | { phase: 'loading' } | { phase: 'success' } | { phase: 'error' };
+
+function ReportModal({ state, onConfirm, onClose }: { state: ReportModalState; onConfirm: (reason: string) => void; onClose: () => void }) {
+    const isOpen = state.phase !== 'idle';
+    const [reason, setReason] = useState('');
+
+    React.useEffect(() => {
+        if (!isOpen) setReason('');
+    }, [isOpen]);
+
+    return (
+        <AnimatePresence>
+            {isOpen && (
+                <div className="fixed inset-0 z-200 flex items-center justify-center p-4">
+                    <motion.div
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        className="absolute inset-0 bg-black/70 backdrop-blur-sm"
+                        onClick={state.phase === 'loading' ? undefined : onClose}
+                    />
+                    <motion.div
+                        initial={{ opacity: 0, scale: 0.92, y: 16 }}
+                        animate={{ opacity: 1, scale: 1, y: 0 }}
+                        exit={{ opacity: 0, scale: 0.92, y: 16 }}
+                        transition={{ type: 'spring', stiffness: 300, damping: 28 }}
+                        className="relative w-full max-w-sm bg-zinc-950 border border-zinc-800 rounded-3xl p-7 shadow-2xl z-10 flex flex-col items-center gap-5 text-center"
+                    >
+                        {state.phase === 'confirm' && (
+                            <>
+                                <div className="w-14 h-14 rounded-2xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center">
+                                    <Flag size={26} className="text-amber-400" />
+                                </div>
+                                <div className="space-y-1.5">
+                                    <h3 className="text-lg font-bold text-white">Түүхийг мэдээлэх</h3>
+                                    <p className="text-sm text-zinc-400 leading-relaxed">Энэ түүхийг зохисгүй гэж үзэж байна уу? Мэдээллийг баг руу илгээх уу?</p>
+                                </div>
+                                <textarea
+                                    value={reason}
+                                    onChange={(e) => setReason(e.target.value)}
+                                    placeholder="Шалтгааныг бичнэ үү..."
+                                    className="w-full bg-zinc-900/50 border border-zinc-800 rounded-xl px-4 py-3 text-white placeholder-zinc-500 focus:outline-none focus:border-amber-500 transition-colors resize-none text-sm"
+                                    rows={3}
+                                />
+                                <div className="flex gap-3 w-full mt-1">
+                                    <button
+                                        onClick={onClose}
+                                        className="flex-1 py-3 rounded-xl border border-zinc-800 text-zinc-400 hover:text-white hover:border-zinc-600 font-semibold transition-all"
+                                    >
+                                        Болих
+                                    </button>
+                                    <button
+                                        onClick={() => onConfirm(reason)}
+                                        disabled={!reason.trim()}
+                                        className="flex-1 py-3 rounded-xl bg-amber-500 hover:bg-amber-400 disabled:opacity-50 disabled:hover:bg-amber-500 text-zinc-950 font-bold transition-all shadow-[0_5px_15px_rgba(245,158,11,0.25)]"
+                                    >
+                                        Мэдээлэх
+                                    </button>
+                                </div>
+                            </>
+                        )}
+                        {state.phase === 'loading' && (
+                            <>
+                                <div className="w-14 h-14 rounded-2xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center">
+                                    <Loader2 size={26} className="text-amber-400 animate-spin" />
+                                </div>
+                                <p className="text-white font-semibold">Илгээж байна...</p>
+                            </>
+                        )}
+                        {state.phase === 'success' && (
+                            <>
+                                <div className="w-14 h-14 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center">
+                                    <CheckCircle2 size={26} className="text-emerald-400" />
+                                </div>
+                                <div className="space-y-1.5">
+                                    <h3 className="text-lg font-bold text-white">Амжилттай!</h3>
+                                    <p className="text-sm text-zinc-400">Таны мэдээлэл хүлээн авлаа. Баярлалаа!</p>
+                                </div>
+                                <button
+                                    onClick={onClose}
+                                    className="w-full py-3 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold transition-all"
+                                >
+                                    Хаах
+                                </button>
+                            </>
+                        )}
+                        {state.phase === 'error' && (
+                            <>
+                                <div className="w-14 h-14 rounded-2xl bg-rose-500/10 border border-rose-500/20 flex items-center justify-center">
+                                    <AlertTriangle size={26} className="text-rose-400" />
+                                </div>
+                                <div className="space-y-1.5">
+                                    <h3 className="text-lg font-bold text-white">Алдаа гарлаа</h3>
+                                    <p className="text-sm text-zinc-400">Мэдээлэл илгээхэд алдаа гарлаа. Дахин оролдоно уу.</p>
+                                </div>
+                                <button
+                                    onClick={onClose}
+                                    className="w-full py-3 rounded-xl bg-rose-600 hover:bg-rose-500 text-white font-bold transition-all"
+                                >
+                                    Хаах
+                                </button>
+                            </>
+                        )}
+                    </motion.div>
+                </div>
+            )}
+        </AnimatePresence>
+    );
+}
 
 function CommentsSection({ storyId, mutatePosts, currentUser, onNavigateToProfile }: { storyId: string, mutatePosts: () => void, currentUser: User | null, onNavigateToProfile?: (id: string) => void }) {
     const { data, mutate } = useSWR<NetworkCommentsResponse>(
@@ -183,6 +293,28 @@ export function StoriesView({ onNavigateToProfile }: { onNavigateToProfile?: (id
         }
     };
 
+    const [reportModal, setReportModal] = React.useState<ReportModalState>({ phase: 'idle' });
+
+    const handleReport = (storyId: string, e: React.MouseEvent) => {
+        e.stopPropagation();
+        setReportModal({ phase: 'confirm', storyId });
+    };
+
+    const confirmReport = async (reason: string) => {
+        if (reportModal.phase !== 'confirm') return;
+        const storyId = reportModal.storyId;
+        setReportModal({ phase: 'loading' });
+        try {
+            await networkApi.reportNetworkPost(storyId, { reason });
+            setReportModal({ phase: 'success' });
+        } catch (error) {
+            console.error('Failed to report post', error);
+            setReportModal({ phase: 'error' });
+        }
+    };
+
+    const closeReportModal = () => setReportModal({ phase: 'idle' });
+
     const handleLike = async (story: NetworkPost, e: React.MouseEvent) => {
         e.stopPropagation();
         try {
@@ -270,13 +402,21 @@ export function StoriesView({ onNavigateToProfile }: { onNavigateToProfile?: (id
                                         </div>
                                     </div>
                                     <div className="flex items-center gap-3">
-                                        {user?._id === story.createdBy?._id && (
+                                        {user?._id === story.createdBy?._id ? (
                                             <button
                                                 onClick={(e) => handleDeletePost(story._id, e)}
                                                 className="text-zinc-600 hover:text-rose-500 transition-colors"
                                                 title="Устгах"
                                             >
                                                 <Trash2 size={18} />
+                                            </button>
+                                        ) : (
+                                            <button
+                                                onClick={(e) => handleReport(story._id, e)}
+                                                className="text-zinc-600 hover:text-amber-500 transition-colors"
+                                                title="Мэдээлэх"
+                                            >
+                                                <Flag size={18} />
                                             </button>
                                         )}
                                     </div>
@@ -407,9 +547,21 @@ export function StoriesView({ onNavigateToProfile }: { onNavigateToProfile?: (id
                         >
                             <div className="flex items-center justify-between p-5 md:p-6 border-b border-zinc-900 gap-4">
                                 <h2 className="text-xl font-serif text-white truncate pr-4 flex-1 min-w-0">{selectedStory.title}</h2>
-                                <button onClick={() => setSelectedStory(null)} className="p-2 text-zinc-400 hover:text-white rounded-full hover:bg-zinc-900 transition-colors shrink-0">
-                                    <X size={20} />
-                                </button>
+                                <div className="flex items-center gap-2 shrink-0">
+                                    {user?._id !== selectedStory.createdBy?._id && (
+                                        <button
+                                            onClick={(e) => handleReport(selectedStory._id, e)}
+                                            disabled={reportModal.phase === 'loading'}
+                                            className="p-2 text-zinc-400 hover:text-amber-500 rounded-full hover:bg-zinc-900 transition-colors disabled:opacity-40"
+                                            title="Мэдээлэх"
+                                        >
+                                            <Flag size={18} />
+                                        </button>
+                                    )}
+                                    <button onClick={() => setSelectedStory(null)} className="p-2 text-zinc-400 hover:text-white rounded-full hover:bg-zinc-900 transition-colors">
+                                        <X size={20} />
+                                    </button>
+                                </div>
                             </div>
 
                             <div className="flex-1 overflow-y-auto p-5 md:p-6 space-y-8 no-scrollbar">
@@ -459,6 +611,7 @@ export function StoriesView({ onNavigateToProfile }: { onNavigateToProfile?: (id
                     </div>
                 )}
             </AnimatePresence>
+            <ReportModal state={reportModal} onConfirm={confirmReport} onClose={closeReportModal} />
         </div>
     );
 }

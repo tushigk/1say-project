@@ -105,4 +105,7 @@ export const networkApi = {
     unlikeNetworkPost: async (id: string): Promise<void> => {
         return await appHttpRequest.del(`/network/posts/${id}/like`);
     },
+    reportNetworkPost: async (id: string, data: { reason: string }): Promise<void> => {
+        return await appHttpRequest.post(`/network/posts/${id}/report`, data);
+    },
 };
