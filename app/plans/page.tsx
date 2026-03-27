@@ -106,20 +106,18 @@ export default function PlansPage() {
 
     return (
         <div className="relative min-h-screen flex flex-col items-center w-full bg-[#030001] text-white overflow-x-hidden selection:bg-rose-600 selection:text-white">
-            {/* Ambient Background Effects - Erotic & Seductive Layered */}
+            {/* Ambient Background Effects - Sharp Luxury Layered */}
             <div className="fixed inset-0 pointer-events-none z-0">
-                <div className="absolute top-[-20%] left-[-10%] w-[1200px] h-[1200px] bg-rose-900/15 rounded-full blur-[180px] mix-blend-screen animate-pulse" style={{ animationDuration: '7s' }} />
-                <div className="absolute top-[20%] right-[-15%] w-[900px] h-[900px] bg-red-950/30 rounded-full blur-[150px] mix-blend-multiply" />
-                <div className="absolute bottom-[-15%] left-[5%] w-[800px] h-[800px] bg-rose-800/10 rounded-full blur-[130px] mix-blend-color-dodge animate-pulse" style={{ animationDuration: '10s' }} />
-                <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/stardust.png')] opacity-[0.04] pointer-events-none" />
-                <div className="absolute inset-0 bg-gradient-to-b from-[#030001]/60 via-[#030001]/90 to-[#030001] opacity-90" />
+                <div className="absolute top-[-10%] left-[-5%] w-[800px] h-[800px] bg-red-950/20 rounded-full blur-[160px]" />
+                <div className="absolute bottom-[-10%] right-[-5%] w-[600px] h-[600px] bg-rose-950/15 rounded-full blur-[140px]" />
+                <div className="absolute inset-0 bg-linear-to-b from-[#030001]/40 via-[#030001]/90 to-[#030001]" />
             </div>
 
             <main className="relative z-10 w-full container mx-auto px-4 py-28 md:py-32 flex flex-col items-center">
                 {/* Fixed Header/Navigation */}
-                <nav className="fixed top-0 inset-x-0 z-50 px-4 py-4 md:px-12 md:py-6 flex items-center justify-between pointer-events-auto bg-[#030001]/60 backdrop-blur-3xl border-b border-rose-900/30">
+                <nav className="fixed top-0 inset-x-0 z-50 px-4 py-4 md:px-12 md:py-6 flex items-center justify-between pointer-events-auto bg-[#030001]/60 backdrop-blur-3xl border-b border-red-900/10">
                     <div className="flex items-center gap-3 md:gap-4 cursor-pointer group" onClick={() => router.push("/")}>
-                        <Image src="/logo.png" alt="Logo" width={100} height={100} className="drop-shadow-[0_0_15px_rgba(225,29,72,0.4)] transition-transform duration-700 group-hover:scale-105" />
+                        <Image src="/logo.jpeg" alt="Logo" width={80} height={80} className="rounded-full shadow-[0_0_20px_rgba(225,29,72,0.3)] transition-transform duration-700 group-hover:scale-105" />
                     </div>
 
                     {isAuthenticated && (
@@ -128,9 +126,9 @@ export default function PlansPage() {
                                 logout();
                                 router.push("/");
                             }}
-                            className="flex cursor-pointer items-center gap-2 md:gap-3 px-5 py-2.5 md:px-7 md:py-3.5 rounded-[2rem] bg-rose-950/20 border border-rose-900/40 text-rose-200/80 hover:text-white hover:bg-rose-900/40 hover:border-rose-500/50 hover:shadow-[0_0_20px_rgba(225,29,72,0.25)] transition-all duration-500 backdrop-blur-xl group"
+                            className="flex cursor-pointer items-center gap-2 md:gap-3 px-5 py-2.5 md:px-7 md:py-3.5 rounded-4xl bg-red-950/10 border border-red-900/20 text-red-200/80 hover:text-white hover:bg-red-900/40 hover:border-red-500/50 hover:shadow-[0_0_20px_rgba(225,29,72,0.25)] transition-all duration-500 backdrop-blur-xl group"
                         >
-                            <LogOut size={14} className="md:w-4 md:h-4 group-hover:-translate-x-1 transition-transform duration-500 text-rose-400 group-hover:text-rose-300" />
+                            <LogOut size={14} className="md:w-4 md:h-4 group-hover:-translate-x-1 transition-transform duration-500 text-red-400 group-hover:text-red-300" />
                             <span className="text-[9px] md:text-[10px] font-black uppercase tracking-[0.2em]">Гарах</span>
                         </button>
                     )}
@@ -139,16 +137,16 @@ export default function PlansPage() {
                 {/* Header Section - Seductive Typography */}
                 <div className="text-center mb-24 max-w-3xl mx-auto space-y-8 relative z-10">
                     <div className="flex items-center justify-center gap-4">
-                        <span className="h-[1px] w-12 bg-gradient-to-r from-transparent to-rose-600 rounded-full opacity-60" />
-                        <span className="px-6 py-2.5 rounded-full bg-rose-950/40 border border-rose-500/30 text-rose-300 text-[10px] font-black tracking-[0.5em] uppercase backdrop-blur-3xl shadow-[0_0_30px_rgba(225,29,72,0.2)] animate-pulse" style={{ animationDuration: '4s' }}>
+                        <span className="h-px w-12 bg-linear-to-r from-transparent to-red-600 rounded-full opacity-60" />
+                        <span className="px-6 py-2.5 rounded-full bg-red-950/40 border border-red-500/30 text-red-300 text-[10px] font-black tracking-[0.5em] uppercase backdrop-blur-3xl shadow-[0_0_30px_rgba(225,29,72,0.2)] animate-pulse" style={{ animationDuration: '4s' }}>
                             Intimate Offer: 50% OFF
                         </span>
-                        <span className="h-[1px] w-12 bg-gradient-to-l from-transparent to-rose-600 rounded-full opacity-60" />
+                        <span className="h-px w-12 bg-linear-to-l from-transparent to-red-600 rounded-full opacity-60" />
                     </div>
 
-                    <h1 className="text-5xl md:text-7xl lg:text-8xl font-serif font-bold leading-[1.1] tracking-tight drop-shadow-[0_0_40px_rgba(225,29,72,0.25)]">
+                    <h1 className="text-5xl md:text-7xl lg:text-8xl font-bold font-serif leading-[1.1] tracking-tight">
                         Нууцлаг Хүсэл <br />
-                        <span className="text-transparent bg-clip-text bg-gradient-to-b from-rose-100 via-rose-300 to-rose-800 italic font-light drop-shadow-2xl inline-block mt-3">Тансаг Мэдрэмж</span>
+                        <span className="text-transparent bg-clip-text bg-linear-to-b from-white via-rose-200 to-rose-900 italic font-light drop-shadow-[0_0_25px_rgba(225,29,72,0.3)] inline-block mt-3">Тансаг Мэдрэмж</span>
                     </h1>
 
                     <p className="text-rose-200/50 text-lg md:text-xl font-light leading-relaxed max-w-2xl mx-auto tracking-wide">
@@ -190,15 +188,18 @@ export default function PlansPage() {
                                     <div
                                         key={plan._id}
                                         className={`
-                                            group relative flex flex-col rounded-[2.5rem] transition-all duration-[800ms] ease-out
+                                            group relative flex flex-col rounded-[2.5rem] transition-all duration-800 ease-out
                                             ${isBest ? 'scale-105 z-20' : 'hover:scale-[1.03] hover:-translate-y-2'}
                                         `}
                                     >
                                         {/* Premium Backdrop & Border Integration */}
                                         <div className={`
-                                            absolute inset-0 rounded-[2.5rem] overflow-hidden border transition-colors duration-[800ms]
-                                            ${isBest ? 'bg-black/20 border-rose-500/30 ring-1 ring-rose-500/40' : 'bg-black/40 border-rose-900/20 hover:border-rose-700/40'}
+                                            absolute inset-0 rounded-[2.5rem] overflow-hidden border transition-all duration-700
+                                            ${isBest ? 'bg-red-950/5 border-red-500/40 shadow-[0_0_50px_rgba(229,9,20,0.1)]' : 'bg-white/2 border-white/5 hover:border-red-900/40'}
                                         `} />
+                                        
+                                        {/* Inner stroke for ultra premium look */}
+                                        <div className="pointer-events-none absolute inset-0 rounded-[2.5rem] border-[0.5px] border-white/5 mix-blend-overlay" />
 
                                         {/* Featured Image Background */}
                                         <div className="absolute inset-0 pointer-events-none overflow-hidden rounded-[2.5rem]">
@@ -207,17 +208,17 @@ export default function PlansPage() {
                                                     src={plan.image.url}
                                                     alt={plan.title}
                                                     fill
-                                                    className="object-cover scale-110 group-hover:scale-100 transition-transform duration-[2000ms]"
+                                                    className="object-cover scale-110 group-hover:scale-100 transition-transform duration-2000"
                                                 />
                                             )}
-                                            <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-black/40 to-[#0a0002]/90" />
+                                            <div className="absolute inset-0 bg-linear-to-b from-black/20 via-black/40 to-[#0a0002]/90" />
                                         </div>
 
                                         {/* Content Wrapper */}
                                         <div className="relative z-20 flex flex-col h-full flex-1">
                                             {/* Tag for Highlighted Plan */}
                                             {isBest && (
-                                                <div className="mt-7 mx-auto self-center bg-gradient-to-r from-rose-800 to-rose-600 text-white text-[9px] font-black px-6 py-2 rounded-full uppercase tracking-[0.4em] shadow-[0_0_20px_rgba(225,29,72,0.4)] animate-pulse" style={{ animationDuration: '3s' }}>
+                                                <div className="mt-7 mx-auto self-center bg-linear-to-r from-red-600 to-red-400 text-white text-[9px] font-black px-6 py-2 rounded-full uppercase tracking-[0.4em] shadow-[0_0_20px_rgba(225,29,72,0.4)] animate-pulse" style={{ animationDuration: '3s' }}>
                                                     Хамгийн их эрэлттэй
                                                 </div>
                                             )}
@@ -230,15 +231,15 @@ export default function PlansPage() {
 
                                                 <div className="flex flex-col items-center justify-center py-6 relative">
                                                     {/* Price Background Glow */}
-                                                    <div className={`absolute -inset-8 rounded-full blur-[40px] opacity-20 transition-opacity duration-[800ms] ${isBest ? 'bg-rose-500 group-hover:opacity-40' : 'bg-rose-900/10 group-hover:opacity-30'}`} />
+                                                    <div className={`absolute -inset-8 rounded-full blur-2xl opacity-20 transition-opacity duration-800 ${isBest ? 'bg-red-500 group-hover:opacity-40' : 'bg-red-900/10 group-hover:opacity-30'}`} />
 
                                                     <div className="relative flex flex-col items-center justify-center">
                                                         <div className="flex items-center gap-3 mb-2 translate-y-3">
-                                                            <span className="text-sm md:text-base text-rose-950/60 line-through opacity-70 font-medium">
+                                                            <span className="text-sm md:text-base text-zinc-500 line-through opacity-70 font-medium">
                                                                 ₮{(plan.price * 2).toLocaleString()}
                                                             </span>
-                                                            <div className="bg-rose-950/40 text-rose-400 text-[10px] font-black px-3 py-1.5 rounded-lg uppercase tracking-[0.2em] border border-rose-500/20 flex items-center gap-1.5 shadow-[0_0_15px_rgba(225,29,72,0.15)]">
-                                                                <Flame size={12} className="text-rose-500 animate-pulse" />
+                                                            <div className="bg-red-950/40 text-red-500 text-[10px] font-black px-3 py-1.5 rounded-lg uppercase tracking-[0.2em] border border-red-500/20 flex items-center gap-1.5 shadow-[0_0_15px_rgba(225,29,72,0.15)]">
+                                                                <Flame size={12} className="text-red-500 animate-pulse" />
                                                                 -50% Off
                                                             </div>
                                                         </div>
@@ -248,7 +249,7 @@ export default function PlansPage() {
                                                                 {plan.price.toLocaleString()}
                                                             </span>
                                                         </div>
-                                                        <span className="text-rose-200/80 text-[10px] font-black uppercase tracking-[0.3em] mt-5 opacity-80 bg-rose-950/30 px-5 py-2 rounded-full border border-rose-900/40">
+                                                        <span className="text-white/60 text-[10px] font-bold uppercase tracking-[0.3em] mt-5 opacity-80 bg-red-950/20 px-5 py-2 rounded-full border border-red-900/20">
                                                             {plan.months} сарын хугацаатай
                                                         </span>
                                                     </div>
@@ -257,7 +258,7 @@ export default function PlansPage() {
 
                                             {/* Divider */}
                                             <div className="px-12 py-6">
-                                                <div className={`h-px w-full ${isBest ? 'bg-gradient-to-r from-transparent via-rose-500/40 to-transparent' : 'bg-gradient-to-r from-transparent via-rose-900/30 to-transparent'}`} />
+                                                <div className={`h-px w-full ${isBest ? 'bg-linear-to-r from-transparent via-red-500/40 to-transparent' : 'bg-linear-to-r from-transparent via-white/5 to-transparent'}`} />
                                             </div>
 
                                             {/* Benefits List */}
@@ -265,10 +266,10 @@ export default function PlansPage() {
                                                 <ul className="space-y-5">
                                                     {benefits?.map((benefit, idx) => (
                                                         <li key={idx} className="flex items-start gap-4 group/item">
-                                                            <div className={`flex-shrink-0 w-5 h-5 rounded-full flex items-center justify-center border mt-0.5 transition-colors duration-500 ${isBest ? 'border-rose-400/30 bg-rose-500/10 text-rose-400 shadow-[0_0_15px_rgba(225,29,72,0.2)]' : 'border-rose-900/20 bg-rose-950/10 text-rose-900/60 group-hover/item:text-rose-700 group-hover/item:border-rose-800/40'}`}>
+                                                            <div className={`shrink-0 w-5 h-5 rounded-full flex items-center justify-center border mt-0.5 transition-colors duration-500 ${isBest ? 'border-red-400/30 bg-red-500/10 text-red-400 shadow-[0_0_15px_rgba(225,29,72,0.2)]' : 'border-white/10 bg-white/5 text-zinc-600 group-hover/item:text-zinc-400 group-hover/item:border-white/20'}`}>
                                                                 <svg className="w-2.5 h-2.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" /></svg>
                                                             </div>
-                                                            <span className={`text-[13px] leading-relaxed transition-colors duration-500 ${isBest ? 'text-rose-50 font-medium' : 'text-rose-200/50 font-light group-hover/item:text-rose-100/80'}`}>
+                                                            <span className={`text-[13px] leading-relaxed transition-colors duration-500 ${isBest ? 'text-zinc-50 font-medium' : 'text-zinc-400 font-light group-hover/item:text-zinc-200'}`}>
                                                                 {benefit}
                                                             </span>
                                                         </li>
@@ -282,15 +283,15 @@ export default function PlansPage() {
                                                     onClick={() => handleChoosePlan(plan._id)}
                                                     disabled={!!loadingById[plan._id]}
                                                     className={`
-                                                        w-full h-16 rounded-[2rem] text-[11px] font-black uppercase tracking-[0.3em] cursor-pointer transition-all duration-[800ms] relative overflow-hidden group/btn
+                                                        w-full h-16 rounded-4xl text-[11px] font-black uppercase tracking-[0.3em] cursor-pointer transition-all duration-700 relative overflow-hidden group/btn
                                                         ${isBest
-                                                            ? 'bg-gradient-to-r from-rose-700 to-rose-500 text-white hover:from-rose-600 hover:to-rose-400 shadow-[0_15px_40px_-10px_rgba(225,29,72,0.5)] border-none'
-                                                            : 'bg-transparent border border-rose-900/40 text-rose-300 hover:bg-rose-950/30 hover:text-white hover:border-rose-600/50 shadow-none'
+                                                            ? 'bg-linear-to-r from-red-950 via-[#700000] to-red-950 bg-size-[200%_auto] text-white hover:bg-position-[100%_auto] shadow-[0_15px_40px_-10px_rgba(229,9,20,0.5)] border border-red-500/30'
+                                                            : 'bg-transparent border border-white/10 text-zinc-400 hover:bg-white/5 hover:text-white hover:border-white/20 shadow-none'
                                                         }
                                                     `}
                                                 >
                                                     {isBest && (
-                                                        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-[150%] group-hover/btn:animate-[shimmer_2s_infinite]" />
+                                                        <div className="absolute inset-0 bg-linear-to-r from-transparent via-white/20 to-transparent -translate-x-[150%] group-hover/btn:animate-[shimmer_2s_infinite]" />
                                                     )}
 
                                                     {loadingById[plan._id] ? (
