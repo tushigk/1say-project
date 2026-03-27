@@ -70,16 +70,37 @@ export default function RegisterPage() {
     };
 
     return (
-        <div className="relative min-h-screen overflow-hidden bg-[#07070a] text-white">
+        <div className="relative min-h-screen overflow-hidden bg-[#030001] text-white">
+            {/* Cinematic Noise Overlay */}
+            <div className="pointer-events-none fixed inset-0 z-50 opacity-[0.03] mix-blend-overlay bg-[url('https://www.transparenttextures.com/patterns/stardust.png')]" />
+
+            {/* Deep red ambient glows */}
+            <div className="pointer-events-none absolute -left-[20%] top-[-10%] h-[700px] w-[700px] rounded-full bg-red-950/20 blur-[150px] animate-pulse" style={{ animationDuration: '8s' }} />
+            <div className="pointer-events-none absolute -right-[20%] bottom-[-10%] h-[700px] w-[700px] rounded-full bg-rose-950/20 blur-[150px] animate-pulse" style={{ animationDuration: '10s' }} />
+            <div className="pointer-events-none absolute left-1/2 top-1/2 h-[900px] w-[900px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#1a0002]/40 blur-[180px]" />
             {/* Main content */}
             <div className="relative z-10 flex min-h-screen items-center justify-center px-4 py-10 sm:px-6">
                 <motion.div
-                    initial={{ opacity: 0, scale: 0.94, y: 30 }}
-                    animate={{ opacity: 1, scale: 1, y: 0 }}
-                    transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+                    initial={{ opacity: 0, scale: 0.98, y: 30 }}
+                    animate={{ 
+                        opacity: 1, 
+                        scale: 1, 
+                        y: 0,
+                    }}
+                    transition={{ 
+                        duration: 1.2, 
+                        ease: [0.16, 1, 0.3, 1],
+                    }}
                     className="w-full max-w-5xl"
                 >
-                    <div className="relative overflow-hidden rounded-[2.5rem] border border-white/10 bg-white/[0.06] shadow-[0_30px_80px_rgba(0,0,0,0.55)] backdrop-blur-2xl grid md:grid-cols-2">
+                    <motion.div 
+                        animate={{ y: [0, -10, 0] }}
+                        transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
+                        className="relative overflow-hidden rounded-[2.5rem] border border-red-500/20 bg-[#050002]/70 shadow-[0_45px_120px_rgba(0,0,0,1)] backdrop-blur-3xl grid md:grid-cols-2"
+                    >
+                        {/* Inner stroke for ultra premium look */}
+                        <div className="pointer-events-none absolute inset-0 rounded-[2.5rem] border-[0.5px] border-white/5 mix-blend-overlay" />
+                        
                         {/* Banner Side */}
                         <div className="relative block min-h-[240px] sm:min-h-[300px] md:h-auto md:min-h-[600px]">
                             <AuthBanner />
@@ -88,8 +109,8 @@ export default function RegisterPage() {
                         {/* Form Side */}
                         <div className="relative flex flex-col justify-center p-8 sm:p-10 md:p-12">
                             {/* inner border */}
-                            <div className="pointer-events-none absolute inset-0 md:rounded-l-none rounded-[2.5rem] border border-white/5" />
-                            <div className="pointer-events-none absolute -top-20 left-1/2 h-40 w-40 -translate-x-1/2 rounded-full bg-white/10 blur-3xl" />
+                            <div className="pointer-events-none absolute inset-0 md:rounded-l-none rounded-[2.5rem] border-l border-white/5" />
+                            <div className="pointer-events-none absolute -top-20 left-1/2 h-40 w-40 -translate-x-1/2 rounded-full bg-red-600/20 blur-3xl" />
 
                             {/* Header */}
                             <div className="hidden md:flex mb-8 flex-col items-center text-center">
@@ -99,8 +120,8 @@ export default function RegisterPage() {
                                     transition={{ delay: 0.1, duration: 0.5 }}
                                     className="relative mb-5"
                                 >
-                                    <div className="absolute inset-0 rounded-full bg-white/10 blur-2xl" />
-                                    <div className="relative flex overflow-hidden h-24 w-24 items-center justify-center rounded-full border border-white/10 bg-white/5 shadow-[0_10px_40px_rgba(255,255,255,0.06)] backdrop-blur-xl">
+                                    <div className="absolute inset-0 rounded-full bg-red-600/20 blur-2xl animate-pulse" />
+                                    <div className="relative flex overflow-hidden h-24 w-24 items-center justify-center rounded-full border border-red-500/30 bg-black/60 shadow-[0_10px_40px_rgba(229,9,20,0.3)] backdrop-blur-xl">
                                         <Image
                                             src="/logo.jpeg"
                                             alt="Noir Logo"
@@ -117,26 +138,26 @@ export default function RegisterPage() {
                                     transition={{ delay: 0.15, duration: 0.5 }}
                                     className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs font-medium text-zinc-300"
                                 >
-                                    <Sparkles size={14} className="text-red-400" />
-                                    Шөнийн таалал!
+                                    <Sparkles size={14} className="text-red-500" />
+                                    Нууцхан таалал...
                                 </motion.div>
 
                                 <motion.h1
                                     initial={{ opacity: 0, y: 10 }}
                                     animate={{ opacity: 1, y: 0 }}
                                     transition={{ delay: 0.2, duration: 0.5 }}
-                                    className="mt-5 text-3xl font-bold tracking-tight sm:text-4xl"
+                                    className="mt-5 text-3xl font-bold tracking-tight sm:text-4xl text-transparent bg-clip-text bg-linear-to-b from-white via-zinc-200 to-zinc-500 drop-shadow-[0_0_15px_rgba(255,255,255,0.2)]"
                                 >
-                                    Шинэ бүртгэл
+                                    Хүслээ Нээх
                                 </motion.h1>
 
                                 <motion.p
                                     initial={{ opacity: 0, y: 10 }}
                                     animate={{ opacity: 1, y: 0 }}
                                     transition={{ delay: 0.25, duration: 0.5 }}
-                                    className="mt-2 max-w-md text-sm leading-relaxed text-zinc-400"
+                                    className="mt-2 max-w-md text-sm leading-relaxed text-zinc-500 font-light tracking-wide"
                                 >
-                                    Noir-д нэгдэж өөрийн хувийн орон зайг нээгээрэй.
+                                    Noir-д нэгдэж, нууцлаг бөгөөд халуухан ертөнцөд өөрийн орон зайг бүтээгээрэй.
                                 </motion.p>
                             </div>
 
@@ -163,7 +184,7 @@ export default function RegisterPage() {
                                     onChange={(e) =>
                                         setFormData({ ...formData, username: e.target.value })
                                     }
-                                    className="h-14 rounded-2xl border-white/10 bg-white/5 text-white placeholder:text-zinc-500 focus:border-white/20 focus:ring-0"
+                                    className="h-14 rounded-2xl border-white/5 bg-white/2 text-white placeholder:text-zinc-700 transition-all duration-300 focus:border-red-600/50 focus:bg-white/4 focus:shadow-[0_0_20px_rgba(229,9,20,0.1)] focus:ring-0"
                                     required
                                 />
                             </div>
@@ -181,9 +202,9 @@ export default function RegisterPage() {
                                                 key={g}
                                                 type="button"
                                                 onClick={() => setFormData({ ...formData, gender: g })}
-                                                className={`group relative h-14 rounded-2xl border text-sm font-semibold transition-all duration-300 ${active
-                                                    ? "border-white bg-white text-black shadow-[0_10px_30px_rgba(255,255,255,0.08)]"
-                                                    : "border-white/10 bg-white/5 text-zinc-400 hover:border-white/20 hover:bg-white/[0.07] hover:text-white"
+                                                className={`group relative h-14 rounded-2xl border text-sm font-semibold transition-all duration-500 ${active
+                                                    ? "border-red-600/40 bg-red-950/40 text-red-50 shadow-[0_0_25px_rgba(229,9,20,0.15)]"
+                                                    : "border-white/5 bg-white/2 text-zinc-600 hover:border-red-900/30 hover:text-zinc-400 hover:bg-white/4"
                                                     }`}
                                             >
                                                 <span className="flex items-center justify-center gap-2">
@@ -209,7 +230,7 @@ export default function RegisterPage() {
                                         onChange={(e) =>
                                             setFormData({ ...formData, password: e.target.value })
                                         }
-                                        className="h-14 rounded-2xl border-white/10 bg-white/5 text-sm text-white placeholder:text-zinc-500 focus:border-white/20 focus:ring-0"
+                                        className="h-14 rounded-2xl border-white/5 bg-white/2 text-sm text-white placeholder:text-zinc-700 transition-all duration-300 focus:border-red-600/50 focus:bg-white/4 focus:shadow-[0_0_20px_rgba(229,9,20,0.1)] focus:ring-0"
                                         required
                                     />
                                 </div>
@@ -228,14 +249,14 @@ export default function RegisterPage() {
                                                 confirmPassword: e.target.value,
                                             })
                                         }
-                                        className="h-14 rounded-2xl border-white/10 bg-white/5 text-sm text-white placeholder:text-zinc-500 focus:border-white/20 focus:ring-0"
+                                        className="h-14 rounded-2xl border-white/5 bg-white/2 text-sm text-white placeholder:text-zinc-700 transition-all duration-300 focus:border-red-600/50 focus:bg-white/4 focus:shadow-[0_0_20px_rgba(229,9,20,0.1)] focus:ring-0"
                                         required
                                     />
                                 </div>
                             </div>
 
                             {/* Terms */}
-                            <div className="rounded-2xl border border-white/8 bg-white/[0.04] p-4">
+                            <div className="rounded-2xl border border-white/5 bg-white/2 p-4">
                                 <label className="flex cursor-pointer items-start gap-3">
                                     <div className="relative mt-0.5">
                                         <input
@@ -249,9 +270,9 @@ export default function RegisterPage() {
                                             }
                                             className="peer sr-only"
                                         />
-                                        <div className="flex h-5 w-5 items-center justify-center rounded-md border border-white/15 bg-white/5 transition-all peer-checked:border-white peer-checked:bg-white">
+                                        <div className="flex h-5 w-5 items-center justify-center rounded-md border border-white/10 bg-black/40 transition-all peer-checked:border-red-500 peer-checked:bg-red-950/50 peer-checked:shadow-[0_0_10px_rgba(229,9,20,0.3)]">
                                             {formData.agreeToTerms && (
-                                                <Check size={13} className="text-black" />
+                                                <Check size={13} className="text-red-400" />
                                             )}
                                         </div>
                                     </div>
@@ -262,7 +283,7 @@ export default function RegisterPage() {
                                         <button
                                             type="button"
                                             onClick={() => setIsTosOpen(true)}
-                                            className="font-semibold text-white underline underline-offset-4 transition-opacity hover:opacity-80"
+                                            className="font-semibold text-red-400 underline underline-offset-4 transition-opacity hover:opacity-80"
                                         >
                                             Үйлчилгээний нөхцөл
                                         </button>
@@ -276,7 +297,7 @@ export default function RegisterPage() {
                                 <Button
                                     type="submit"
                                     isLoading={isLoading}
-                                    className="group relative h-14 w-full overflow-hidden rounded-2xl bg-white text-base font-semibold text-black transition-all duration-300 hover:scale-[1.01] hover:bg-zinc-100 active:scale-[0.99]"
+                                    className="group relative flex h-14 w-full items-center justify-center overflow-hidden rounded-2xl border border-red-500/40 bg-linear-to-r from-red-950 via-[#700000] to-red-950 bg-size-[200%_auto] text-base font-semibold text-white shadow-[0_0_30px_rgba(229,9,20,0.3)] transition-all duration-700 hover:bg-position-[100%_auto] hover:shadow-[0_0_60px_rgba(229,9,20,0.5)] hover:border-red-500/60 active:scale-[0.98]"
                                 >
                                     <span className="relative z-10 flex items-center justify-center">
                                         Бүртгүүлэх
@@ -300,7 +321,7 @@ export default function RegisterPage() {
                             </Link>
                         </div>
                         </div>
-                    </div>
+                    </motion.div>
                 </motion.div>
             </div>
 

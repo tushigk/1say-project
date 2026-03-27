@@ -69,22 +69,10 @@ export default function AuthBanner({ className }: { className?: string }) {
                 </motion.div>
             </AnimatePresence>
 
-            <div className="absolute inset-0 z-30 opacity-[0.05] pointer-events-none mix-blend-overlay animate-grain bg-[url('https://www.transparenttextures.com/patterns/stardust.png')]" />
-
-            <style jsx>{`
-                @keyframes grain {
-                    0%, 100% { transform: translate(0, 0); }
-                    10% { transform: translate(-1%, -1%); }
-                    30% { transform: translate(1%, 1%); }
-                    50% { transform: translate(-0.5%, 1.5%); }
-                    70% { transform: translate(1.5%, -0.5%); }
-                    90% { transform: translate(-1%, 0.5%); }
-                }
-                .animate-grain {
-                    animation: grain 8s steps(10) infinite;
-                    background-size: 200px;
-                }
-            `}</style>
+            {/* Luxurious Red Vignette Overlay */}
+            <div className="absolute inset-0 z-10 bg-linear-to-t from-[#030001] via-transparent to-[#030001]/40" />
+            <div className="absolute inset-0 z-10 bg-linear-to-r from-[#030001]/60 via-transparent to-transparent md:from-[#030001]/20" />
+            <div className="absolute inset-0 z-10 ring-1 ring-inset ring-red-500/10" />
 
             {/* Subtle Title Display (Desktop Only) */}
             {/* <div className="hidden md:block absolute bottom-12 left-12 z-40">
