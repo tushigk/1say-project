@@ -117,7 +117,7 @@ export default function PlansPage() {
                 {/* Fixed Header/Navigation */}
                 <nav className="fixed top-0 inset-x-0 z-50 px-4 py-4 md:px-12 md:py-6 flex items-center justify-between pointer-events-auto bg-[#030001]/60 backdrop-blur-3xl border-b border-red-900/10">
                     <div className="flex items-center gap-3 md:gap-4 cursor-pointer group" onClick={() => router.push("/")}>
-                        <Image src="/logo.jpeg" alt="Logo" width={80} height={80} className="rounded-full shadow-[0_0_20px_rgba(225,29,72,0.3)] transition-transform duration-700 group-hover:scale-105" />
+                        <Image src="/logo.png" alt="Logo" width={80} height={80} className="rounded-full shadow-[0_0_20px_rgba(225,29,72,0.3)] transition-transform duration-700 group-hover:scale-105" />
                     </div>
 
                     {isAuthenticated && (
@@ -197,7 +197,7 @@ export default function PlansPage() {
                                             absolute inset-0 rounded-[2.5rem] overflow-hidden border transition-all duration-700
                                             ${isBest ? 'bg-red-950/5 border-red-500/40 shadow-[0_0_50px_rgba(229,9,20,0.1)]' : 'bg-white/2 border-white/5 hover:border-red-900/40'}
                                         `} />
-                                        
+
                                         {/* Inner stroke for ultra premium look */}
                                         <div className="pointer-events-none absolute inset-0 rounded-[2.5rem] border-[0.5px] border-white/5 mix-blend-overlay" />
 
