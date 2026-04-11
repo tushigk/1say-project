@@ -10,12 +10,14 @@ import { StoriesView } from '@/components/views/StoriesView';
 import { ChatView } from '@/components/views/ChatView';
 import { GroupChatView } from '@/components/views/GroupChatView';
 import { ProfileView } from '@/components/views/ProfileView';
-import { Heart, BookOpen, MessageCircle, Users, LogOut } from 'lucide-react';
+import { AIHumanListView } from '@/components/views/AIHumanListView';
+import { AIHumanChatView } from '@/components/views/AIHumanChatView';
+import { Heart, BookOpen, MessageCircle, Users, LogOut, Sparkles } from 'lucide-react';
 import { NavItem } from '@/components/layout/NavItem';
 import { useAuth } from '@/components/providers/AuthProvider';
 import Image from 'next/image';
 
-type Tab = 'discover' | 'stories' | 'chat' | 'groups' | 'profile';
+type Tab = 'discover' | 'stories' | 'chat' | 'groups' | 'profile' | 'ai-human';
 
 function AppContent() {
   const { logout, user } = useAuth();
@@ -24,7 +26,7 @@ function AppContent() {
 
   const activeTab = useMemo(() => {
     const tab = searchParams.get('tab');
-    if (tab && ['discover', 'stories', 'chat', 'groups', 'profile'].includes(tab)) {
+    if (tab && ['discover', 'stories', 'chat', 'groups', 'profile', 'ai-human'].includes(tab)) {
       return tab as Tab;
     }
     return 'discover';
@@ -32,6 +34,7 @@ function AppContent() {
 
   const selectedChatId = searchParams.get('chatId');
   const viewingUserId = searchParams.get('userId');
+  const personaId = searchParams.get('personaId');
 
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
@@ -50,6 +53,7 @@ function AppContent() {
       case 'chat': return 'Зурвасууд';
       case 'groups': return 'Грүпп чат';
       case 'profile': return 'Профайл';
+      case 'ai-human': return 'AI Personas';
       default: return 'Noir';
     }
   };
@@ -84,6 +88,13 @@ function AppContent() {
             selectedChatId={selectedChatId}
             setSelectedChatId={(id) => router.push(`/?tab=groups${id ? `&chatId=${id}` : ''}`)}
           />
+        )}
+        {activeTab === 'ai-human' && (
+          personaId ? (
+            <AIHumanChatView />
+          ) : (
+            <AIHumanListView />
+          )
         )}
         {activeTab === 'profile' && viewingUserId && (
           <ProfileView
@@ -141,6 +152,7 @@ function AppContent() {
               <nav className="space-y-1">
                 <NavItem icon={<Heart />} label="Танилцах" isActive={activeTab === 'discover'} onClick={() => { router.push('/?tab=discover'); setIsMobileMenuOpen(false); }} />
                 <NavItem icon={<BookOpen />} label="Түүхүүд" isActive={activeTab === 'stories'} onClick={() => { router.push('/?tab=stories'); setIsMobileMenuOpen(false); }} />
+                <NavItem icon={<Sparkles />} label="AI Personas" isActive={activeTab === 'ai-human'} onClick={() => { router.push('/?tab=ai-human'); setIsMobileMenuOpen(false); }} />
                 <NavItem icon={<MessageCircle />} label="Чат" isActive={activeTab === 'chat'} onClick={() => { router.push('/?tab=chat'); setIsMobileMenuOpen(false); }} />
                 <NavItem icon={<Users />} label="Грүпп чат" isActive={activeTab === 'groups'} onClick={() => { router.push('/?tab=groups'); setIsMobileMenuOpen(false); }} />
               </nav>

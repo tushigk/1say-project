@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { Heart, BookOpen, MessageCircle, Users, LogOut } from 'lucide-react';
+import { Heart, BookOpen, MessageCircle, Users, LogOut, Sparkles } from 'lucide-react';
 import { NavItem } from './NavItem';
 import Image from 'next/image';
 import { useAuth } from '../providers/AuthProvider';
@@ -18,7 +18,7 @@ interface Chat {
 
 interface SidebarProps {
     activeTab: string;
-    setActiveTab: (tab: 'discover' | 'stories' | 'chat' | 'groups' | 'profile') => void;
+    setActiveTab: (tab: 'discover' | 'stories' | 'chat' | 'groups' | 'profile' | 'ai-human') => void;
     onNavigateToProfile?: (id: string) => void;
 }
 
@@ -80,6 +80,13 @@ export function Sidebar({ activeTab, setActiveTab, onNavigateToProfile }: Sideba
                     label="Түүхүүд"
                     isActive={activeTab === 'stories'}
                     onClick={() => setActiveTab('stories')}
+                />
+
+                <NavItem
+                    icon={<Sparkles />}
+                    label="AI Personas"
+                    isActive={activeTab === 'ai-human'}
+                    onClick={() => setActiveTab('ai-human')}
                 />
 
                 <div className="pt-6 mb-4">
