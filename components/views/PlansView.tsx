@@ -110,7 +110,7 @@ export function PlansView() {
                     <div className="flex items-center justify-center gap-4">
                         <span className="h-px w-12 bg-linear-to-r from-transparent to-red-600 rounded-full opacity-60" />
                         <span className="px-6 py-2.5 rounded-full bg-red-950/40 border border-red-500/30 text-red-300 text-[10px] font-black tracking-[0.5em] uppercase backdrop-blur-3xl shadow-[0_0_30px_rgba(225,29,72,0.2)] animate-pulse" style={{ animationDuration: '4s' }}>
-                            Intimate Offer: 50% OFF
+                            Хугацаат хямдрал: 50% OFF
                         </span>
                         <span className="h-px w-12 bg-linear-to-l from-transparent to-red-600 rounded-full opacity-60" />
                     </div>
@@ -269,25 +269,6 @@ export function PlansView() {
                             })}
                         </div>
                     )}
-                </div>
-
-                {/* Footer Trust Indicators */}
-                <div className="mt-36 w-full max-w-2xl py-10 px-8 rounded-[2.5rem] bg-[#050001]/40 border border-rose-900/20 backdrop-blur-xl flex flex-col md:flex-row items-center justify-around gap-10 opacity-70">
-                    <div className="flex items-center gap-4 group">
-                        <div className="w-12 h-12 rounded-2xl bg-rose-950/20 flex items-center justify-center group-hover:bg-rose-900/30 transition-colors duration-500 border border-rose-900/10 group-hover:border-rose-800/30">
-                            <svg className="w-5 h-5 text-rose-700 group-hover:text-rose-500 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" /></svg>
-                        </div>
-                        <span className="text-[10px] font-black uppercase tracking-[0.3em] text-rose-900/60 group-hover:text-rose-400 transition-colors">Security Guaranteed</span>
-                    </div>
-
-                    <div className="h-6 w-px bg-rose-900/20 hidden md:block" />
-
-                    <div className="flex items-center gap-4 group">
-                        <div className="w-12 h-12 rounded-2xl bg-rose-950/20 flex items-center justify-center group-hover:bg-rose-900/30 transition-colors duration-500 border border-rose-900/10 group-hover:border-rose-800/30">
-                            <svg className="w-5 h-5 text-rose-700 group-hover:text-rose-500 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M13 10V3L4 14h7v7l9-11h-7z" /></svg>
-                        </div>
-                        <span className="text-[10px] font-black uppercase tracking-[0.3em] text-rose-900/60 group-hover:text-rose-400 transition-colors">Instant Activation</span>
-                    </div>
                 </div>
             </main>
         </div>
