@@ -60,7 +60,7 @@
   --color-accent-crimson: var(--accent-crimson);
 
   --font-sans: var(--font-jakarta), ui-sans-serif, system-ui;
-  --font-serif: var(--font-noto), ui-serif, Georgia;
+  --font-serif: var(--font-fraunces), ui-serif, Georgia;
 }
 
 body {

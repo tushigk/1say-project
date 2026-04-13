@@ -160,7 +160,7 @@ export function ChatView({ onNavigateToProfile, selectedChatId, setSelectedChatI
         <div className="flex h-full bg-black/20 overflow-hidden relative">
             {/* Chat List */}
             <div className={`${selectedChatId ? 'hidden md:flex' : 'flex'} w-full md:w-96 border-r border-zinc-900/50 flex flex-col bg-zinc-950/20 shrink-0`}>
-                <div className="p-8 border-b border-zinc-900/50">
+                <div className="p-8 border-b border-zinc-900/50 hidden md:block">
                     <div className="flex items-center justify-between mb-6">
                         <h2 className="text-2xl font-serif font-bold text-white">Зурвасууд</h2>
                     </div>

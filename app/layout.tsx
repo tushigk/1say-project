@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Plus_Jakarta_Sans, Noto_Sans } from "next/font/google";
+import { Plus_Jakarta_Sans, Fraunces } from "next/font/google";
 import "./globals.css";
 import { AuthProvider } from "@/components/providers/AuthProvider";
 import { SocketProvider } from "@/components/providers/SocketProvider";
@@ -12,11 +12,12 @@ const plusJakartaSans = Plus_Jakarta_Sans({
   weight: ["300", "400", "500", "600", "700", "800"],
 });
 
-const notoSans = Noto_Sans({
+const fraunces = Fraunces({
   subsets: ["latin"],
-  variable: "--font-noto",
+  variable: "--font-fraunces",
   display: "swap",
-  weight: ["400", "500", "700"],
+  style: ["normal", "italic"],
+  weight: ["300", "400", "500", "600", "700", "800", "900"],
 });
 
 export const metadata: Metadata = {
@@ -81,7 +82,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={`dark ${plusJakartaSans.variable} ${notoSans.variable}`}>
+    <html lang="en" className={`dark ${plusJakartaSans.variable} ${fraunces.variable}`}>
       <body className="min-h-screen bg-velvet-dark text-white antialiased overflow-x-hidden selection:bg-primary selection:text-white">
         <AuthProvider>
           <SocketProvider>
