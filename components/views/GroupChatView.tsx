@@ -66,7 +66,6 @@ export function GroupChatView({ onNavigateToProfile, selectedChatId, setSelected
     );
     const { data: invitesData, mutate: mutateInvites } = useSWR('invites', () => chatApi.listChatInvites());
 
-    // Socket updates for list and messages
     useEffect(() => {
         if (!socket) return;
 
@@ -93,7 +92,6 @@ export function GroupChatView({ onNavigateToProfile, selectedChatId, setSelected
         };
     }, [socket, selectedChatId, mutateChats, mutateMessages, mutateInvites]);
 
-    // Mark as read when selecting chat
     useEffect(() => {
         if (selectedChatId) {
             chatApi.markChatRead(selectedChatId).then(() => mutateChats()).catch(console.error);
@@ -194,7 +192,7 @@ export function GroupChatView({ onNavigateToProfile, selectedChatId, setSelected
                 <div className="p-8 border-b border-zinc-900/50">
                     <div className="flex items-center justify-between mb-6">
                         <div className="space-y-1">
-                            <h2 className="text-2xl font-serif font-bold text-white">Грүппүүд</h2>
+                            <h2 className="text-2xl font-serif font-bold text-white hidden md:block">Грүппүүд</h2>
                             <p className="text-[10px] font-black text-rose-500 uppercase tracking-widest">Таны нэгдсэн өрөө</p>
                         </div>
                         <button
