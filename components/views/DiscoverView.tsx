@@ -94,7 +94,8 @@ export function DiscoverView({
     };
 
     return (
-        <div className="p-6 md:p-10 max-w-7xl mx-auto space-y-10">
+        <div className="flex-1 flex flex-col h-full overflow-y-auto relative custom-scrollbar p-6 md:p-10">
+            <div className="max-w-7xl mx-auto w-full space-y-10">
             <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
                 <div className="space-y-4">
                     <div className="space-y-2">
@@ -102,9 +103,6 @@ export function DiscoverView({
                             <Sparkles size={14} />
                             <span>Санал болгож буй</span>
                         </div>
-                        <h1 className="text-4xl md:text-5xl font-serif text-white tracking-tight">
-                            Танилцах
-                        </h1>
                         <p className="text-zinc-500 max-w-lg leading-relaxed">
                             Өөртэйгөө ижил сонирхолтой хүмүүсийг олж нээж, шинэ харилцааг эхлүүл.
                         </p>
@@ -131,68 +129,84 @@ export function DiscoverView({
                 </div>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-8">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
                 {users?.map((profile, index) => (
                     <motion.div
                         key={profile._id}
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: index * 0.1 }}
-                        whileHover={{ y: -10 }}
-                        className="group relative h-[500px] rounded-[2.5rem] overflow-hidden bg-zinc-900 border border-zinc-800/50 hover:border-rose-500/50 transition-all duration-500 shadow-2xl"
+                        initial={{ opacity: 0, scale: 0.9 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        transition={{ duration: 0.6, delay: index * 0.05 }}
+                        whileHover={{ y: -12 }}
+                        className="group relative cursor-pointer"
                     >
-                        <Image
-                            src={profile.avatar || `https://ui-avatars.com/api/?name=${profile.username}&background=random`}
-                            alt={profile.username}
-                            fill
-                            className="object-cover transition-transform duration-700 group-hover:scale-110 cursor-pointer"
-                            referrerPolicy="no-referrer"
-                            onClick={() => onNavigateToProfile?.(String(profile._id))}
-                        />
+                        <div className="relative bg-zinc-900/40 border border-white/5 rounded-[2.5rem] overflow-hidden backdrop-blur-xl transition-all duration-700 h-full group-hover:border-rose-500/30 group-hover:shadow-[0_40px_80px_-20px_rgba(0,0,0,0.8)]">
 
-                        {/* Gradient Overlays */}
-                        <div className="absolute inset-0 bg-linear-to-t from-black via-black/20 to-transparent opacity-90"></div>
-                        <div className="absolute inset-0 bg-linear-to-b from-black/40 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                            <div className="relative aspect-[4/5] overflow-hidden">
+                                <Image
+                                    src={profile.avatar || `https://ui-avatars.com/api/?name=${profile.username}&background=random`}
+                                    alt={profile.username}
+                                    fill
+                                    className="object-cover transition-transform duration-1000 group-hover:scale-110 grayscale-[10%] group-hover:grayscale-0"
+                                    referrerPolicy="no-referrer"
+                                    onClick={() => onNavigateToProfile?.(String(profile._id))}
+                                />
+                                <div className="absolute inset-0 bg-gradient-to-t from-zinc-950/90 via-zinc-950/20 to-transparent opacity-90 group-hover:opacity-60 transition-opacity duration-700 pointer-events-none" />
 
-                        <div className="absolute bottom-0 left-0 right-0 p-8 space-y-4">
-                            <div className="flex justify-between items-end">
-                                <div className="space-y-1">
-                                    <h3
-                                        className="text-3xl font-serif font-bold text-white tracking-tight cursor-pointer hover:text-rose-500 transition-colors"
-                                        onClick={() => onNavigateToProfile?.(String(profile._id))}
-                                    >
-                                        {profile.username?.length > 10 ? `${profile.username.substring(0, 10)}...` : profile.username}{profile.age ? <>, <span className="text-rose-500">{profile.age}</span></> : ''}
-                                    </h3>
-                                    <div className="flex items-center gap-1.5 text-sm text-zinc-300 font-medium">
-                                        <div className={`w-2 h-2 rounded-full ${profile.isOnline ? 'bg-green-500' : 'bg-zinc-500'}`} />
+                                <div className="absolute top-5 left-5 flex flex-col gap-2">
+                                    <div className="px-3 py-1 rounded-full bg-black/60 backdrop-blur-xl border border-white/10 text-[9px] font-black text-white uppercase tracking-[0.2em] w-fit">
                                         {profile.gender === 'male' ? 'Эрэгтэй' : 'Эмэгтэй'}
-                                        <span className="text-zinc-500">•</span>
-                                        <span className="text-rose-400">{profile.exp} exp</span>
                                     </div>
+                                    {profile.age && (
+                                        <div className="px-3 py-1 rounded-full bg-rose-500/90 backdrop-blur-md text-[9px] font-black text-white uppercase tracking-[0.2em] w-fit">
+                                            {profile.age} yrs
+                                        </div>
+                                    )}
                                 </div>
                             </div>
 
-                            <p className="text-sm text-zinc-400 line-clamp-2 leading-relaxed opacity-0 group-hover:opacity-100 transition-all duration-500 translate-y-4 group-hover:translate-y-0">
-                                {profile.isOnline ? 'Одоогоор идэвхтэй байна' : 'Одоогоор идэвхгүй байна'}
-                            </p>
+                            <div className="p-6 space-y-5">
+                                <div className="space-y-4">
+                                    <div className="flex items-center gap-2">
+                                        <div className={`w-1.5 h-1.5 rounded-full ${profile.isOnline ? 'bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.6)] animate-pulse' : 'bg-zinc-600'}`} />
+                                        <span className="text-[9px] font-bold text-zinc-500 uppercase tracking-widest">{profile.isOnline ? 'Онлайн' : 'Офлайн'}</span>
+                                    </div>
+                                    <h3 
+                                        className="text-2xl md:text-3xl font-serif font-bold text-white group-hover:text-rose-500 transition-colors duration-700 leading-none tracking-tight italic truncate cursor-pointer"
+                                        onClick={() => onNavigateToProfile?.(String(profile._id))}
+                                    >
+                                        {profile.username}
+                                    </h3>
+                                    <div className="flex items-center gap-3">
+                                        <div className="px-3 py-1 rounded-lg bg-white/5 border border-white/5 text-[10px] font-bold text-rose-400 uppercase tracking-wider">
+                                            {profile.exp} EXP
+                                        </div>
+                                    </div>
+                                </div>
 
-                            <div className="pt-2 flex gap-3">
-                                <button
-                                    onClick={() => handleGreet(profile._id)}
-                                    disabled={isGreeting === profile._id}
-                                    className="flex-1 py-4 bg-white text-black hover:bg-rose-500 hover:text-white rounded-2xl transition-all duration-300 font-bold flex items-center justify-center gap-2 transform active:scale-95 shadow-lg disabled:opacity-50"
-                                >
-                                    {isGreeting === profile._id ? (
-                                        <div className="w-5 h-5 border-2 border-zinc-900 border-t-zinc-400 rounded-full animate-spin" />
-                                    ) : (
-                                        <>
-                                            <Heart size={20} className="fill-current" />
-                                            Мэндчилэх
-                                        </>
-                                    )}
-                                </button>
+                                <div className="pt-2">
+                                    <div 
+                                        onClick={() => handleGreet(profile._id)}
+                                        className={`relative group/btn-container overflow-hidden rounded-xl cursor-pointer ${isGreeting === profile._id ? 'opacity-70 pointer-events-none' : ''}`}
+                                    >
+                                        <div className="absolute inset-0 bg-gradient-to-r from-rose-600 to-rose-400 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                                        <div className="relative w-full h-12 bg-white/[0.04] border border-white/5 flex items-center justify-between px-6 transition-all duration-500 group-hover:bg-transparent group-hover:border-transparent">
+                                            <span className="text-[10px] font-black uppercase tracking-[0.2em] text-zinc-400 group-hover:text-white transition-colors">
+                                                {isGreeting === profile._id ? 'Уншиж байна...' : 'Мэндчилэх'}
+                                            </span>
+                                            <div className="w-7 h-7 rounded-full bg-white/5 flex items-center justify-center text-zinc-500 group-hover:bg-white group-hover:text-rose-600 transition-all duration-500 shadow-lg">
+                                                {isGreeting === profile._id ? (
+                                                    <div className="w-4 h-4 border-2 border-zinc-500 border-t-transparent rounded-full animate-spin" />
+                                                ) : (
+                                                    <Heart size={14} fill="currentColor" className="opacity-40 group-hover:opacity-100" />
+                                                )}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
+
+                        <div className="absolute -inset-2 bg-rose-500/5 rounded-[3rem] blur-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-1000 -z-10" />
                     </motion.div>
                 ))}
             </div>
@@ -225,5 +239,6 @@ export function DiscoverView({
                 </div>
             )}
         </div>
+    </div>
     );
 }

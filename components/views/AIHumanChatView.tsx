@@ -46,7 +46,7 @@ export function AIHumanChatView({ personaId: propPersonaId, onBack }: AIHumanCha
     const persona: AIHuman | null = Array.isArray(personaData?.data) ? personaData.data[0] : (personaData?.data || null);
     const messages: AIHumanMessage[] = historyData?.data || [];
 
-    const canChat = personaData?.canChat !== false; // Default to true if not specified
+    const canChat = personaData?.canChat !== false;
     const membershipRequired = personaData?.membershipRequired;
 
     const scrollToBottom = (behavior: ScrollBehavior = 'smooth') => {
@@ -111,12 +111,30 @@ export function AIHumanChatView({ personaId: propPersonaId, onBack }: AIHumanCha
         setMessageBody('');
         setIsSending(true);
 
+        const tempId = `temp-${Date.now()}`;
+        const optimisticMsg: AIHumanMessage = {
+            _id: tempId,
+            content: body,
+            role: 'user',
+            persona: personaId,
+            user: currentUser?._id || '',
+            conversation: messages[0]?.conversation || '',
+            createdAt: new Date().toISOString(),
+            updatedAt: new Date().toISOString(),
+        };
+
+        mutateHistory((current: any) => ({
+            ...current,
+            data: [...(current?.data || []), optimisticMsg]
+        }), false);
+
         try {
             await aiHumanApi.chatWithAIHuman(personaId, { message: body });
         } catch (error) {
             console.error("Chat Error:", error);
             toast.error("Алдаа гарлаа. Дахин оролдоно уу.");
             setMessageBody(body);
+            mutateHistory();
         } finally {
             setIsSending(false);
         }
@@ -132,12 +150,9 @@ export function AIHumanChatView({ personaId: propPersonaId, onBack }: AIHumanCha
 
     return (
         <div className="flex flex-col bg-[#0a0a0a] relative overflow-hidden h-full w-full">
-            {/* Cinematic Background Gradient */}
             <div className="absolute top-0 left-0 right-0 h-96 bg-gradient-to-b from-rose-500/10 via-rose-500/5 to-transparent pointer-events-none z-0" />
-            
-            {/* Top Navigation & Persona Info (Centered Header) */}
+
             <div className="relative z-40 w-full pt-8 pb-4 flex flex-col items-center">
-                {/* Back Button - Top Left */}
                 <button
                     onClick={handleBack}
                     className="absolute top-8 left-6 md:left-12 w-10 h-10 rounded-2xl bg-white/5 backdrop-blur-xl border border-white/10 flex items-center justify-center text-white/60 hover:text-white hover:bg-white/10 transition-all shadow-xl active:scale-90"
@@ -145,7 +160,6 @@ export function AIHumanChatView({ personaId: propPersonaId, onBack }: AIHumanCha
                     <ChevronLeft size={20} />
                 </button>
 
-                {/* Centered Persona Image */}
                 <div className="flex flex-col items-center gap-4">
                     <div className="relative group">
                         <div className="absolute -inset-4 bg-rose-500/20 rounded-full blur-2xl opacity-0 group-hover:opacity-100 transition-duration-1000" />
@@ -173,7 +187,6 @@ export function AIHumanChatView({ personaId: propPersonaId, onBack }: AIHumanCha
                 </div>
             </div>
 
-            {/* Chat Body */}
             <div className="flex-1 overflow-y-auto px-6 md:px-0 custom-scrollbar relative z-10">
                 <div className="max-w-4xl mx-auto py-8 flex flex-col gap-6">
                     {messages.length === 0 && (
@@ -189,10 +202,10 @@ export function AIHumanChatView({ personaId: propPersonaId, onBack }: AIHumanCha
                         </div>
                     )}
 
-                    {messages.map((msg) => {
+                    {messages?.map((msg, idx) => {
                         const isPersona = msg.role === 'assistant';
                         return (
-                            <div key={msg._id} className={`flex ${!isPersona ? 'justify-end' : 'justify-start'} animate-in fade-in slide-in-from-bottom-2 duration-500`}>
+                            <div key={idx} className={`flex ${!isPersona ? 'justify-end' : 'justify-start'} animate-in fade-in slide-in-from-bottom-2 duration-500`}>
                                 <div className={`relative flex flex-col gap-2 ${isPersona ? 'max-w-[90%] md:max-w-2xl' : 'max-w-[85%] md:max-w-xl'}`}>
                                     <div className={`relative px-6 py-5 md:px-8 md:py-6 rounded-[2.5rem] shadow-2xl transition-all duration-500 ${!isPersona
                                         ? 'bg-rose-600/90 text-white rounded-tr-sm shadow-rose-900/20'
@@ -211,8 +224,8 @@ export function AIHumanChatView({ personaId: propPersonaId, onBack }: AIHumanCha
 
                                         <div className={`text-[15px] md:text-[16px] leading-[1.7] tracking-wide antialiased ${isPersona ? 'font-light' : 'font-medium'}`}>
                                             {msg.content.split('\n').map((line, i) => (
-                                                <p key={i} className={line.startsWith('*') || line.startsWith('_') 
-                                                    ? 'italic text-rose-300/80 mb-3 bg-white/5 py-1.5 px-3 rounded-xl inline-block text-sm' 
+                                                <p key={i} className={line.startsWith('*') || line.startsWith('_')
+                                                    ? 'italic text-rose-300/80 mb-3 bg-white/5 py-1.5 px-3 rounded-xl inline-block text-sm'
                                                     : 'mb-3 last:mb-0'}>
                                                     {line.replace(/[*_]/g, '')}
                                                 </p>
@@ -221,7 +234,7 @@ export function AIHumanChatView({ personaId: propPersonaId, onBack }: AIHumanCha
                                     </div>
                                     {!isPersona && (
                                         <div className="flex justify-end pr-4 opacity-40">
-                                            <span className="text-[9px] font-black text-white uppercase tracking-[0.2em]">{currentUser?.username || 'You'}</span>
+                                            <span className="text-[9px] font-black text-white uppercase tracking-[0.2em]">{new Date(msg?.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
                                         </div>
                                     )}
                                 </div>
@@ -243,7 +256,6 @@ export function AIHumanChatView({ personaId: propPersonaId, onBack }: AIHumanCha
                 </div>
             </div>
 
-            {/* Cinematic Input Area */}
             <div className="relative z-50 p-6 md:p-10 bg-gradient-to-t from-black via-black/90 to-transparent">
                 <div className="max-w-3xl mx-auto">
                     {!canChat && (

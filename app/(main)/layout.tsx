@@ -42,7 +42,7 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
       {showSidebar && <Sidebar />}
 
       <AnimatePresence>
-        {showSidebar && isMobileMenuOpen && (
+        {(showSidebar || isChattingWithAI) && isMobileMenuOpen && (
           <>
             <motion.div
               initial={{ opacity: 0 }}
@@ -56,7 +56,7 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
               animate={{ x: 0 }}
               exit={{ x: '-100%' }}
               transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-              className="md:hidden fixed inset-y-0 left-0 w-[280px] bg-zinc-950 border-r border-zinc-900 z-120 p-6 flex flex-col"
+              className="md:hidden fixed inset-y-0 left-0 w-[280px] bg-zinc-950 border-r border-zinc-900 z-[1000] p-6 flex flex-col"
             >
               <div className="flex items-center justify-center mb-10 mt-4">
                 <div className="relative flex h-14 w-full items-center justify-center rounded-3xl border border-white/10 bg-white/5 backdrop-blur-xl shadow-[0_10px_30px_rgba(255,255,255,0.06)]">
