@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useState, useEffect, useRef, FormEvent } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Send, ChevronLeft, Info, MoreVertical, Sparkles } from 'lucide-react';
 import Image from 'next/image';
@@ -9,22 +9,34 @@ import useSWR from 'swr';
 import { aiHumanApi } from '@/apis';
 import { AIHuman, AIHumanMessage } from '@/apis/aiHuman';
 import { useSocket } from '@/components/providers/SocketProvider';
-import { useAuth } from '@/components/providers/AuthProvider';
 import { toast } from 'react-hot-toast';
 
-export function AIHumanChatView() {
+interface AIHumanChatViewProps {
+    personaId?: string;
+    onBack?: () => void;
+}
+
+export function AIHumanChatView({ personaId: propPersonaId, onBack }: AIHumanChatViewProps) {
     const searchParams = useSearchParams();
     const router = useRouter();
     const { socket } = useSocket();
-    const personaId = searchParams.get('personaId') as string;
+    const personaId = propPersonaId || searchParams.get('personaId') as string;
 
-    const [messageBody, setMessageBody] = React.useState('');
-    const [isSending, setIsSending] = React.useState(false);
-    const [isPersonaTyping, setIsPersonaTyping] = React.useState(false);
-    const [status, setStatus] = React.useState<'idle' | 'loading'>('idle');
+    const handleBack = () => {
+        if (onBack) {
+            onBack();
+        } else {
+            router.push('/ai-human');
+        }
+    };
 
-    const messagesEndRef = React.useRef<HTMLDivElement>(null);
-    const inputRef = React.useRef<HTMLInputElement>(null);
+    const [messageBody, setMessageBody] = useState('');
+    const [isSending, setIsSending] = useState(false);
+    const [isPersonaTyping, setIsPersonaTyping] = useState(false);
+    const [status, setStatus] = useState<'idle' | 'loading'>('idle');
+
+    const messagesEndRef = useRef<HTMLDivElement>(null);
+    const inputRef = useRef<HTMLInputElement>(null);
 
     const { data: personaData } = useSWR(personaId ? `ai-humans/${personaId}` : null, () => aiHumanApi.getAIHumanDetail(personaId));
     const { data: historyData, mutate: mutateHistory } = useSWR(personaId ? `ai-humans/${personaId}/history` : null, () => aiHumanApi.getAIHumanHistory(personaId));
@@ -36,16 +48,15 @@ export function AIHumanChatView() {
         messagesEndRef.current?.scrollIntoView({ behavior });
     };
 
-    React.useEffect(() => {
+    useEffect(() => {
         scrollToBottom('auto');
     }, [personaId]);
 
-    React.useEffect(() => {
+    useEffect(() => {
         scrollToBottom();
     }, [messages, isPersonaTyping]);
 
-    // Socket listeners
-    React.useEffect(() => {
+    useEffect(() => {
         if (!socket) return;
 
         const handleStatus = (data: { personaId: string, status: 'loading' | 'idle' }) => {
@@ -87,7 +98,7 @@ export function AIHumanChatView() {
         };
     }, [socket, personaId, mutateHistory]);
 
-    const handleSendMessage = async (e?: React.FormEvent) => {
+    const handleSendMessage = async (e?: FormEvent) => {
         e?.preventDefault();
         if (!messageBody.trim() || isSending || status === 'loading') return;
 
@@ -97,11 +108,10 @@ export function AIHumanChatView() {
 
         try {
             await aiHumanApi.chatWithAIHuman(personaId, { message: body });
-            // History will be updated by socket
         } catch (error) {
             console.error("Chat Error:", error);
             toast.error("Алдаа гарлаа. Дахин оролдоно уу.");
-            setMessageBody(body); // Restore message
+            setMessageBody(body);
         } finally {
             setIsSending(false);
         }
@@ -121,7 +131,7 @@ export function AIHumanChatView() {
             <div className="h-24 border-b border-zinc-900/50 flex items-center justify-between px-6 md:px-10 bg-black/40 backdrop-blur-2xl shrink-0 z-20">
                 <div className="flex items-center gap-4">
                     <button
-                        onClick={() => router.push('/?tab=ai-human')}
+                        onClick={handleBack}
                         className="w-12 h-12 rounded-2xl bg-zinc-900/50 flex items-center justify-center text-zinc-400 hover:text-white hover:bg-zinc-800 transition-all active:scale-95"
                     >
                         <ChevronLeft size={24} />
@@ -157,15 +167,13 @@ export function AIHumanChatView() {
                 </div>
             </div>
 
-            {/* Messages Area */}
             <div className="flex-1 overflow-y-auto p-6 md:p-10 space-y-8 scroll-smooth relative">
-                {/* Background Decor */}
                 <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-rose-500/5 blur-[120px] rounded-full pointer-events-none" />
 
                 {messages.length === 0 && (
                     <div className="flex flex-col items-center justify-center py-20 text-center space-y-6">
                         <div className="w-24 h-24 rounded-[40px] overflow-hidden relative shadow-2xl ring-4 ring-zinc-900">
-                             <Image
+                            <Image
                                 src={persona.image?.url || `https://ui-avatars.com/api/?name=${persona.name}&background=random`}
                                 alt={persona.name}
                                 fill
@@ -199,11 +207,10 @@ export function AIHumanChatView() {
                                 </div>
                             )}
                             <div className="space-y-2">
-                                <div className={`relative px-6 py-4 rounded-[32px] text-sm leading-relaxed shadow-xl ${
-                                    !isPersona 
-                                    ? 'bg-gradient-to-br from-rose-600 to-rose-700 text-white rounded-br-lg' 
+                                <div className={`relative px-6 py-4 rounded-[32px] text-sm leading-relaxed shadow-xl ${!isPersona
+                                    ? 'bg-gradient-to-br from-rose-600 to-rose-700 text-white rounded-br-lg'
                                     : 'bg-zinc-900/80 backdrop-blur-md text-zinc-100 border border-zinc-800/50 rounded-bl-lg'
-                                }`}>
+                                    }`}>
                                     {msg.content}
                                     {isPersona && msg.aiModel && (
                                         <div className="absolute -top-6 left-2 flex items-center gap-1 opacity-40">
@@ -227,7 +234,7 @@ export function AIHumanChatView() {
                         className="flex gap-4"
                     >
                         <div className="w-10 h-10 rounded-xl overflow-hidden relative shrink-0 mt-auto border border-zinc-800">
-                             <Image
+                            <Image
                                 src={persona.image?.url || `https://ui-avatars.com/api/?name=${persona.name}&background=random`}
                                 alt={persona.name}
                                 fill
@@ -243,7 +250,7 @@ export function AIHumanChatView() {
                         </div>
                     </motion.div>
                 )}
-                
+
                 <div ref={messagesEndRef} className="h-4" />
             </div>
 

@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect, useMemo } from 'react';
 import { motion } from 'framer-motion';
 import { ImageIcon, Smile, Send, MessageCircle, ChevronLeft } from 'lucide-react';
 import Image from 'next/image';
@@ -64,7 +64,7 @@ export function ChatView({ onNavigateToProfile, selectedChatId, setSelectedChatI
     );
 
     // Socket updates for list and messages
-    React.useEffect(() => {
+    useEffect(() => {
         if (!socket) return;
 
         const handleUpdate = () => {
@@ -87,13 +87,12 @@ export function ChatView({ onNavigateToProfile, selectedChatId, setSelectedChatI
         };
     }, [socket, selectedChatId, mutateChats, mutateMessages]);
 
-    // Mark as read when selecting chat
-    React.useEffect(() => {
+    useEffect(() => {
         if (selectedChatId) {
             chatApi.markChatRead(selectedChatId).then(() => mutateChats()).catch(console.error);
         }
     }, [selectedChatId, mutateChats]);
-    const chats: Chat[] = React.useMemo(() => {
+    const chats: Chat[] = useMemo(() => {
         const rawChats = chatsData?.data || chatsData || [];
         return rawChats
             .filter((c: Chat) => c.type === 'direct')
@@ -114,17 +113,17 @@ export function ChatView({ onNavigateToProfile, selectedChatId, setSelectedChatI
         messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
     };
 
-    React.useEffect(() => {
+    useEffect(() => {
         scrollToBottom();
     }, [messages, selectedChatId]);
 
-    React.useEffect(() => {
+    useEffect(() => {
         if (selectedChatId && !chats.find(c => c._id === selectedChatId)) {
             mutateChats();
         }
     }, [selectedChatId, chats, mutateChats]);
 
-    React.useEffect(() => {
+    useEffect(() => {
         if (selectedChatId && inputRef.current) {
             inputRef.current.focus();
         }

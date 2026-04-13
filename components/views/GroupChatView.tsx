@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { motion } from 'framer-motion';
 import { Search, ImageIcon, Smile, Send, Users, Plus, MessageSquare, ChevronLeft } from 'lucide-react';
 import Image from 'next/image';
@@ -52,12 +52,12 @@ interface GroupChatViewProps {
 export function GroupChatView({ onNavigateToProfile, selectedChatId, setSelectedChatId }: GroupChatViewProps) {
     const { user: currentUser } = useAuth();
     const { socket } = useSocket();
-    const [messageBody, setMessageBody] = React.useState('');
-    const [isSending, setIsSending] = React.useState(false);
-    const inputRef = React.useRef<HTMLInputElement>(null);
-    const messagesEndRef = React.useRef<HTMLDivElement>(null);
-    const [isCreateModalOpen, setIsCreateModalOpen] = React.useState(false);
-    const [isCreating, setIsCreating] = React.useState(false);
+    const [messageBody, setMessageBody] = useState('');
+    const [isSending, setIsSending] = useState(false);
+    const inputRef = useRef<HTMLInputElement>(null);
+    const messagesEndRef = useRef<HTMLDivElement>(null);
+    const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+    const [isCreating, setIsCreating] = useState(false);
 
     const { data: chatsData, mutate: mutateChats } = useSWR('chats', () => chatApi.listChats());
     const { data: messagesData, mutate: mutateMessages } = useSWR(
@@ -67,7 +67,7 @@ export function GroupChatView({ onNavigateToProfile, selectedChatId, setSelected
     const { data: invitesData, mutate: mutateInvites } = useSWR('invites', () => chatApi.listChatInvites());
 
     // Socket updates for list and messages
-    React.useEffect(() => {
+    useEffect(() => {
         if (!socket) return;
 
         const handleUpdate = () => {
@@ -94,12 +94,12 @@ export function GroupChatView({ onNavigateToProfile, selectedChatId, setSelected
     }, [socket, selectedChatId, mutateChats, mutateMessages, mutateInvites]);
 
     // Mark as read when selecting chat
-    React.useEffect(() => {
+    useEffect(() => {
         if (selectedChatId) {
             chatApi.markChatRead(selectedChatId).then(() => mutateChats()).catch(console.error);
         }
     }, [selectedChatId, mutateChats]);
-    const chats: Chat[] = React.useMemo(() => {
+    const chats: Chat[] = useMemo(() => {
         const rawChats = chatsData?.data || chatsData || [];
         return rawChats
             .filter((c: Chat) => c.type === 'group')
@@ -120,17 +120,17 @@ export function GroupChatView({ onNavigateToProfile, selectedChatId, setSelected
         messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
     };
 
-    React.useEffect(() => {
+    useEffect(() => {
         scrollToBottom();
     }, [messages, selectedChatId]);
 
-    React.useEffect(() => {
+    useEffect(() => {
         if (selectedChatId && !chats.find(c => c._id === selectedChatId)) {
             mutateChats();
         }
     }, [selectedChatId, chats, mutateChats]);
 
-    React.useEffect(() => {
+    useEffect(() => {
         if (selectedChatId && inputRef.current) {
             inputRef.current.focus();
         }

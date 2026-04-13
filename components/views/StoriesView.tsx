@@ -1,5 +1,5 @@
 'use client';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { networkApi, NetworkPost, NetworkPostsResponse, NetworkCommentsResponse } from '@/apis/network';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Heart, MessageCircle, Clock, Plus, X, Send, Trash2, Flag, AlertTriangle, CheckCircle2, Loader2 } from 'lucide-react';
@@ -14,7 +14,7 @@ function ReportModal({ state, onConfirm, onClose }: { state: ReportModalState; o
     const isOpen = state.phase !== 'idle';
     const [reason, setReason] = useState('');
 
-    React.useEffect(() => {
+    useEffect(() => {
         if (!isOpen) setReason('');
     }, [isOpen]);
 
@@ -239,7 +239,7 @@ export function StoriesView({ onNavigateToProfile }: { onNavigateToProfile?: (id
     );
     const [allPosts, setAllPosts] = useState<NetworkPost[]>([]);
 
-    React.useEffect(() => {
+    useEffect(() => {
         if (data?.data) {
             if (page === 1) {
                 setAllPosts(data.data);
