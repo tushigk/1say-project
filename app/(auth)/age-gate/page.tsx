@@ -5,7 +5,6 @@ import React, { useState } from "react";
 import Button from "../../../components/ui/Button";
 import TermOfServiceModal from "../../../components/auth/TermOfServiceModal";
 import { ArrowRight, Flame, Sparkles } from "lucide-react";
-import { motion } from "framer-motion";
 import AuthBanner from "../../../components/auth/AuthBanner";
 import Image from "next/image";
 
@@ -33,20 +32,7 @@ export default function AgeGatePage() {
             <div className="pointer-events-none absolute -left-[20%] top-[-10%] h-[700px] w-[700px] rounded-full bg-red-950/20 blur-[150px] animate-pulse" style={{ animationDuration: '8s' }} />
             <div className="pointer-events-none absolute -right-[20%] bottom-[-10%] h-[700px] w-[700px] rounded-full bg-rose-950/20 blur-[150px] animate-pulse" style={{ animationDuration: '10s' }} />
 
-            <motion.div
-                initial={{ opacity: 0, scale: 0.98, y: 30 }}
-                animate={{ 
-                    opacity: 1, 
-                    scale: 1, 
-                    y: [0, -10, 0] 
-                }}
-                transition={{ 
-                    opacity: { duration: 1 },
-                    scale: { duration: 1 },
-                    y: { duration: 6, repeat: Infinity, ease: "easeInOut" }
-                }}
-                className="relative z-10 w-full max-w-[500px] overflow-hidden rounded-[2.5rem] border border-red-500/20 bg-[#050002]/70 p-12 md:p-16 text-center shadow-[0_45px_120px_rgba(0,0,0,1)] backdrop-blur-3xl"
-            >
+            <div className="relative z-10 w-full max-w-[500px] overflow-hidden rounded-[2.5rem] border border-red-500/20 bg-[#050002]/70 p-12 md:p-16 text-center shadow-[0_45px_120px_rgba(0,0,0,1)] backdrop-blur-3xl">
                 {/* Inner stroke for ultra premium look */}
                 <div className="pointer-events-none absolute inset-0 rounded-[2.5rem] border-[0.5px] border-white/5 mix-blend-overlay" />
 
@@ -101,7 +87,7 @@ export default function AgeGatePage() {
                         зөвшөөрч байгаа болно.
                     </p>
                 </div>
-            </motion.div>
+            </div>
             <TermOfServiceModal isOpen={isTosOpen} onClose={() => setIsTosOpen(false)} />
 
             {/* Ambient Lighting Orbs - Extra Layer */}

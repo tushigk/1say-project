@@ -73,23 +73,6 @@ export default function AuthBanner({ className }: { className?: string }) {
             <div className="absolute inset-0 z-10 bg-linear-to-t from-[#030001] via-transparent to-[#030001]/40" />
             <div className="absolute inset-0 z-10 bg-linear-to-r from-[#030001]/60 via-transparent to-transparent md:from-[#030001]/20" />
             <div className="absolute inset-0 z-10 ring-1 ring-inset ring-red-500/10" />
-
-            {/* Subtle Title Display (Desktop Only) */}
-            {/* <div className="hidden md:block absolute bottom-12 left-12 z-40">
-                <AnimatePresence mode="wait">
-                    <motion.div
-                        key={currentIndex}
-                        initial={{ opacity: 0, y: 10 }}
-                        animate={{ opacity: 0.4, y: 0 }}
-                        exit={{ opacity: 0, y: -10 }}
-                        transition={{ duration: 1 }}
-                    >
-                        <p className="text-[10px] font-black uppercase tracking-[0.5em] text-white">
-                            {banners[currentIndex].title || "Noir Community"}
-                        </p>
-                    </motion.div>
-                </AnimatePresence>
-            </div> */}
         </div>
     );
 }

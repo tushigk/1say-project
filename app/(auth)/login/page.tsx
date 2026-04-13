@@ -9,7 +9,6 @@ import { useAuth } from "../../../components/providers/AuthProvider";
 import { authApi } from "../../../apis";
 import AuthBanner from "../../../components/auth/AuthBanner";
 import { Eye, EyeOff, ChevronRight, Sparkles } from "lucide-react";
-import { motion } from "framer-motion";
 import Image from "next/image";
 
 export default function LoginPage() {
@@ -58,18 +57,9 @@ export default function LoginPage() {
             <div className="pointer-events-none absolute left-1/2 top-1/2 h-[900px] w-[900px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#1a0002]/40 blur-[180px]" />
             {/* Main content */}
             <div className="relative z-10 flex min-h-screen items-center justify-center px-4 py-10 sm:px-6">
-                <motion.div
-                    initial={{ opacity: 0, scale: 0.94, y: 30 }}
-                    animate={{ opacity: 1, scale: 1, y: 0 }}
-                    transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-                    className="w-full max-w-4xl"
-                >
+                <div className="w-full max-w-4xl">
                     {/* Card */}
-                    <motion.div 
-                        animate={{ y: [0, -10, 0] }}
-                        transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
-                        className="relative overflow-hidden rounded-[2.5rem] border border-red-500/20 bg-[#050002]/70 shadow-[0_45px_120px_rgba(0,0,0,1)] backdrop-blur-3xl grid md:grid-cols-2"
-                    >
+                    <div className="relative overflow-hidden rounded-[2.5rem] border border-red-500/20 bg-[#050002]/70 shadow-[0_45px_120px_rgba(0,0,0,1)] backdrop-blur-3xl grid md:grid-cols-2">
                         {/* Banner Side */}
                         <div className="relative block min-h-[240px] sm:min-h-[300px] md:h-auto md:min-h-[600px]">
                             <AuthBanner />
@@ -83,12 +73,7 @@ export default function LoginPage() {
 
                             {/* Logo */}
                             <div className="hidden md:flex mb-8 flex-col items-center text-center">
-                                <motion.div
-                                    initial={{ opacity: 0, y: -10 }}
-                                    animate={{ opacity: 1, y: 0 }}
-                                    transition={{ delay: 0.1, duration: 0.5 }}
-                                    className="relative mb-5"
-                                >
+                                <div className="relative mb-5">
                                     <div className="absolute inset-0 rounded-full bg-red-600/20 blur-2xl animate-pulse" />
                                     <div className="relative flex overflow-hidden h-24 w-24 items-center justify-center rounded-full border border-red-500/30 bg-black/60 shadow-[0_10px_40px_rgba(229,9,20,0.3)] backdrop-blur-xl">
                                         <Image
@@ -99,47 +84,28 @@ export default function LoginPage() {
                                             priority
                                         />
                                     </div>
-                                </motion.div>
+                                </div>
 
-                                <motion.div
-                                    initial={{ opacity: 0, y: 8 }}
-                                    animate={{ opacity: 1, y: 0 }}
-                                    transition={{ delay: 0.15, duration: 0.5 }}
-                                    className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs font-medium text-zinc-300"
-                                >
+                                <div className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs font-medium text-zinc-300">
                                     <Sparkles size={14} className="text-red-500" />
                                     Шөнийн таалал...
-                                </motion.div>
+                                </div>
 
-                                <motion.h1
-                                    initial={{ opacity: 0, y: 10 }}
-                                    animate={{ opacity: 1, y: 0 }}
-                                    transition={{ delay: 0.2, duration: 0.5 }}
-                                    className="mt-5 text-3xl font-bold tracking-tight sm:text-4xl text-transparent bg-clip-text bg-linear-to-b from-white via-zinc-200 to-zinc-500 drop-shadow-[0_0_15px_rgba(255,255,255,0.2)]"
-                                >
+                                <h1 className="mt-5 text-3xl font-bold tracking-tight sm:text-4xl text-transparent bg-clip-text bg-linear-to-b from-white via-zinc-200 to-zinc-500 drop-shadow-[0_0_15px_rgba(255,255,255,0.2)]">
                                     Хаалга Нээх
-                                </motion.h1>
+                                </h1>
 
-                                <motion.p
-                                    initial={{ opacity: 0, y: 10 }}
-                                    animate={{ opacity: 1, y: 0 }}
-                                    transition={{ delay: 0.25, duration: 0.5 }}
-                                    className="mt-2 text-sm leading-relaxed text-zinc-400"
-                                >
+                                <p className="mt-2 text-sm leading-relaxed text-zinc-400">
                                     Өөрийн бүртгэлээр нэвтэрч үргэлжлүүлнэ үү.
-                                </motion.p>
+                                </p>
                             </div>
 
                             {/* Form */}
                             <form className="space-y-5" onSubmit={handleSubmit}>
                                 {error && (
-                                    <motion.div
-                                        initial={{ opacity: 0, y: -6 }}
-                                        animate={{ opacity: 1, y: 0 }}
-                                        className="rounded-2xl border border-red-500/20 bg-red-500/10 px-4 py-3 text-center text-sm font-medium text-red-300"
-                                    >
+                                    <div className="rounded-2xl border border-red-500/20 bg-red-500/10 px-4 py-3 text-center text-sm font-medium text-red-300">
                                         {error}
-                                    </motion.div>
+                                    </div>
                                 )}
 
                                 <div className="space-y-4">
@@ -216,8 +182,8 @@ export default function LoginPage() {
                                 </Link>
                             </div>
                         </div>
-                    </motion.div>
-                </motion.div>
+                    </div>
+                </div>
             </div>
         </div>
     );
