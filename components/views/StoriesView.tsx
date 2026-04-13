@@ -4,6 +4,7 @@ import { networkApi, NetworkPost, NetworkPostsResponse, NetworkCommentsResponse 
 import { motion, AnimatePresence } from 'framer-motion';
 import { Heart, MessageCircle, Clock, Plus, X, Send, Trash2, Flag, AlertTriangle, CheckCircle2, Loader2 } from 'lucide-react';
 import Image from 'next/image';
+import Loading from '@/components/ui/Loading';
 import useSWRInfinite from 'swr/infinite';
 import { useAuth, User } from '@/components/providers/AuthProvider';
 import { ImagePicker } from '../form/image-picker';
@@ -70,12 +71,7 @@ function ReportModal({ state, onConfirm, onClose }: { state: ReportModalState; o
                             </>
                         )}
                         {state.phase === 'loading' && (
-                            <>
-                                <div className="w-14 h-14 rounded-2xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center">
-                                    <Loader2 size={26} className="text-amber-400 animate-spin" />
-                                </div>
-                                <p className="text-white font-semibold">Илгээж байна...</p>
-                            </>
+                            <Loading text="Илгээж байна..." />
                         )}
                         {state.phase === 'success' && (
                             <>
@@ -471,7 +467,7 @@ export function StoriesView({ onNavigateToProfile }: { onNavigateToProfile?: (id
                                 disabled={isValidating}
                                 className="px-8 py-3 bg-zinc-900 hover:bg-zinc-800 text-white rounded-2xl font-bold transition-all border border-zinc-800 disabled:opacity-50"
                             >
-                                {isValidating ? 'Уншиж байна...' : 'Цааш үзэх'}
+                                {isValidating ? <Loading size="sm" text="Уншиж байна..." /> : 'Цааш үзэх'}
                             </button>
                         </div>
                     )}
@@ -527,7 +523,7 @@ export function StoriesView({ onNavigateToProfile }: { onNavigateToProfile?: (id
                                         disabled={isSubmitting || !title.trim() || !description.trim()}
                                         className="w-full py-4 bg-rose-600 hover:bg-rose-500 disabled:opacity-50 text-white rounded-xl font-bold transition-all shadow-[0_5px_15px_rgba(225,29,72,0.2)]"
                                     >
-                                        {isSubmitting ? 'Нийтэлж байна...' : 'Нийтлэх'}
+                                        {isSubmitting ? <Loading size="sm" text="Нийтэлж байна..." /> : 'Нийтлэх'}
                                     </button>
                                 </form>
                             </motion.div>

@@ -9,6 +9,7 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { useSocket } from '@/components/providers/SocketProvider';
 import { toast } from 'react-hot-toast';
 import Image from 'next/image';
+import Loading from '@/components/ui/Loading';
 import { useAuth } from '@/components/providers/AuthProvider';
 
 interface Invite {
@@ -150,7 +151,7 @@ export function NotificationDropdown() {
                                     <p className="text-[10px] text-zinc-500 font-bold uppercase tracking-widest">Таны сүүлийн үеийн идэвх</p>
                                 </div>
                                 {(isInvitesLoading || isChatsLoading) && (
-                                    <Loader2 className="size-4 animate-spin text-rose-500" />
+                                    <Loading size="sm" />
                                 )}
                             </div>
 

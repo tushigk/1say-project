@@ -4,6 +4,7 @@ import React, { useEffect, useMemo } from 'react';
 import { motion } from 'framer-motion';
 import { ImageIcon, Smile, Send, MessageCircle, ChevronLeft } from 'lucide-react';
 import Image from 'next/image';
+import Loading from '@/components/ui/Loading';
 
 import useSWR from 'swr';
 import { chatApi } from '@/apis';
@@ -232,7 +233,7 @@ export function ChatView({ onNavigateToProfile, selectedChatId, setSelectedChatI
                             >
                                 <ChevronLeft size={20} />
                             </button>
-                            <div className="w-8 h-8 border-4 border-rose-500 border-t-transparent rounded-full animate-spin" />
+                            <Loading text="Зурвасуудыг ачаалж байна..." />
                         </div>
                     ) : (
                         <>
@@ -322,7 +323,7 @@ export function ChatView({ onNavigateToProfile, selectedChatId, setSelectedChatI
                                         className="w-12 h-12 bg-rose-600 disabled:opacity-50 disabled:bg-zinc-800 rounded-2xl flex items-center justify-center text-white hover:bg-rose-500 transition-all ml-1 shadow-[0_8px_20px_rgba(225,29,72,0.3)] transform active:scale-90"
                                     >
                                         {isSending ? (
-                                            <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                                            <Loading size="sm" />
                                         ) : (
                                             <Send size={18} className="ml-0.5" />
                                         )}

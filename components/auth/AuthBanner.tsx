@@ -30,7 +30,7 @@ export default function AuthBanner({ className }: { className?: string }) {
         if (banners.length === 0) return;
         const interval = setInterval(() => {
             setCurrentIndex((prev) => (prev + 1) % banners.length);
-        }, 6000); // Slower cycle for more premium feel
+        }, 6000);
         return () => clearInterval(interval);
     }, [banners]);
 

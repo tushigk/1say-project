@@ -4,6 +4,7 @@ import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { motion } from 'framer-motion';
 import { Search, ImageIcon, Smile, Send, Users, Plus, MessageSquare, ChevronLeft } from 'lucide-react';
 import Image from 'next/image';
+import Loading from '@/components/ui/Loading';
 import useSWR from 'swr';
 import { chatApi } from '@/apis';
 import { useAuth } from '@/components/providers/AuthProvider';
@@ -337,7 +338,7 @@ export function GroupChatView({ onNavigateToProfile, selectedChatId, setSelected
                             >
                                 <ChevronLeft size={20} />
                             </button>
-                            <div className="w-8 h-8 border-4 border-rose-500 border-t-transparent rounded-full animate-spin" />
+                            <Loading text="Грүпп чатыг ачаалж байна..." />
                         </div>
                     ) : (
                         <>
@@ -440,7 +441,7 @@ export function GroupChatView({ onNavigateToProfile, selectedChatId, setSelected
                                         className="w-12 h-12 bg-white disabled:opacity-20 disabled:bg-zinc-800 rounded-2xl flex items-center justify-center text-zinc-950 hover:bg-zinc-200 transition-all ml-1 shadow-2xl transform active:scale-90"
                                     >
                                         {isSending ? (
-                                            <div className="w-4 h-4 border-2 border-black border-t-transparent rounded-full animate-spin" />
+                                            <Loading size="sm" />
                                         ) : (
                                             <Send size={18} className="ml-0.5" />
                                         )}

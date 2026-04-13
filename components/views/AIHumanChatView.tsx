@@ -11,6 +11,7 @@ import { useSocket } from '@/components/providers/SocketProvider';
 import { toast } from 'react-hot-toast';
 
 import { useAuth } from '@/components/providers/AuthProvider';
+import Loading from '@/components/ui/Loading';
 
 interface AIHumanChatViewProps {
     personaId?: string;
@@ -143,7 +144,7 @@ export function AIHumanChatView({ personaId: propPersonaId, onBack }: AIHumanCha
     if (!persona) {
         return (
             <div className="flex-1 flex items-center justify-center">
-                <div className="w-10 h-10 border-4 border-rose-500 border-t-transparent rounded-full animate-spin" />
+                <Loading />
             </div>
         );
     }

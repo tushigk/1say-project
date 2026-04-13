@@ -3,6 +3,7 @@
 import { useAuth } from './AuthProvider';
 import { useRouter, usePathname } from 'next/navigation';
 import { useEffect } from 'react';
+import Loading from '../ui/Loading';
 
 export function RouteGuard({ children }: { children: React.ReactNode }) {
     const { isAuthenticated, user, isLoading } = useAuth();
@@ -86,26 +87,7 @@ export function RouteGuard({ children }: { children: React.ReactNode }) {
     const shouldShow = getShouldShow();
 
     if (!shouldShow) {
-        return (
-            <div className="h-screen w-screen bg-black flex flex-col items-center justify-center gap-4">
-                <div className="w-12 h-12 rounded-2xl bg-white text-black flex items-center justify-center font-black text-2xl animate-pulse">
-                    N
-                </div>
-                <div className="w-48 h-1 bg-zinc-900 rounded-full overflow-hidden">
-                    <div className="h-full bg-accent-crimson animate-loading" />
-                </div>
-                <style jsx>{`
-                    .animate-loading {
-                        animation: loading 1.5s infinite;
-                    }
-                    @keyframes loading {
-                        0% { width: 0%; transform: translateX(-100%); }
-                        50% { width: 50%; transform: translateX(100%); }
-                        100% { width: 0%; transform: translateX(200%); }
-                    }
-                `}</style>
-            </div>
-        );
+        return <Loading fullScreen />;
     }
 
     return <>{children}</>;

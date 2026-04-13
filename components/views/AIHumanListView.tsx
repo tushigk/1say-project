@@ -7,6 +7,7 @@ import { aiHumanApi } from '@/apis';
 import { AIHuman } from '@/apis/aiHuman';
 import useSWR from 'swr';
 import { useRouter } from 'next/navigation';
+import Loading from '@/components/ui/Loading';
 
 export function AIHumanListView() {
     const router = useRouter();
@@ -17,7 +18,7 @@ export function AIHumanListView() {
     if (isLoading) {
         return (
             <div className="flex-1 flex items-center justify-center">
-                <div className="w-12 h-12 border-4 border-rose-500 border-t-transparent rounded-full animate-spin" />
+                <Loading text="Persona-нуудыг ачаалж байна..." />
             </div>
         );
     }

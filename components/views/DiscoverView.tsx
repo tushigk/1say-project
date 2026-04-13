@@ -8,6 +8,7 @@ import useSWRInfinite from 'swr/infinite';
 import { membershipApi, chatApi } from '@/apis';
 import toast from 'react-hot-toast';
 import { useAuth } from '@/components/providers/AuthProvider';
+import Loading from '@/components/ui/Loading';
 
 
 interface MembershipUser {
@@ -226,7 +227,7 @@ export function DiscoverView({
                         >
                             {(isLoading || isValidating) ? (
                                 <>
-                                    <div className="w-5 h-5 border-2 border-white/20 border-t-white rounded-full animate-spin" />
+                                    <Loading size="sm" />
                                     <span>Уншиж байна...</span>
                                 </>
                             ) : (

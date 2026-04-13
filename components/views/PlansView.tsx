@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import useSWR from "swr";
 import { LogOut, Flame, ArrowRight, ArrowLeft } from "lucide-react";
 import Button from "@/components/ui/Button";
+import Loading from "@/components/ui/Loading";
 import { useAuth } from "@/components/providers/AuthProvider";
 import * as membershipApi from "@/apis/membership";
 import { IMembershipPlan } from "@/components/models/membership";
@@ -251,10 +252,7 @@ export function PlansView() {
                                                     )}
 
                                                     {loadingById[plan._id] ? (
-                                                        <div className="flex items-center justify-center gap-3">
-                                                            <div className="w-4 h-4 border-2 border-white/20 border-t-white rounded-full animate-spin" />
-                                                            <span className="tracking-[0.4em]">Түр хүлээнэ үү...</span>
-                                                        </div>
+                                                        <Loading size="sm" text="Түр хүлээнэ үү..." />
                                                     ) : (
                                                         <span className="flex items-center justify-center gap-3 font-black">
                                                             {isBest ? 'Эрхээ авах' : 'Сонгох'}

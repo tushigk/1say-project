@@ -3,6 +3,7 @@
 import React from 'react';
 import { X, Users, Plus } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import Loading from '../ui/Loading';
 
 interface CreateGroupModalProps {
     isOpen: boolean;
@@ -74,7 +75,7 @@ export function CreateGroupModal({ isOpen, onClose, onSubmit, isLoading }: Creat
                                 className="w-full h-14 bg-white text-zinc-950 rounded-2xl font-black text-xs uppercase tracking-widest hover:bg-zinc-200 transition-all shadow-xl flex items-center justify-center gap-3 disabled:opacity-20 disabled:cursor-not-allowed group"
                             >
                                 {isLoading ? (
-                                    <div className="w-5 h-5 border-2 border-zinc-950 border-t-transparent rounded-full animate-spin" />
+                                    <Loading size="sm" />
                                 ) : (
                                     <>
                                         Үүсгэх

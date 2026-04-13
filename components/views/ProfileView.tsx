@@ -11,6 +11,7 @@ import { Plus, Users, X, Camera } from 'lucide-react';
 import { useAuth } from '@/components/providers/AuthProvider';
 import { mutate } from 'swr';
 import { siteUrl } from '@/config/site';
+import Loading from '@/components/ui/Loading';
 
 interface GroupChat {
     _id: string;
@@ -75,8 +76,8 @@ export function ProfileView({ userId, onBack, onNavigateToChat }: ProfileViewPro
 
     if (isLoading) {
         return (
-            <div className="flex h-full items-center justify-center">
-                <div className="w-8 h-8 border-4 border-rose-500 border-t-transparent rounded-full animate-spin" />
+            <div className="flex h-screen items-center justify-center">
+                <Loading text="Профайл ачаалж байна..." />
             </div>
         );
     }
