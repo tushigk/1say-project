@@ -1,14 +1,14 @@
-"use client";
+'use client';
 
 import { useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import useSWR from "swr";
-import { LogOut, Flame, ArrowRight } from "lucide-react";
+import { LogOut, Flame, ArrowRight, ArrowLeft } from "lucide-react";
 import Button from "@/components/ui/Button";
 import { useAuth } from "@/components/providers/AuthProvider";
 import * as membershipApi from "@/apis/membership";
 import { IMembershipPlan } from "@/components/models/membership";
-import { userApi } from "../../apis/index";
+import { userApi } from "@/apis/index";
 import Image from "next/image";
 
 type MembershipListResponse = {
@@ -26,7 +26,7 @@ type Me = {
     membershipExpiresAt?: string | null;
 };
 
-export default function PlansPage() {
+export function PlansView() {
     const router = useRouter();
     const { logout, isAuthenticated } = useAuth();
 
@@ -51,38 +51,30 @@ export default function PlansPage() {
     const isLoading = isPlansLoading || isMeLoading;
 
     const rawPlans = useMemo(() => data?.plans ?? data?.data ?? [], [data]);
-
     const plans = useMemo(() => rawPlans, [rawPlans]);
 
     const [loadingById, setLoadingById] = useState<Record<string, boolean>>({});
 
     const bestValueId = useMemo<string | undefined>(() => {
         if (!plans.length) return undefined;
-
         const TARGET_PRICE = 50000;
-
         const exact = plans.find((p) => p.price === TARGET_PRICE);
         if (exact) return exact._id;
-
         const withMonths = plans.filter((p) => Number.isFinite(p.months));
         if (withMonths.length) {
             return [...withMonths].sort((a, b) => (b.months ?? 0) - (a.months ?? 0))[0]._id;
         }
-
         return plans[Math.floor(plans.length / 2)]?._id;
     }, [plans]);
 
     const displayedPlans = useMemo<IMembershipPlan[]>(() => {
         if (!plans.length) return [];
-
         const arr = [...plans].sort((a, b) => (a.price ?? 0) - (b.price ?? 0));
         const featuredIndex = bestValueId ? arr.findIndex((p) => p._id === bestValueId) : -1;
-
         if (featuredIndex > -1 && arr.length > 1) {
             const [featured] = arr.splice(featuredIndex, 1);
             arr.splice(1, 0, featured);
         }
-
         return arr.slice(0, 3);
     }, [plans, bestValueId]);
 
@@ -91,7 +83,6 @@ export default function PlansPage() {
             router.push(`/register?next=${encodeURIComponent(`/payment/${planId}`)}`);
             return;
         }
-
         setLoadingById((prev) => ({ ...prev, [planId]: true }));
         router.push(`/payment/${planId}`);
     };
@@ -105,37 +96,17 @@ export default function PlansPage() {
     ];
 
     return (
-        <div className="relative min-h-screen flex flex-col items-center w-full bg-[#030001] text-white overflow-x-hidden selection:bg-rose-600 selection:text-white">
-            {/* Ambient Background Effects - Sharp Luxury Layered */}
+        <div className="relative min-h-screen flex flex-col items-center w-full bg-[#030001] text-white overflow-x-hidden selection:bg-rose-600 selection:text-white pb-32">
+            {/* Ambient Background Effects */}
             <div className="fixed inset-0 pointer-events-none z-0">
                 <div className="absolute top-[-10%] left-[-5%] w-[800px] h-[800px] bg-red-950/20 rounded-full blur-[160px]" />
                 <div className="absolute bottom-[-10%] right-[-5%] w-[600px] h-[600px] bg-rose-950/15 rounded-full blur-[140px]" />
                 <div className="absolute inset-0 bg-linear-to-b from-[#030001]/40 via-[#030001]/90 to-[#030001]" />
             </div>
 
-            <main className="relative z-10 w-full container mx-auto px-4 py-28 md:py-32 flex flex-col items-center">
-                {/* Fixed Header/Navigation */}
-                <nav className="fixed top-0 inset-x-0 z-50 px-4 py-4 md:px-12 md:py-6 flex items-center justify-between pointer-events-auto bg-[#030001]/60 backdrop-blur-3xl border-b border-red-900/10">
-                    <div className="flex items-center gap-3 md:gap-4 cursor-pointer group" onClick={() => router.push("/")}>
-                        <Image src="/logo.png" alt="Logo" width={80} height={80} className="rounded-full shadow-[0_0_20px_rgba(225,29,72,0.3)] transition-transform duration-700 group-hover:scale-105" />
-                    </div>
-
-                    {isAuthenticated && (
-                        <button
-                            onClick={() => {
-                                logout();
-                                router.push("/");
-                            }}
-                            className="flex cursor-pointer items-center gap-2 md:gap-3 px-5 py-2.5 md:px-7 md:py-3.5 rounded-4xl bg-red-950/10 border border-red-900/20 text-red-200/80 hover:text-white hover:bg-red-900/40 hover:border-red-500/50 hover:shadow-[0_0_20px_rgba(225,29,72,0.25)] transition-all duration-500 backdrop-blur-xl group"
-                        >
-                            <LogOut size={14} className="md:w-4 md:h-4 group-hover:-translate-x-1 transition-transform duration-500 text-red-400 group-hover:text-red-300" />
-                            <span className="text-[9px] md:text-[10px] font-black uppercase tracking-[0.2em]">Гарах</span>
-                        </button>
-                    )}
-                </nav>
-
-                {/* Header Section - Seductive Typography */}
-                <div className="text-center mb-24 max-w-3xl mx-auto space-y-8 relative z-10">
+            <main className="relative z-10 w-full container mx-auto px-4 py-16 flex flex-col items-center">
+                {/* Header Section */}
+                <div className="text-center mb-20 max-w-3xl mx-auto space-y-8 relative z-10">
                     <div className="flex items-center justify-center gap-4">
                         <span className="h-px w-12 bg-linear-to-r from-transparent to-red-600 rounded-full opacity-60" />
                         <span className="px-6 py-2.5 rounded-full bg-red-950/40 border border-red-500/30 text-red-300 text-[10px] font-black tracking-[0.5em] uppercase backdrop-blur-3xl shadow-[0_0_30px_rgba(225,29,72,0.2)] animate-pulse" style={{ animationDuration: '4s' }}>
@@ -144,21 +115,17 @@ export default function PlansPage() {
                         <span className="h-px w-12 bg-linear-to-l from-transparent to-red-600 rounded-full opacity-60" />
                     </div>
 
-                    <h1 className="text-5xl md:text-7xl lg:text-8xl font-bold font-serif leading-[1.1] tracking-tight">
+                    <h1 className="text-5xl md:text-7xl font-bold font-serif leading-[1.1] tracking-tight">
                         Нууцлаг Хүсэл <br />
                         <span className="text-transparent bg-clip-text bg-linear-to-b from-white via-rose-200 to-rose-900 italic font-light drop-shadow-[0_0_25px_rgba(225,29,72,0.3)] inline-block mt-3">Тансаг Мэдрэмж</span>
                     </h1>
-
-                    <p className="text-rose-200/50 text-lg md:text-xl font-light leading-relaxed max-w-2xl mx-auto tracking-wide">
-                        Энэ бол <span className="text-rose-500 font-bold drop-shadow-[0_0_12px_rgba(225,29,72,0.5)]">50% ХӨНГӨЛӨЛТТЭЙ</span>-гөөр <span className="text-white font-medium italic">дотоод хүслээ</span> нээх таны хамгийн зөв цаг хугацаа.
-                    </p>
                 </div>
 
-                {/* Plans Grid - Erotic Deep Elevation */}
+                {/* Plans Grid */}
                 <div className="w-full max-w-6xl px-4 relative z-10">
                     {isLoading && (
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
-                            {[1, 2, 3]?.map((i) => (
+                            {[1, 2, 3].map((i) => (
                                 <div key={i} className="h-[650px] rounded-[2.5rem] bg-rose-950/10 animate-pulse border border-rose-900/20 relative overflow-hidden backdrop-blur-sm">
                                     <div className="absolute inset-x-0 top-0 h-48 bg-rose-900/10" />
                                 </div>
@@ -173,7 +140,6 @@ export default function PlansPage() {
                             </div>
                             <div>
                                 <h2 className="text-xl font-serif text-rose-100 mb-2">Холболтын алдаа</h2>
-                                <p className="text-rose-200/50 mb-8 font-light">Мэдээлэл ачаалахад алдаа гарлаа. Та интернэтээ шалгана уу.</p>
                                 <Button onClick={() => mutate()} variant="outline" className="rounded-full px-10 border-rose-900/50 text-rose-300 hover:bg-rose-950/40 hover:text-white">Дахин оролдох</Button>
                             </div>
                         </div>
@@ -181,7 +147,7 @@ export default function PlansPage() {
 
                     {!isLoading && !error && displayedPlans.length > 0 && (
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 lg:gap-10 items-stretch">
-                            {displayedPlans?.map((plan) => {
+                            {displayedPlans.map((plan) => {
                                 const isBest = plan._id === bestValueId;
 
                                 return (
@@ -192,16 +158,13 @@ export default function PlansPage() {
                                             ${isBest ? 'scale-105 z-20' : 'hover:scale-[1.03] hover:-translate-y-2'}
                                         `}
                                     >
-                                        {/* Premium Backdrop & Border Integration */}
                                         <div className={`
                                             absolute inset-0 rounded-[2.5rem] overflow-hidden border transition-all duration-700
                                             ${isBest ? 'bg-red-950/5 border-red-500/40 shadow-[0_0_50px_rgba(229,9,20,0.1)]' : 'bg-white/2 border-white/5 hover:border-red-900/40'}
                                         `} />
 
-                                        {/* Inner stroke for ultra premium look */}
                                         <div className="pointer-events-none absolute inset-0 rounded-[2.5rem] border-[0.5px] border-white/5 mix-blend-overlay" />
 
-                                        {/* Featured Image Background */}
                                         <div className="absolute inset-0 pointer-events-none overflow-hidden rounded-[2.5rem]">
                                             {plan.image?.url && (
                                                 <Image
@@ -214,23 +177,19 @@ export default function PlansPage() {
                                             <div className="absolute inset-0 bg-linear-to-b from-black/20 via-black/40 to-[#0a0002]/90" />
                                         </div>
 
-                                        {/* Content Wrapper */}
                                         <div className="relative z-20 flex flex-col h-full flex-1">
-                                            {/* Tag for Highlighted Plan */}
                                             {isBest && (
                                                 <div className="mt-7 mx-auto self-center bg-linear-to-r from-red-600 to-red-400 text-white text-[9px] font-black px-6 py-2 rounded-full uppercase tracking-[0.4em] shadow-[0_0_20px_rgba(225,29,72,0.4)] animate-pulse" style={{ animationDuration: '3s' }}>
                                                     Хамгийн их эрэлттэй
                                                 </div>
                                             )}
 
-                                            {/* Top Visual Section */}
                                             <div className="p-10 pb-2 text-center">
                                                 <h3 className={`text-[11px] tracking-[0.5em] uppercase font-black mb-6 transition-colors duration-500 ${isBest ? 'text-rose-400 drop-shadow-[0_0_10px_rgba(225,29,72,0.4)]' : 'text-rose-900/60 group-hover:text-rose-700/80'}`}>
                                                     {plan.title}
                                                 </h3>
 
                                                 <div className="flex flex-col items-center justify-center py-6 relative">
-                                                    {/* Price Background Glow */}
                                                     <div className={`absolute -inset-8 rounded-full blur-2xl opacity-20 transition-opacity duration-800 ${isBest ? 'bg-red-500 group-hover:opacity-40' : 'bg-red-900/10 group-hover:opacity-30'}`} />
 
                                                     <div className="relative flex flex-col items-center justify-center">
@@ -245,7 +204,7 @@ export default function PlansPage() {
                                                         </div>
                                                         <div className="flex items-start drop-shadow-[0_0_15px_rgba(255,255,255,0.05)]">
                                                             <span className="text-xl font-serif italic text-rose-700 mt-4 mr-1">₮</span>
-                                                            <span className="text-6xl md:text-[5rem] font-serif font-black tracking-tighter text-white">
+                                                            <span className="text-6xl md:text-7xl font-serif font-black tracking-tighter text-white">
                                                                 {plan.price.toLocaleString()}
                                                             </span>
                                                         </div>
@@ -256,15 +215,13 @@ export default function PlansPage() {
                                                 </div>
                                             </div>
 
-                                            {/* Divider */}
                                             <div className="px-12 py-6">
                                                 <div className={`h-px w-full ${isBest ? 'bg-linear-to-r from-transparent via-red-500/40 to-transparent' : 'bg-linear-to-r from-transparent via-white/5 to-transparent'}`} />
                                             </div>
 
-                                            {/* Benefits List */}
                                             <div className="px-10 py-2 flex-1">
                                                 <ul className="space-y-5">
-                                                    {benefits?.map((benefit, idx) => (
+                                                    {benefits.map((benefit, idx) => (
                                                         <li key={idx} className="flex items-start gap-4 group/item">
                                                             <div className={`shrink-0 w-5 h-5 rounded-full flex items-center justify-center border mt-0.5 transition-colors duration-500 ${isBest ? 'border-red-400/30 bg-red-500/10 text-red-400 shadow-[0_0_15px_rgba(225,29,72,0.2)]' : 'border-white/10 bg-white/5 text-zinc-600 group-hover/item:text-zinc-400 group-hover/item:border-white/20'}`}>
                                                                 <svg className="w-2.5 h-2.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" /></svg>
@@ -277,7 +234,6 @@ export default function PlansPage() {
                                                 </ul>
                                             </div>
 
-                                            {/* Action Button */}
                                             <div className="p-10 pt-8 mt-auto">
                                                 <Button
                                                     onClick={() => handleChoosePlan(plan._id)}
@@ -295,12 +251,12 @@ export default function PlansPage() {
                                                     )}
 
                                                     {loadingById[plan._id] ? (
-                                                        <div className="flex items-center justify-center gap-3 cursor-pointer">
+                                                        <div className="flex items-center justify-center gap-3">
                                                             <div className="w-4 h-4 border-2 border-white/20 border-t-white rounded-full animate-spin" />
                                                             <span className="tracking-[0.4em]">Түр хүлээнэ үү...</span>
                                                         </div>
                                                     ) : (
-                                                        <span className="flex items-center justify-center gap-3">
+                                                        <span className="flex items-center justify-center gap-3 font-black">
                                                             {isBest ? 'Эрхээ авах' : 'Сонгох'}
                                                             <ArrowRight size={14} className="group-hover/btn:translate-x-2 transition-transform duration-500" />
                                                         </span>
@@ -315,7 +271,7 @@ export default function PlansPage() {
                     )}
                 </div>
 
-                {/* Footer Trust Indicators - Intimate subtle tone */}
+                {/* Footer Trust Indicators */}
                 <div className="mt-36 w-full max-w-2xl py-10 px-8 rounded-[2.5rem] bg-[#050001]/40 border border-rose-900/20 backdrop-blur-xl flex flex-col md:flex-row items-center justify-around gap-10 opacity-70">
                     <div className="flex items-center gap-4 group">
                         <div className="w-12 h-12 rounded-2xl bg-rose-950/20 flex items-center justify-center group-hover:bg-rose-900/30 transition-colors duration-500 border border-rose-900/10 group-hover:border-rose-800/30">

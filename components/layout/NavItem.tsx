@@ -7,13 +7,13 @@ interface NavItemProps {
     icon: React.ReactNode;
     label: string;
     isActive?: boolean;
-    onClick: () => void;
+    onClick?: () => void;
     badge?: string;
 }
 
 export function NavItem({ icon, label, isActive, onClick, badge }: NavItemProps) {
     return (
-        <button
+        <div
             onClick={onClick}
             className={`w-full group flex items-center justify-between px-4 py-3 rounded-2xl transition-all relative overflow-hidden cursor-pointer ${isActive
                 ? 'text-white'
@@ -41,6 +41,6 @@ export function NavItem({ icon, label, isActive, onClick, badge }: NavItemProps)
                     {badge}
                 </span>
             )}
-        </button>
+        </div>
     );
 }

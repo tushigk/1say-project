@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Heart, BookOpen, MessageCircle, Users, LogOut, Sparkles } from 'lucide-react';
 import { NavItem } from './NavItem';
 import Image from 'next/image';
@@ -16,20 +16,23 @@ interface Chat {
     unread?: boolean;
 }
 
-interface SidebarProps {
-    activeTab: string;
-    setActiveTab: (tab: 'discover' | 'stories' | 'chat' | 'groups' | 'profile' | 'ai-human') => void;
-    onNavigateToProfile?: (id: string) => void;
-}
+import { usePathname } from 'next/navigation';
+import Link from 'next/link';
 
-export function Sidebar({ activeTab, setActiveTab, onNavigateToProfile }: SidebarProps) {
+export function Sidebar() {
     const { logout, user } = useAuth();
     const { socket } = useSocket();
     const router = useRouter();
+    const pathname = usePathname();
+
+    const handleLogout = () => {
+        logout();
+        router.push('/login');
+    };
 
     const { data: chatsData, mutate: mutateChats } = useSWR(user ? 'chats' : null, () => chatApi.listChats());
 
-    React.useEffect(() => {
+    useEffect(() => {
         if (!socket) return;
         const handleUpdate = () => mutateChats();
         socket.on('chat:message', handleUpdate);
@@ -54,65 +57,71 @@ export function Sidebar({ activeTab, setActiveTab, onNavigateToProfile }: Sideba
             {/* Logo only */}
             <div className="p-8 flex items-start justify-start">
                 <div className="relative flex h-16 w-full items-center justify-center rounded-3xl border border-white/10 bg-white/5 backdrop-blur-xl shadow-[0_10px_30px_rgba(255,255,255,0.06)]">
-                    <Image
-                        src="/logo.png"
-                        alt="Logo"
-                        fill
-                        className="object-contain cursor-pointer"
-                        priority
-                        onClick={() => router.push("/")}
-                    />
+                    <Link href="/discover" className="relative w-full h-full block">
+                        <Image
+                            src="/logo.png"
+                            alt="Logo"
+                            fill
+                            className="object-contain cursor-pointer"
+                            priority
+                        />
+                    </Link>
                 </div>
             </div>
 
             <nav className="flex-1 px-6 py-8 space-y-1.5">
                 <div className="text-[11px] font-bold text-zinc-600 uppercase tracking-widest mb-4 ml-4">Үндсэн</div>
 
-                <NavItem
-                    icon={<Heart />}
-                    label="Танилцах"
-                    isActive={activeTab === 'discover'}
-                    onClick={() => setActiveTab('discover')}
-                />
+                <Link href="/discover" className="block">
+                    <NavItem
+                        icon={<Heart />}
+                        label="Танилцах"
+                        isActive={pathname === '/discover' || pathname === '/'}
+                    />
+                </Link>
 
-                <NavItem
-                    icon={<BookOpen />}
-                    label="Түүхүүд"
-                    isActive={activeTab === 'stories'}
-                    onClick={() => setActiveTab('stories')}
-                />
+                <Link href="/stories" className="block">
+                    <NavItem
+                        icon={<BookOpen />}
+                        label="Түүхүүд"
+                        isActive={pathname.startsWith('/stories')}
+                    />
+                </Link>
 
-                <NavItem
-                    icon={<Sparkles />}
-                    label="AI Personas"
-                    isActive={activeTab === 'ai-human'}
-                    onClick={() => setActiveTab('ai-human')}
-                />
+                <Link href="/ai-human" className="block">
+                    <NavItem
+                        icon={<Sparkles />}
+                        label="AI Personas"
+                        isActive={pathname.startsWith('/ai-human')}
+                    />
+                </Link>
 
                 <div className="pt-6 mb-4">
                     <div className="text-[11px] font-bold text-zinc-600 uppercase tracking-widest mb-4 ml-4">Харилцаа</div>
 
-                    <NavItem
-                        icon={<MessageCircle />}
-                        label="Чат"
-                        isActive={activeTab === 'chat'}
-                        onClick={() => setActiveTab('chat')}
-                        badge={directUnreadCount > 0 ? directUnreadCount.toString() : undefined}
-                    />
+                    <Link href="/chat" className="block">
+                        <NavItem
+                            icon={<MessageCircle />}
+                            label="Чат"
+                            isActive={pathname.startsWith('/chat')}
+                            badge={directUnreadCount > 0 ? directUnreadCount.toString() : undefined}
+                        />
+                    </Link>
 
-                    <NavItem
-                        icon={<Users />}
-                        label="Грүпп чат"
-                        isActive={activeTab === 'groups'}
-                        onClick={() => setActiveTab('groups')}
-                        badge={groupUnreadCount > 0 ? groupUnreadCount.toString() : undefined}
-                    />
+                    <Link href="/groups" className="block">
+                        <NavItem
+                            icon={<Users />}
+                            label="Грүпп чат"
+                            isActive={pathname.startsWith('/groups')}
+                            badge={groupUnreadCount > 0 ? groupUnreadCount.toString() : undefined}
+                        />
+                    </Link>
                 </div>
             </nav>
 
             <div className="p-6 space-y-4">
                 <div
-                    onClick={() => user?._id && onNavigateToProfile?.(user._id)}
+                    onClick={() => user?._id && router.push(`/profile/${user._id}`)}
                     className="rounded-3xl p-1.5 bg-zinc-900/50 border border-zinc-800/50 hover:border-rose-500/30 transition-all cursor-pointer group"
                 >
                     <div className="flex items-center gap-3 p-2 rounded-2xl hover:bg-zinc-800/50 transition-colors">
@@ -132,7 +141,7 @@ export function Sidebar({ activeTab, setActiveTab, onNavigateToProfile }: Sideba
                 </div>
 
                 <button
-                    onClick={logout}
+                    onClick={handleLogout}
                     className="w-full flex items-center justify-center gap-2 py-3 rounded-2xl bg-zinc-900/50 border border-zinc-800/50 text-zinc-500 hover:text-rose-500 hover:border-rose-500/30 transition-all text-xs font-bold uppercase tracking-widest group cursor-pointer"
                 >
                     <LogOut size={14} className="group-hover:-translate-x-1 transition-transform" />

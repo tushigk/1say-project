@@ -43,7 +43,7 @@ export function RouteGuard({ children }: { children: React.ReactNode }) {
 
             // If they HAVE a membership and are on a public route or plans page, send them home.
             if (hasMembership && (isPublicRoute || pathname === '/plans') && pathname !== '/privacy' && !isPaymentPage) {
-                router.push('/');
+                router.push('/discover');
                 return;
             }
         }

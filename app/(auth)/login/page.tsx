@@ -34,7 +34,7 @@ export default function LoginPage() {
 
             if (res.token) {
                 login(res.token, res.user);
-                router.push("/");
+                router.push("/discover");
             } else {
                 setError("Нэвтрэхэд алдаа гарлаа.");
             }
@@ -73,24 +73,6 @@ export default function LoginPage() {
 
                             {/* Logo */}
                             <div className="hidden md:flex mb-8 flex-col items-center text-center">
-                                <div className="relative mb-5">
-                                    <div className="absolute inset-0 rounded-full bg-red-600/20 blur-2xl animate-pulse" />
-                                    <div className="relative flex overflow-hidden h-24 w-24 items-center justify-center rounded-full border border-red-500/30 bg-black/60 shadow-[0_10px_40px_rgba(229,9,20,0.3)] backdrop-blur-xl">
-                                        <Image
-                                            src="/logo.jpeg"
-                                            alt="Noir Logo"
-                                            fill
-                                            className="object-cover"
-                                            priority
-                                        />
-                                    </div>
-                                </div>
-
-                                <div className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs font-medium text-zinc-300">
-                                    <Sparkles size={14} className="text-red-500" />
-                                    Шөнийн таалал...
-                                </div>
-
                                 <h1 className="mt-5 text-3xl font-bold tracking-tight sm:text-4xl text-transparent bg-clip-text bg-linear-to-b from-white via-zinc-200 to-zinc-500 drop-shadow-[0_0_15px_rgba(255,255,255,0.2)]">
                                     Хаалга Нээх
                                 </h1>
