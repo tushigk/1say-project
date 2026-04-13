@@ -18,7 +18,7 @@ export function Header({ isMobileMenuOpen, setIsMobileMenuOpen, activeTabTitle }
     const router = useRouter();
     const pathname = usePathname();
     const { logout } = useAuth();
-    
+
     const isSpecialPage = pathname === '/plans' || pathname.startsWith('/payment');
 
     const handleLogout = () => {

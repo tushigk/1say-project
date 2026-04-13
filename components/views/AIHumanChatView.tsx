@@ -1,7 +1,8 @@
 'use client';
 
 import { useState, useEffect, useRef, FormEvent } from 'react';
-import { Send, ChevronLeft, MoreVertical, Sparkles } from 'lucide-react';
+import { Send, ChevronLeft, MoreVertical, Sparkles, Info, X } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
 import Image from 'next/image';
 import { useRouter, useSearchParams } from 'next/navigation';
 import useSWR from 'swr';
@@ -37,6 +38,8 @@ export function AIHumanChatView({ personaId: propPersonaId, onBack }: AIHumanCha
     const [isSending, setIsSending] = useState(false);
     const [isPersonaTyping, setIsPersonaTyping] = useState(false);
     const [status, setStatus] = useState<'idle' | 'loading'>('idle');
+    const [isInfoOpen, setIsInfoOpen] = useState(false);
+    const [isAvatarZoomed, setIsAvatarZoomed] = useState(false);
 
     const messagesEndRef = useRef<HTMLDivElement>(null);
     const inputRef = useRef<HTMLInputElement>(null);
@@ -150,160 +153,254 @@ export function AIHumanChatView({ personaId: propPersonaId, onBack }: AIHumanCha
     }
 
     return (
-        <div className="flex flex-col bg-[#0a0a0a] relative overflow-hidden h-full w-full">
-            <div className="absolute top-0 left-0 right-0 h-96 bg-gradient-to-b from-rose-500/10 via-rose-500/5 to-transparent pointer-events-none z-0" />
+        <div className="flex flex-1 flex-col relative bg-zinc-950 h-full overflow-hidden w-full">
+            <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
+                <motion.div 
+                    animate={{ y: [0, -30, 0], x: [0, 20, 0], opacity: [0.3, 0.6, 0.3] }}
+                    transition={{ duration: 7, repeat: Infinity, ease: "easeInOut" }}
+                    className="absolute top-[10%] left-[5%] w-96 h-96 bg-rose-500/10 rounded-full blur-[100px]" 
+                />
+                <motion.div 
+                    animate={{ y: [0, 40, 0], x: [0, -30, 0], opacity: [0.2, 0.5, 0.2] }}
+                    transition={{ duration: 9, repeat: Infinity, ease: "easeInOut", delay: 1 }}
+                    className="absolute bottom-[20%] right-[10%] w-[30rem] h-[30rem] bg-purple-500/10 rounded-full blur-[120px]" 
+                />
+            </div>
 
-            <div className="relative z-40 w-full pt-8 pb-4 flex flex-col items-center">
+            <div className="relative z-20 h-20 border-b border-zinc-900/50 flex items-center justify-between px-6 md:px-8 bg-black/10 backdrop-blur-md shrink-0">
+                <div className="flex items-center gap-3 md:gap-4">
+                    <button
+                        onClick={handleBack}
+                        className="w-10 h-10 rounded-xl bg-zinc-900/50 flex items-center justify-center text-zinc-400 active:scale-95 transition-all"
+                    >
+                        <ChevronLeft size={20} />
+                    </button>
+                    <div 
+                        className="w-10 h-10 md:w-12 md:h-12 rounded-2xl overflow-hidden relative border-2 border-zinc-800 cursor-pointer hover:border-rose-500/50 transition-colors"
+                        onClick={() => setIsAvatarZoomed(true)}
+                    >
+                        <Image
+                            src={persona.image?.url || `https://ui-avatars.com/api/?name=${persona.name}&background=random`}
+                            alt={persona.name}
+                            fill
+                            className="object-cover"
+                        />
+                    </div>
+                    <div>
+                        <h3 className="font-bold text-white tracking-wide">{persona.name}</h3>
+                        <div className="flex items-center gap-1.5">
+                            <div className={`w-1.5 h-1.5 rounded-full ${status === 'loading' ? 'bg-rose-500 animate-pulse' : 'bg-green-500'}`}></div>
+                            <p className={`text-[10px] font-bold uppercase tracking-widest ${status === 'loading' ? 'text-rose-500' : 'text-green-500'}`}>
+                                {status === 'loading' ? 'Typing...' : 'Online'}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
                 <button
-                    onClick={handleBack}
-                    className="absolute top-8 left-6 md:left-12 w-10 h-10 rounded-2xl bg-white/5 backdrop-blur-xl border border-white/10 flex items-center justify-center text-white/60 hover:text-white hover:bg-white/10 transition-all shadow-xl active:scale-90"
+                    onClick={() => setIsInfoOpen(true)}
+                    className="w-10 h-10 rounded-xl bg-zinc-900/50 flex items-center justify-center text-zinc-400 hover:text-white hover:bg-zinc-800 transition-all cursor-pointer"
                 >
-                    <ChevronLeft size={20} />
+                    <Info size={20} />
                 </button>
+            </div>
 
-                <div className="flex flex-col items-center gap-4">
-                    <div className="relative group">
-                        <div className="absolute -inset-4 bg-rose-500/20 rounded-full blur-2xl opacity-0 group-hover:opacity-100 transition-duration-1000" />
-                        <div className="w-24 h-24 md:w-32 md:h-32 rounded-full overflow-hidden relative shadow-[0_0_50px_rgba(244,63,94,0.3)] ring-2 ring-rose-500/20 group-hover:ring-rose-500/50 transition-all duration-500">
+            <div className="flex-1 overflow-y-auto p-4 md:p-8 space-y-6 scroll-smooth z-10">
+                {messages?.map((msg, idx) => {
+                    const isPersona = msg.role === 'assistant';
+                    return (
+                        <div key={idx} className={`flex gap-4 max-w-[70%] ${!isPersona ? 'ml-auto flex-row-reverse' : ''}`}>
+                            {isPersona && (
+                                <div className="w-8 h-8 rounded-xl overflow-hidden relative shrink-0 mt-auto border border-zinc-800">
+                                    <Image
+                                        src={persona.image?.url || `https://ui-avatars.com/api/?name=${persona.name}&background=random`}
+                                        alt={persona.name}
+                                        fill
+                                        className="object-cover"
+                                    />
+                                </div>
+                            )}
+                            <div className="space-y-1.5">
+                                <div className={`${!isPersona ? 'bg-rose-600 text-white shadow-lg shadow-rose-950/20' : 'glass-card text-zinc-200 border border-zinc-800/40'} p-4 rounded-3xl ${!isPersona ? 'rounded-br-none' : 'rounded-bl-none'} text-sm leading-relaxed transition-all`}>
+                                    {msg.content.split('\n').map((line, i) => (
+                                        <p key={i} className={line.startsWith('*') || line.startsWith('_')
+                                            ? 'italic text-rose-300/80 mb-3 block text-sm'
+                                            : 'mb-3 last:mb-0'}>
+                                            {line.replace(/[*_]/g, '')}
+                                        </p>
+                                    ))}
+                                </div>
+                                <span className={`text-[9px] font-bold text-zinc-600 uppercase block ${!isPersona ? 'text-right mr-1' : 'ml-1'}`}>
+                                    {new Date(msg.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                                </span>
+                            </div>
+                        </div>
+                    );
+                })}
+
+                {isPersonaTyping && (
+                    <div className="flex gap-4 max-w-[70%]">
+                        <div className="w-8 h-8 rounded-xl overflow-hidden relative shrink-0 mt-auto border border-zinc-800">
                             <Image
                                 src={persona.image?.url || `https://ui-avatars.com/api/?name=${persona.name}&background=random`}
                                 alt={persona.name}
                                 fill
-                                className="object-cover transition-transform duration-1000 group-hover:scale-110"
+                                className="object-cover"
                             />
                         </div>
-                    </div>
-
-                    <div className="text-center">
-                        <h2 className="text-xl md:text-2xl font-black text-white tracking-widest leading-none uppercase flex items-center gap-3">
-                            {persona.name}
-                            <div className="flex items-center gap-2">
-                                <span className={`w-2 h-2 rounded-full ${status === 'loading' ? 'bg-rose-500 animate-pulse' : 'bg-emerald-500'} shadow-[0_0_8px_rgba(16,185,129,0.8)]`} />
-                            </div>
-                        </h2>
-                        <span className="text-[10px] font-bold text-zinc-500 uppercase tracking-[0.3em] mt-2 block">
-                            {status === 'loading' ? 'Typing...' : 'Online'}
-                        </span>
-                    </div>
-                </div>
-            </div>
-
-            <div className="flex-1 overflow-y-auto px-6 md:px-0 custom-scrollbar relative z-10">
-                <div className="max-w-4xl mx-auto py-8 flex flex-col gap-6">
-                    {messages.length === 0 && (
-                        <div className="flex flex-col items-center justify-center py-20 text-center animate-in fade-in slide-in-from-bottom-4 duration-1000">
-                            <div className="bg-white/[0.02] backdrop-blur-3xl px-10 py-12 rounded-[3.5rem] border border-white/5 shadow-3xl max-w-sm relative group overflow-hidden">
-                                <div className="absolute inset-0 bg-gradient-to-tr from-rose-500/5 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
-                                <div className="w-12 h-1 bg-gradient-to-r from-transparent via-rose-500 to-transparent mx-auto mb-8 opacity-40" />
-                                <h4 className="text-xl font-black text-white uppercase tracking-[0.4em] mb-4">{persona.name}</h4>
-                                <p className="text-zinc-400 text-sm italic font-serif leading-relaxed px-2">
-                                    "{persona.greeting || "Let's begin our story..."}"
-                                </p>
+                        <div className="space-y-1.5">
+                            <div className="glass-card text-zinc-200 border border-zinc-800/40 p-4 rounded-3xl rounded-bl-none text-sm leading-relaxed transition-all w-20 flex items-center justify-center">
+                                <span className="w-1.5 h-1.5 bg-rose-500 rounded-full animate-bounce mx-0.5 [animation-delay:-0.3s]" />
+                                <span className="w-1.5 h-1.5 bg-rose-500 rounded-full animate-bounce mx-0.5 [animation-delay:-0.15s]" />
+                                <span className="w-1.5 h-1.5 bg-rose-500 rounded-full animate-bounce mx-0.5" />
                             </div>
                         </div>
-                    )}
-
-                    {messages?.map((msg, idx) => {
-                        const isPersona = msg.role === 'assistant';
-                        return (
-                            <div key={idx} className={`flex ${!isPersona ? 'justify-end' : 'justify-start'} animate-in fade-in slide-in-from-bottom-2 duration-500`}>
-                                <div className={`relative flex flex-col gap-2 ${isPersona ? 'max-w-[90%] md:max-w-2xl' : 'max-w-[85%] md:max-w-xl'}`}>
-                                    <div className={`relative px-6 py-5 md:px-8 md:py-6 rounded-[2.5rem] shadow-2xl transition-all duration-500 ${!isPersona
-                                        ? 'bg-rose-600/90 text-white rounded-tr-sm shadow-rose-900/20'
-                                        : 'bg-zinc-900/80 backdrop-blur-2xl text-zinc-100 border border-white/10 rounded-tl-sm'
-                                        }`}>
-
-                                        {isPersona && (
-                                            <div className="flex items-center gap-2 mb-4 opacity-60">
-                                                <span className="text-[9px] font-black text-rose-500 uppercase tracking-[0.3em]">{persona.name}</span>
-                                                <div className="w-px h-2 bg-white/20" />
-                                                <span className="text-[9px] font-bold text-zinc-500 uppercase tracking-widest">
-                                                    {new Date(msg.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-                                                </span>
-                                            </div>
-                                        )}
-
-                                        <div className={`text-[15px] md:text-[16px] leading-[1.7] tracking-wide antialiased ${isPersona ? 'font-light' : 'font-medium'}`}>
-                                            {msg.content.split('\n').map((line, i) => (
-                                                <p key={i} className={line.startsWith('*') || line.startsWith('_')
-                                                    ? 'italic text-rose-300/80 mb-3 bg-white/5 py-1.5 px-3 rounded-xl inline-block text-sm'
-                                                    : 'mb-3 last:mb-0'}>
-                                                    {line.replace(/[*_]/g, '')}
-                                                </p>
-                                            ))}
-                                        </div>
-                                    </div>
-                                    {!isPersona && (
-                                        <div className="flex justify-end pr-4 opacity-40">
-                                            <span className="text-[9px] font-black text-white uppercase tracking-[0.2em]">{new Date(msg?.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
-                                        </div>
-                                    )}
-                                </div>
-                            </div>
-                        );
-                    })}
-
-                    {isPersonaTyping && (
-                        <div className="flex justify-start animate-in fade-in slide-in-from-left-4">
-                            <div className="bg-zinc-900/80 backdrop-blur-3xl px-6 py-4 rounded-full border border-white/10 flex gap-1.5 shadow-2xl items-center">
-                                <span className="w-1.5 h-1.5 bg-rose-500 rounded-full animate-bounce [animation-delay:-0.3s]" />
-                                <span className="w-1.5 h-1.5 bg-rose-500 rounded-full animate-bounce [animation-delay:-0.15s]" />
-                                <span className="w-1.5 h-1.5 bg-rose-500 rounded-full animate-bounce" />
-                            </div>
-                        </div>
-                    )}
-
-                    <div ref={messagesEndRef} className="h-32" />
-                </div>
+                    </div>
+                )}
+                
+                <div ref={messagesEndRef} />
             </div>
 
-            <div className="relative z-50 p-6 md:p-10 bg-gradient-to-t from-black via-black/90 to-transparent">
-                <div className="max-w-3xl mx-auto">
-                    {!canChat && (
-                        <div
-                            onClick={() => router.push('/plans')}
-                            className="mb-6 bg-rose-500/10 backdrop-blur-3xl border border-rose-500/20 rounded-3xl p-4 flex items-center justify-between cursor-pointer hover:bg-rose-500/20 transition-all group animate-in slide-in-from-bottom-2"
+            <div className="p-4 md:p-8 shrink-0 bg-transparent z-20">
+                {!canChat && (
+                    <div
+                        onClick={() => router.push('/plans')}
+                        className="mb-4 bg-rose-500/10 border border-rose-500/20 rounded-2xl p-3 flex items-center justify-between cursor-pointer hover:bg-rose-500/20 transition-all text-xs max-w-3xl mx-auto"
+                    >
+                        <div className="flex items-center gap-3">
+                            <Sparkles className="text-rose-500" size={16} />
+                            <p className="font-bold text-rose-100 uppercase tracking-widest">
+                                {membershipRequired ? "Бүртгэлтэй хэрэглэгчдэд нээлттэй" : "Чатлах эрх дууссан"}
+                            </p>
+                        </div>
+                        <span className="font-bold text-rose-500 uppercase tracking-wider">Get Access ❯</span>
+                    </div>
+                )}
+                <form onSubmit={handleSendMessage} className={`relative block max-w-3xl mx-auto ${!canChat ? 'opacity-40 cursor-not-allowed' : ''}`}>
+                    <div className="flex items-center gap-3 md:gap-4 bg-zinc-900/80 border border-zinc-800/50 rounded-3xl md:rounded-4xl px-4 md:px-6 py-3 backdrop-blur-xl shadow-2xl focus-within:ring-2 focus-within:ring-rose-500/20 transition-all">
+                        <input
+                            ref={inputRef}
+                            type="text"
+                            value={messageBody}
+                            onChange={(e) => setMessageBody(e.target.value)}
+                            disabled={isSending || status === 'loading' || !canChat}
+                            placeholder={canChat ? "Шинэ зурвас бичих..." : "Access Required"}
+                            className="flex-1 bg-transparent border-none focus:outline-none text-sm text-zinc-100 placeholder:text-zinc-600 px-2 font-medium"
+                            onKeyDown={(e) => {
+                                if (e.key === 'Enter' && !e.shiftKey) {
+                                    handleSendMessage(e);
+                                }
+                            }}
+                        />
+                        <button
+                            type="submit"
+                            disabled={!messageBody.trim() || isSending || status === 'loading' || !canChat}
+                            className="w-12 h-12 bg-rose-600 disabled:opacity-50 disabled:bg-zinc-800 rounded-2xl flex items-center justify-center text-white hover:bg-rose-500 transition-all ml-1 shadow-[0_8px_20px_rgba(225,29,72,0.3)] transform active:scale-90 shrink-0"
                         >
-                            <div className="flex items-center gap-4">
-                                <div className="p-2 bg-rose-500/20 rounded-xl">
-                                    <Sparkles className="text-rose-500" size={18} />
-                                </div>
-                                <p className="text-[10px] md:text-xs font-black text-rose-100 uppercase tracking-widest">
-                                    {membershipRequired ? "Бүртгэлтэй хэрэглэгчдэд нээлттэй" : "Чатлах эрх дууссан"}
-                                </p>
-                            </div>
-                            <span className="text-[10px] font-black text-rose-500 uppercase tracking-wider group-hover:translate-x-1 transition-transform">Get Access ❯</span>
-                        </div>
-                    )}
-
-                    <form onSubmit={handleSendMessage} className={`relative group ${!canChat ? 'opacity-40 cursor-not-allowed' : ''}`}>
-                        <div className="absolute -inset-4 bg-rose-500/10 rounded-[4rem] blur-3xl opacity-0 group-focus-within:opacity-100 transition duration-1000" />
-                        <div className="relative flex items-center bg-zinc-900 shadow-[0_20px_50px_rgba(0,0,0,0.5)] border border-white/5 rounded-[2.5rem] pl-8 pr-2 py-2 group-focus-within:border-rose-500/30 transition-all duration-500">
-                            <input
-                                ref={inputRef}
-                                type="text"
-                                value={messageBody}
-                                onChange={(e) => setMessageBody(e.target.value)}
-                                disabled={isSending || status === 'loading' || !canChat}
-                                placeholder={canChat ? "Message..." : "Access Required"}
-                                className="flex-1 bg-transparent border-none focus:outline-none text-[16px] text-white placeholder:text-zinc-600 py-3 font-medium tracking-wide"
-                                onKeyDown={(e) => {
-                                    if (e.key === 'Enter' && !e.shiftKey) {
-                                        handleSendMessage(e);
-                                    }
-                                }}
-                            />
-                            <button
-                                type="submit"
-                                disabled={!messageBody.trim() || isSending || status === 'loading' || !canChat}
-                                className="w-12 h-12 rounded-full bg-rose-500 text-white flex items-center justify-center shadow-lg shadow-rose-500/30 hover:bg-rose-600 hover:scale-105 active:scale-95 disabled:opacity-0 disabled:scale-75 transition-all duration-300"
-                            >
-                                <Send size={20} className="ml-0.5" />
-                            </button>
-                        </div>
-                    </form>
-                </div>
+                            {isSending || status === 'loading' ? (
+                                <Loading size="sm" />
+                            ) : (
+                                <Send size={18} className="ml-0.5" />
+                            )}
+                        </button>
+                    </div>
+                </form>
             </div>
+
+            <AnimatePresence>
+                {isInfoOpen && (
+                    <motion.div
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        className="fixed inset-0 z-[100] flex items-center justify-center bg-black/80 backdrop-blur-sm p-4"
+                        onClick={() => setIsInfoOpen(false)}
+                    >
+                        <motion.div
+                            initial={{ scale: 0.95, opacity: 0 }}
+                            animate={{ scale: 1, opacity: 1 }}
+                            exit={{ scale: 0.95, opacity: 0 }}
+                            onClick={e => e.stopPropagation()}
+                            className="bg-zinc-950 border border-zinc-800 rounded-3xl p-6 max-w-md w-full relative overflow-hidden shadow-2xl shadow-rose-900/20"
+                        >
+                            <div className="absolute -top-24 -right-24 w-48 h-48 bg-rose-500/20 rounded-full blur-[50px] pointer-events-none" />
+                            
+                            <button
+                                onClick={() => setIsInfoOpen(false)}
+                                className="absolute top-4 right-4 w-8 h-8 flex items-center justify-center rounded-full bg-zinc-900 hover:bg-zinc-800 text-zinc-400 transition-colors z-10"
+                            >
+                                <X size={16} />
+                            </button>
+                            
+                            <div className="flex flex-col items-center text-center gap-4 mt-4 relative z-10">
+                                <div className="w-24 h-24 rounded-3xl overflow-hidden relative border-2 border-zinc-800">
+                                    <Image 
+                                        src={persona.image?.url || `https://ui-avatars.com/api/?name=${persona.name}&background=random`} 
+                                        fill 
+                                        className="object-cover" 
+                                        alt={persona.name} 
+                                    />
+                                </div>
+                                <div>
+                                    <h2 className="text-2xl font-bold text-white mb-1">{persona.name}</h2>
+                                    <p className="text-sm text-zinc-400 max-w-[280px] mx-auto italic font-serif leading-relaxed">
+                                        "{persona.greeting || "Let's begin our story..."}"
+                                    </p>
+                                </div>
+                            </div>
+                        </motion.div>
+                    </motion.div>
+                )}
+            </AnimatePresence>
+
+            <AnimatePresence>
+                {isAvatarZoomed && (
+                    <motion.div
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        className="fixed inset-0 z-[110] flex items-center justify-center bg-black/90 backdrop-blur-xl"
+                        onClick={() => setIsAvatarZoomed(false)}
+                    >
+                        <div className="absolute inset-0 overflow-hidden pointer-events-none">
+                            <motion.div 
+                                animate={{ y: [0, -20, 0], x: [0, 10, 0], opacity: [0.5, 0.8, 0.5] }}
+                                transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+                                className="absolute top-1/4 left-1/4 w-64 h-64 bg-rose-500/30 rounded-full blur-[80px]" 
+                            />
+                            <motion.div 
+                                animate={{ y: [0, 30, 0], x: [0, -20, 0], opacity: [0.3, 0.6, 0.3] }}
+                                transition={{ duration: 5, repeat: Infinity, ease: "easeInOut", delay: 1 }}
+                                className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-purple-500/20 rounded-full blur-[100px]" 
+                            />
+                        </div>
+
+                        <button
+                            onClick={() => setIsAvatarZoomed(false)}
+                            className="absolute top-6 right-6 md:top-10 md:right-10 w-12 h-12 flex items-center justify-center rounded-2xl bg-white/5 hover:bg-white/10 border border-white/10 text-white transition-all z-20 backdrop-blur-md"
+                        >
+                            <X size={24} />
+                        </button>
+
+                        <motion.div
+                            initial={{ scale: 0.8, y: 20 }}
+                            animate={{ scale: 1, y: 0 }}
+                            exit={{ scale: 0.8, y: 20 }}
+                            transition={{ type: "spring", damping: 25, stiffness: 200 }}
+                            onClick={e => e.stopPropagation()}
+                            className="relative z-10 w-[90vw] max-w-sm aspect-square md:max-w-md rounded-[3rem] overflow-hidden shadow-[0_0_100px_rgba(244,63,94,0.2)] border border-white/10"
+                        >
+                            <Image
+                                src={persona.image?.url || `https://ui-avatars.com/api/?name=${persona.name}&background=random`}
+                                alt={persona.name}
+                                fill
+                                className="object-cover"
+                                priority
+                            />
+                        </motion.div>
+                    </motion.div>
+                )}
+            </AnimatePresence>
         </div>
     );
 }

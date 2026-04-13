@@ -120,15 +120,16 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
         )}
       </AnimatePresence>
 
-      <main className="flex-1 relative flex flex-col z-10 pt-20 md:pt-0">
-        {/* On desktop, hide header if chatting with AI. On mobile, always show header. */}
-        <div className={isChattingWithAI ? 'md:hidden' : ''}>
-          <Header
-            isMobileMenuOpen={isMobileMenuOpen}
-            setIsMobileMenuOpen={setIsMobileMenuOpen}
-            activeTabTitle={getPageTitle()}
-          />
-        </div>
+      <main className={`flex-1 relative flex flex-col z-10 ${isChattingWithAI ? 'pt-0' : 'pt-20 md:pt-0'}`}>
+        {!isChattingWithAI && (
+          <div>
+            <Header
+              isMobileMenuOpen={isMobileMenuOpen}
+              setIsMobileMenuOpen={setIsMobileMenuOpen}
+              activeTabTitle={getPageTitle()}
+            />
+          </div>
+        )}
 
         <div className={`flex-1 flex flex-col h-full ${(['/chat', '/groups', '/ai-human'].some(p => pathname.startsWith(p))) ? 'overflow-hidden' : 'overflow-y-auto scroll-smooth'}`}>
           <AnimatePresence mode="wait">
