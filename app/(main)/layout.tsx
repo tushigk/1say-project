@@ -9,6 +9,7 @@ import { useAuth } from '@/components/providers/AuthProvider';
 import { useRouter, usePathname } from 'next/navigation';
 import { Heart, BookOpen, MessageCircle, Users, LogOut, Sparkles } from 'lucide-react';
 import { NavItem } from '@/components/layout/NavItem';
+import { useSearchParams } from 'next/navigation';
 
 export default function MainLayout({ children }: { children: React.ReactNode }) {
   const { logout, user } = useAuth();
@@ -28,17 +29,20 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
     return 'Noir';
   };
 
+  const searchParams = useSearchParams();
+  const isChattingWithAI = pathname.startsWith('/ai-human') && searchParams.get('personaId');
   const isSpecialPage = pathname === '/plans' || pathname.startsWith('/payment');
+  const showSidebar = !isSpecialPage && !isChattingWithAI;
 
   return (
     <div className="flex h-screen bg-zinc-950 text-zinc-200 overflow-hidden noise-bg font-sans">
       <div className="fixed top-[-10%] left-[-10%] w-[40%] h-[40%] bg-rose-900/10 blur-[120px] rounded-full z-0 pointer-events-none"></div>
       <div className="fixed bottom-[-10%] right-[-10%] w-[30%] h-[30%] bg-purple-900/10 blur-[120px] rounded-full z-0 pointer-events-none"></div>
 
-      {!isSpecialPage && <Sidebar />}
+      {showSidebar && <Sidebar />}
 
       <AnimatePresence>
-        {!isSpecialPage && isMobileMenuOpen && (
+        {showSidebar && isMobileMenuOpen && (
           <>
             <motion.div
               initial={{ opacity: 0 }}
@@ -70,7 +74,7 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
                 <NavItem icon={<Heart />} label="Танилцах" isActive={pathname === '/discover'} onClick={() => { router.push('/discover'); setIsMobileMenuOpen(false); }} />
                 <NavItem icon={<BookOpen />} label="Түүхүүд" isActive={pathname === '/stories'} onClick={() => { router.push('/stories'); setIsMobileMenuOpen(false); }} />
                 <NavItem icon={<Sparkles />} label="AI Personas" isActive={pathname.startsWith('/ai-human')} onClick={() => { router.push('/ai-human'); setIsMobileMenuOpen(false); }} />
-                <NavItem icon={<MessageCircle />} label="Чат" isActive={pathname.startsWith('/chat')} onClick={() => { router.push('/chat'); setIsMobileMenuOpen(false); }} />
+                <NavItem icon={<MessageCircle />} label="Зурвасууд" isActive={pathname.startsWith('/chat')} onClick={() => { router.push('/chat'); setIsMobileMenuOpen(false); }} />
                 <NavItem icon={<Users />} label="Грүпп чат" isActive={pathname.startsWith('/groups')} onClick={() => { router.push('/groups'); setIsMobileMenuOpen(false); }} />
               </nav>
 
@@ -116,14 +120,17 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
         )}
       </AnimatePresence>
 
-      <main className="flex-1 relative flex flex-col z-10 pt-16 md:pt-0">
-        <Header
-          isMobileMenuOpen={isMobileMenuOpen}
-          setIsMobileMenuOpen={setIsMobileMenuOpen}
-          activeTabTitle={getPageTitle()}
-        />
+      <main className="flex-1 relative flex flex-col z-10 pt-20 md:pt-0">
+        {/* On desktop, hide header if chatting with AI. On mobile, always show header. */}
+        <div className={isChattingWithAI ? 'md:hidden' : ''}>
+          <Header
+            isMobileMenuOpen={isMobileMenuOpen}
+            setIsMobileMenuOpen={setIsMobileMenuOpen}
+            activeTabTitle={getPageTitle()}
+          />
+        </div>
 
-        <div className={`flex-1 ${(['/chat', '/groups'].some(p => pathname.startsWith(p))) ? 'overflow-hidden' : 'overflow-y-auto scroll-smooth'}`}>
+        <div className={`flex-1 flex flex-col h-full ${(['/chat', '/groups', '/ai-human'].some(p => pathname.startsWith(p))) ? 'overflow-hidden' : 'overflow-y-auto scroll-smooth'}`}>
           <AnimatePresence mode="wait">
             <motion.div
               key={pathname}
@@ -131,9 +138,11 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.98 }}
               transition={{ duration: 0.4, ease: [0.23, 1, 0.32, 1] }}
-              className="h-full"
+              className="flex-1 flex flex-col h-full overflow-hidden"
             >
-              {children}
+              <div className="flex-1 flex flex-col h-full min-h-0 relative">
+                {children}
+              </div>
             </motion.div>
           </AnimatePresence>
         </div>

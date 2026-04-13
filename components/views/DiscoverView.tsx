@@ -1,10 +1,10 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { Heart, Sparkles, Users } from 'lucide-react';
 import Image from 'next/image';
-import useSWR from 'swr';
+import useSWRInfinite from 'swr/infinite';
 import { membershipApi, chatApi } from '@/apis';
 import toast from 'react-hot-toast';
 import { useAuth } from '@/components/providers/AuthProvider';
@@ -37,11 +37,7 @@ export function DiscoverView({
 }) {
     const { user } = useAuth();
     const [selectedGender, setSelectedGender] = useState<'male' | 'female' | 'all'>('all');
-    const [page, setPage] = useState(1);
-    const [users, setUsers] = useState<MembershipUser[]>([]);
-    const [hasMore, setHasMore] = useState(true);
     const [isGreeting, setIsGreeting] = useState<string | null>(null);
-
     const [hasSetInitialGender, setHasSetInitialGender] = useState(false);
 
     useEffect(() => {
@@ -51,39 +47,31 @@ export function DiscoverView({
         }
     }, [user?.gender, hasSetInitialGender]);
 
-    const { isLoading, isValidating } = useSWR<MembershipResponse>(
-        [`users`, selectedGender, page],
-        () => membershipApi.listActiveMembershipUsers({
-            gender: selectedGender === 'all' ? undefined : selectedGender,
-            page
+    const getKey = (pageIndex: number, previousPageData: MembershipResponse | null) => {
+        if (previousPageData && previousPageData.page >= previousPageData.totalPages) return null;
+        return [`users`, selectedGender, pageIndex + 1];
+    };
+
+    const { data: infiniteData, size, setSize, isLoading, isValidating } = useSWRInfinite<MembershipResponse>(
+        getKey,
+        ([, gender, p]) => membershipApi.listActiveMembershipUsers({
+            gender: gender === 'all' ? undefined : (gender as any),
+            page: p as number
         }),
-        {
-            onSuccess: (newData) => {
-                if (page === 1) {
-                    setUsers(newData.data);
-                } else {
-                    setUsers(prev => {
-                        const existingIds = new Set(prev?.map(u => u._id));
-                        const newUsers = newData.data.filter(u => !existingIds.has(u._id));
-                        return [...prev, ...newUsers];
-                    });
-                }
-                setHasMore(newData.page < newData.totalPages);
-            },
-            revalidateOnFocus: false
-        }
+        { revalidateOnFocus: false }
     );
+
+    const users = infiniteData ? infiniteData.flatMap(page => page.data || []) : [];
+    const hasMore = infiniteData ? (infiniteData[infiniteData.length - 1].page < infiniteData[infiniteData.length - 1].totalPages) : true;
 
     const handleFilterChange = (gender: 'male' | 'female' | 'all') => {
         setSelectedGender(gender);
-        setPage(1);
-        setUsers([]);
-        setHasMore(true);
+        setSize(1);
     };
 
     const loadMore = () => {
         if (!isLoading && !isValidating && hasMore) {
-            setPage(prev => prev + 1);
+            setSize(size + 1);
         }
     };
 

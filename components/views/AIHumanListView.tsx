@@ -1,13 +1,12 @@
 'use client';
 
-import React from 'react';
 import { motion } from 'framer-motion';
-import { MessageCircle, Info } from 'lucide-react';
+import { MessageCircle } from 'lucide-react';
 import Image from 'next/image';
 import { aiHumanApi } from '@/apis';
 import { AIHuman } from '@/apis/aiHuman';
 import useSWR from 'swr';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 
 export function AIHumanListView() {
     const router = useRouter();
@@ -49,7 +48,7 @@ export function AIHumanListView() {
                                 className="object-cover transition-transform duration-700 group-hover:scale-110"
                             />
                             <div className="absolute inset-0 bg-gradient-to-t from-zinc-950 via-zinc-950/20 to-transparent opacity-80" />
-                            
+
                             {/* Tags */}
                             <div className="absolute top-6 left-6 flex flex-wrap gap-2">
                                 <span className="px-4 py-1.5 rounded-full bg-black/40 backdrop-blur-md border border-white/10 text-[10px] font-bold text-white uppercase tracking-widest">
@@ -74,17 +73,11 @@ export function AIHumanListView() {
 
                             <div className="pt-4 flex items-center gap-3">
                                 <button
-                                    onClick={() => router.push(`/?tab=ai-human&personaId=${persona._id}`)}
+                                    onClick={() => router.push(`/ai-human?personaId=${persona._id}`)}
                                     className="flex-1 h-14 rounded-2xl bg-white text-black font-bold uppercase tracking-widest text-xs hover:bg-rose-500 hover:text-white transition-all duration-300 flex items-center justify-center gap-2 group/btn shadow-xl shadow-white/5 active:scale-95"
                                 >
                                     <MessageCircle size={18} />
-                                    <span>Chat Now</span>
-                                </button>
-                                <button 
-                                    className="w-14 h-14 rounded-2xl bg-zinc-800/80 text-white flex items-center justify-center hover:bg-zinc-700 transition-all active:scale-95"
-                                    onClick={() => {/* detail modal or something */}}
-                                >
-                                    <Info size={18} />
+                                    <span>Чатлах</span>
                                 </button>
                             </div>
                         </div>

@@ -4,7 +4,7 @@ import { networkApi, NetworkPost, NetworkPostsResponse, NetworkCommentsResponse 
 import { motion, AnimatePresence } from 'framer-motion';
 import { Heart, MessageCircle, Clock, Plus, X, Send, Trash2, Flag, AlertTriangle, CheckCircle2, Loader2 } from 'lucide-react';
 import Image from 'next/image';
-import useSWR from 'swr';
+import useSWRInfinite from 'swr/infinite';
 import { useAuth, User } from '@/components/providers/AuthProvider';
 import { ImagePicker } from '../form/image-picker';
 
@@ -119,13 +119,25 @@ function ReportModal({ state, onConfirm, onClose }: { state: ReportModalState; o
 }
 
 function CommentsSection({ storyId, mutatePosts, currentUser, onNavigateToProfile }: { storyId: string, mutatePosts: () => void, currentUser: User | null, onNavigateToProfile?: (id: string) => void }) {
-    const { data, mutate } = useSWR<NetworkCommentsResponse>(
-        storyId ? `network/comments/${storyId}` : null,
-        () => networkApi.listNetworkComments(storyId)
+    const getCommentsKey = (pageIndex: number, previousPageData: NetworkCommentsResponse | null) => {
+        if (!storyId) return null;
+        if (previousPageData && (previousPageData.data || []).length === 0) return null;
+        return [`network/comments`, storyId, pageIndex + 1];
+    };
+
+    const { data: infiniteData, mutate, size, setSize, isValidating } = useSWRInfinite<NetworkCommentsResponse>(
+        getCommentsKey,
+        (key) => {
+            const [, sid] = key;
+            return networkApi.listNetworkComments(sid as string);
+        }
     );
+
     const [msg, setMsg] = useState('');
     const [isSubmitting, setIsSubmitting] = useState(false);
 
+    const allComments = infiniteData ? infiniteData.flatMap(page => page.data || []) : [];
+    const totalComments = infiniteData ? infiniteData[0].total : 0;
 
     const submitComment = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -156,10 +168,10 @@ function CommentsSection({ storyId, mutatePosts, currentUser, onNavigateToProfil
 
     return (
         <div className="space-y-6 h-full flex flex-col">
-            <h3 className="text-lg font-bold text-white">Сэтгэгдлүүд ({data?.total || 0})</h3>
+            <h3 className="text-lg font-bold text-white">Сэтгэгдлүүд ({totalComments})</h3>
 
             <div className="flex-1 min-h-0 space-y-4">
-                {[...(data?.data || [])].reverse().map(comment => {
+                {[...allComments].reverse().map(comment => {
                     const commentUser = comment.user || comment.createdBy;
                     return (
                         <div key={comment._id} className="bg-zinc-900/30 p-4 rounded-2xl flex gap-4 group">
@@ -202,7 +214,7 @@ function CommentsSection({ storyId, mutatePosts, currentUser, onNavigateToProfil
                         </div>
                     );
                 })}
-                {!data?.data?.length && (
+                {!allComments.length && (
                     <p className="text-center text-zinc-500 py-8 text-sm">Одоогоор сэтгэгдэл алга байна.</p>
                 )}
             </div>
@@ -226,32 +238,25 @@ function CommentsSection({ storyId, mutatePosts, currentUser, onNavigateToProfil
 
 export function StoriesView({ onNavigateToProfile }: { onNavigateToProfile?: (id: string) => void }) {
     const { user } = useAuth();
-    const [page, setPage] = useState(1);
     const LIMIT = 10;
 
-    const { data, mutate, isValidating } = useSWR<NetworkPostsResponse>(
-        [`network/posts`, page],
-        () => networkApi.listNetworkPosts({
-            page,
+    const getKey = (pageIndex: number, previousPageData: NetworkPostsResponse | null) => {
+        if (previousPageData && (previousPageData.data || []).length === 0) return null;
+        return [`network/posts`, pageIndex + 1];
+    };
+
+    const { data: infiniteData, size, setSize, mutate, isValidating } = useSWRInfinite<NetworkPostsResponse>(
+        getKey,
+        ([, p]) => networkApi.listNetworkPosts({
+            page: p as number,
             limit: LIMIT
         }),
-        { keepPreviousData: true }
+        { revalidateOnFocus: false }
     );
-    const [allPosts, setAllPosts] = useState<NetworkPost[]>([]);
 
-    useEffect(() => {
-        if (data?.data) {
-            if (page === 1) {
-                setAllPosts(data.data);
-            } else {
-                setAllPosts(prev => {
-                    const existingIds = new Set(prev?.map(p => p._id));
-                    const newPosts = data.data.filter(p => !existingIds.has(p._id));
-                    return [...prev, ...newPosts];
-                });
-            }
-        }
-    }, [data, page]);
+    const allPosts = infiniteData ? infiniteData.flatMap(page => page.data || []) : [];
+    const hasMore = infiniteData ? (infiniteData[infiniteData.length - 1].data.length === LIMIT) : true;
+    const page = size;
 
     const [isCreating, setIsCreating] = useState(false);
     const [selectedStory, setSelectedStory] = useState<NetworkPost | null>(null);
@@ -320,13 +325,14 @@ export function StoriesView({ onNavigateToProfile }: { onNavigateToProfile?: (id
         try {
             await mutate(async (currentData) => {
                 if (!currentData) return currentData;
-                const newData = { ...currentData };
-                newData.data = newData.data?.map(p =>
-                    p._id === story._id
-                        ? { ...p, likedByMe: !p.likedByMe, likeCount: p.likedByMe ? Math.max(0, p.likeCount - 1) : p.likeCount + 1 }
-                        : p
-                );
-                return newData;
+                return currentData.map(page => ({
+                    ...page,
+                    data: page.data?.map(p =>
+                        p._id === story._id
+                            ? { ...p, likedByMe: !p.likedByMe, likeCount: p.likedByMe ? Math.max(0, p.likeCount - 1) : p.likeCount + 1 }
+                            : p
+                    )
+                }));
             }, false);
 
             if (story.likedByMe) {
@@ -458,10 +464,10 @@ export function StoriesView({ onNavigateToProfile }: { onNavigateToProfile?: (id
                     </motion.div>
                 ))}
 
-                {data && data.totalPages > page && (
+                {hasMore && allPosts.length > 0 && (
                     <div className="flex justify-center pt-10">
                         <button
-                            onClick={() => setPage(prev => prev + 1)}
+                            onClick={() => setSize(size + 1)}
                             disabled={isValidating}
                             className="px-8 py-3 bg-zinc-900 hover:bg-zinc-800 text-white rounded-2xl font-bold transition-all border border-zinc-800 disabled:opacity-50"
                         >

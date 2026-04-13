@@ -29,13 +29,18 @@ export function ProfileView({ userId, onBack, onNavigateToChat }: ProfileViewPro
     const { user: currentUser } = useAuth();
     const [isActionLoading, setIsActionLoading] = React.useState(false);
     const [isInviteModalOpen, setIsInviteModalOpen] = React.useState(false);
-    const [myGroups, setMyGroups] = React.useState<GroupChat[]>([]);
-    const [isGroupsLoading, setIsGroupsLoading] = React.useState(false);
 
     const { data, error, isLoading } = useSWR(
         userId ? `profile/public/${userId}` : null,
         () => profileApi.getPublicUserProfile(userId)
     );
+
+    const { data: chatsData, isLoading: isGroupsLoading } = useSWR('chats', () => chatApi.listChats());
+
+    const myGroups: GroupChat[] = React.useMemo(() => {
+        const rawChats = chatsData?.data || chatsData || [];
+        return rawChats.filter((chat: GroupChat) => chat.type === 'group');
+    }, [chatsData]);
 
     const fileInputRef = React.useRef<HTMLInputElement>(null);
     const [isUploading, setIsUploading] = React.useState(false);
@@ -95,10 +100,9 @@ export function ProfileView({ userId, onBack, onNavigateToChat }: ProfileViewPro
         setIsActionLoading(true);
         try {
             const res = await chatApi.createDirectChat(profile._id);
-            if (res.data?._id) {
-                onNavigateToChat?.(res.data._id);
-            } else if (res._id) {
-                onNavigateToChat?.(res._id);
+            const chatId = res.data?._id || res._id;
+            if (chatId) {
+                onNavigateToChat?.(chatId);
             } else {
                 toast.error("Чат үүсгэхэд асуудал гарлаа");
             }
@@ -111,20 +115,8 @@ export function ProfileView({ userId, onBack, onNavigateToChat }: ProfileViewPro
         }
     };
 
-    const openInviteModal = async () => {
+    const openInviteModal = () => {
         setIsInviteModalOpen(true);
-        setIsGroupsLoading(true);
-        try {
-            const res = await chatApi.listChats({});
-            // Filter for group chats
-            const groups = (res.data || res).filter((chat: GroupChat) => chat.type === 'group');
-            setMyGroups(groups);
-        } catch (error) {
-            console.error("Fetch Groups Error:", error);
-            toast.error("Грүппүүд ачаалахад алдаа гарлаа");
-        } finally {
-            setIsGroupsLoading(false);
-        }
     };
 
     const handleInvite = async (chatId: string) => {
