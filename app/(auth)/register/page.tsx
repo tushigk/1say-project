@@ -102,7 +102,7 @@ export default function RegisterPage() {
                                 </h1>
 
                                 <p className="mt-2 max-w-md text-sm leading-relaxed text-zinc-500 font-light tracking-wide">
-                                    Noir-д нэгдэж, нууцлаг бөгөөд халуухан ертөнцөд өөрийн орон зайг бүтээгээрэй.
+                                    Бидэнтэй нэгдэж, нууцлаг бөгөөд халуухан ертөнцөд өөрийн орон зайг бүтээгээрэй.
                                 </p>
                             </div>
 

@@ -4,6 +4,7 @@ import "./globals.css";
 import { AuthProvider } from "@/components/providers/AuthProvider";
 import { SocketProvider } from "@/components/providers/SocketProvider";
 import { RouteGuard } from "@/components/providers/RouteGuard";
+import SplashScreen from "@/components/ui/SplashScreen";
 
 const plusJakartaSans = Plus_Jakarta_Sans({
   subsets: ["latin"],
@@ -84,6 +85,7 @@ export default function RootLayout({
   return (
     <html lang="en" className={`dark ${plusJakartaSans.variable} ${fraunces.variable}`}>
       <body className="min-h-screen bg-velvet-dark text-white antialiased overflow-x-hidden selection:bg-primary selection:text-white">
+        <SplashScreen />
         <AuthProvider>
           <SocketProvider>
             <RouteGuard>
