@@ -75,3 +75,7 @@ export const getAIHumanHistory = async (id: string, params?: { page?: number; li
 export const chatWithAIHuman = async (id: string, data: { message: string, behaviorPrompt?: string }) => {
     return await appHttpRequest.post(`/ai-humans/${id}/chat`, data);
 };
+
+export const deleteAIHumanChat = async (id: string) => {
+    return await appHttpRequest.del(`/ai-humans/${id}/chat`);
+};

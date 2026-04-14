@@ -1,13 +1,13 @@
 'use client';
 
 import { useState, useEffect, useRef, FormEvent } from 'react';
-import { Send, ChevronLeft, MoreVertical, Sparkles, Info, X } from 'lucide-react';
+import { Send, ChevronLeft, MoreVertical, Sparkles, Info, X, Trash2 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Image from 'next/image';
 import { useRouter, useSearchParams } from 'next/navigation';
 import useSWR from 'swr';
 import { aiHumanApi } from '@/apis';
-import { AIHuman, AIHumanMessage, AIHumanConversation } from '@/apis/aiHuman';
+import { AIHuman, AIHumanMessage, AIHumanConversation, deleteAIHumanChat } from '@/apis/aiHuman';
 import { useSocket } from '@/components/providers/SocketProvider';
 import { toast } from 'react-hot-toast';
 
@@ -159,6 +159,43 @@ export function AIHumanChatView({ personaId: propPersonaId, onBack, activeTab = 
         }
     };
 
+    const [isDeleting, setIsDeleting] = useState(false);
+    const [isDeleteConfirmOpen, setIsDeleteConfirmOpen] = useState(false);
+    const [personaToDeleteId, setPersonaToDeleteId] = useState<string | null>(null);
+    const longPressTimer = useRef<NodeJS.Timeout | null>(null);
+    const [isLongPressing, setIsLongPressing] = useState(false);
+
+    const handleLongPress = (id: string) => {
+        setPersonaToDeleteId(id);
+        setIsDeleteConfirmOpen(true);
+        if (window.navigator.vibrate) window.navigator.vibrate(50);
+    };
+
+    const handleDeleteChat = async (targetId?: string) => {
+        const id = targetId || personaId;
+        if (!id || isDeleting) return;
+
+        setIsDeleting(true);
+        try {
+            await aiHumanApi.deleteAIHumanChat(id);
+            toast.success('Харилцаа амжилттай устгагдлаа');
+            mutateChats();
+            setIsDeleteConfirmOpen(false);
+            setPersonaToDeleteId(null);
+
+            // If we deleted the current active chat, go back to discover
+            if (id === personaId) {
+                setIsInfoOpen(false);
+                router.push('/ai-human?tab=discover');
+            }
+        } catch (error) {
+            console.error("Delete Chat Error:", error);
+            toast.error("Устгахад алдаа гарлаа");
+        } finally {
+            setIsDeleting(false);
+        }
+    };
+
     const { data: chatsData, mutate: mutateChats } = useSWR('ai-human-chats', () => aiHumanApi.listMyAIHumanChats());
     const chats: AIHumanConversation[] = chatsData?.data || chatsData || [];
 
@@ -244,13 +281,31 @@ export function AIHumanChatView({ personaId: propPersonaId, onBack, activeTab = 
                         return (
                             <motion.div
                                 key={idx}
-                                onClick={() => router.push(`/ai-human?personaId=${pId}`)}
-                                className={`group flex items-center gap-4 p-4 rounded-3xl cursor-pointer transition-all duration-500 ${pId === personaId
+                                onPointerDown={() => {
+                                    setIsLongPressing(false);
+                                    longPressTimer.current = setTimeout(() => {
+                                        setIsLongPressing(true);
+                                        handleLongPress(pId);
+                                    }, 600);
+                                }}
+                                onPointerUp={() => {
+                                    if (longPressTimer.current) clearTimeout(longPressTimer.current);
+                                }}
+                                onPointerLeave={() => {
+                                    if (longPressTimer.current) clearTimeout(longPressTimer.current);
+                                }}
+                                onClick={() => {
+                                    if (!isLongPressing) {
+                                        router.push(`/ai-human?personaId=${pId}`);
+                                    }
+                                }}
+                                whileTap={{ scale: 0.96 }}
+                                className={`group flex items-center gap-4 p-4 rounded-3xl cursor-pointer transition-all duration-500 select-none ${pId === personaId
                                     ? 'bg-rose-500/10 border border-rose-500/20 shadow-[0_10px_30px_-5px_rgba(244,63,94,0.15)] ring-1 ring-rose-500/10'
                                     : 'hover:bg-zinc-900/40 border border-transparent hover:border-zinc-800/30'
                                     }`}
                             >
-                                <div className="relative shrink-0">
+                                <div className="relative shrink-0 pointer-events-none">
                                     <div className={`w-14 h-14 rounded-2xl overflow-hidden relative ring-2 transition-all duration-500 ${pId === personaId ? 'ring-rose-500/40 scale-105' : 'ring-zinc-800/50 group-hover:ring-zinc-700'}`}>
                                         <Image
                                             src={pImage}
@@ -261,10 +316,10 @@ export function AIHumanChatView({ personaId: propPersonaId, onBack, activeTab = 
                                     </div>
                                     <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-green-500 border-4 border-zinc-950 rounded-full shadow-lg"></div>
                                 </div>
-                                <div className="flex-1 min-w-0">
+                                <div className="flex-1 min-w-0 pointer-events-none">
                                     <div className="flex justify-between items-baseline mb-1">
                                         <h4 className={`font-bold truncate text-sm transition-colors ${pId === personaId ? 'text-rose-500' : 'text-white group-hover:text-rose-100'}`}>{pName}</h4>
-                                        <span className="text-[9px] font-black text-zinc-600 uppercase tracking-tighter">
+                                        <span className="text-[9px] font-black text-zinc-600 uppercase tracking-tighter shrink-0">
                                             {(() => {
                                                 const time = (chat as any).lastMessageAt || (chat as any).conversation?.lastMessageAt || (p as any)?.conversation?.lastMessageAt;
                                                 return time ? new Date(time).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : '';
@@ -277,6 +332,18 @@ export function AIHumanChatView({ personaId: propPersonaId, onBack, activeTab = 
                                             return preview?.replace(/\s+/g, ' ') || 'Яриаг эхлүүлэх...';
                                         })()}
                                     </p>
+                                </div>
+                                <div className="shrink-0 hidden md:flex items-center opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-x-1 group-hover:translate-x-0">
+                                    <button
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            setPersonaToDeleteId(pId);
+                                            setIsDeleteConfirmOpen(true);
+                                        }}
+                                        className="w-8 h-8 cursor-pointer flex items-center justify-center rounded-xl bg-red-500/10 hover:bg-red-500 text-red-500 hover:text-white transition-all border border-red-500/20 hover:border-transparent"
+                                    >
+                                        <Trash2 size={13} />
+                                    </button>
                                 </div>
                             </motion.div>
                         );
@@ -519,12 +586,77 @@ export function AIHumanChatView({ personaId: propPersonaId, onBack, activeTab = 
                                     {persona?.greeting || persona?.shortBio || "Step into a world of mystery. Start chatting to discover more about my personality and life."}
                                 </p>
 
-                                <button
-                                    onClick={() => setIsInfoOpen(false)}
-                                    className="w-full h-12 md:h-14 bg-zinc-900 border border-white/10 rounded-xl flex items-center justify-center text-white font-bold tracking-wider hover:bg-zinc-800 transition-colors"
-                                >
-                                    ХААХ
-                                </button>
+                                <div className="space-y-3 pt-4 border-t border-zinc-900">
+                                    <button
+                                        onClick={() => setIsDeleteConfirmOpen(true)}
+                                        disabled={isDeleting}
+                                        className="w-full h-12 md:h-14 cursor-pointer bg-red-500/10 hover:bg-red-500/20 text-red-500 border border-red-500/20 rounded-xl flex items-center justify-center gap-2 font-bold tracking-wider transition-all"
+                                    >
+                                        <Trash2 size={18} />
+                                        {isDeleting ? 'УСТГАЖ БАЙНА...' : 'ХАРИЛЦААГ УСТГАХ'}
+                                    </button>
+
+                                    <button
+                                        onClick={() => setIsInfoOpen(false)}
+                                        className="w-full h-12 md:h-14 bg-zinc-900 border border-white/10 rounded-xl flex items-center justify-center text-white font-bold tracking-wider hover:bg-zinc-800 transition-colors"
+                                    >
+                                        ХААХ
+                                    </button>
+                                </div>
+                            </div>
+                        </motion.div>
+                    </motion.div>
+                )}
+            </AnimatePresence>
+
+            <AnimatePresence>
+                {isDeleteConfirmOpen && (
+                    <motion.div
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        className="fixed inset-0 z-[120] flex items-center justify-center p-4 bg-black/60 backdrop-blur-md"
+                        onClick={() => setIsDeleteConfirmOpen(false)}
+                    >
+                        <motion.div
+                            initial={{ scale: 0.9, opacity: 0, y: 20 }}
+                            animate={{ scale: 1, opacity: 1, y: 0 }}
+                            exit={{ scale: 0.9, opacity: 0, y: 20 }}
+                            onClick={e => e.stopPropagation()}
+                            className="w-full max-w-sm bg-zinc-950 border border-white/10 rounded-[2.5rem] p-8 shadow-2xl relative overflow-hidden"
+                        >
+                            <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-red-500/50 to-transparent" />
+
+                            <div className="flex flex-col items-center text-center space-y-6">
+                                <div className="w-20 h-20 rounded-3xl bg-red-500/10 flex items-center justify-center text-red-500 border border-red-500/20 shadow-[0_0_30px_rgba(239,68,68,0.1)] mb-2">
+                                    <Trash2 size={32} />
+                                </div>
+
+                                <div className="space-y-2">
+                                    <h3 className="text-2xl font-serif font-bold text-white tracking-tight italic">Устгахдаа итгэлтэй байна уу?</h3>
+                                    <p className="text-zinc-500 text-sm font-medium leading-relaxed">
+                                        Таны энэ AI-тай хийсэн бүх харилцаа зурвасууд бүр мөсөн устах болно.
+                                    </p>
+                                </div>
+
+                                <div className="grid grid-cols-2 gap-4 w-full pt-4">
+                                    <button
+                                        onClick={() => {
+                                            setIsDeleteConfirmOpen(false);
+                                            setPersonaToDeleteId(null);
+                                        }}
+                                        className="h-12 rounded-2xl bg-zinc-900 hover:bg-zinc-800 text-zinc-400 font-bold tracking-wider transition-all border border-white/5"
+                                    >
+                                        ЦУЦЛАХ
+                                    </button>
+                                    <button
+                                        onClick={() => handleDeleteChat(personaToDeleteId || undefined)}
+                                        disabled={isDeleting}
+                                        className="h-12 rounded-2xl bg-red-600 hover:bg-red-500 text-white font-bold tracking-wider transition-all shadow-lg shadow-red-950/20 flex items-center justify-center"
+                                    >
+                                        {isDeleting ? <Loading size="sm" /> : 'УСТГАХ'}
+                                    </button>
+                                </div>
                             </div>
                         </motion.div>
                     </motion.div>
