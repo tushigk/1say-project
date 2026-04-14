@@ -137,16 +137,6 @@ export function ProfileView({ userId, onBack, onNavigateToChat }: ProfileViewPro
 
     return (
         <div className="max-w-4xl mx-auto p-6 md:p-10 space-y-10">
-            <div className="flex items-center gap-4">
-                <button
-                    onClick={onBack}
-                    className="p-3 bg-zinc-900/50 hover:bg-rose-500 group rounded-2xl transition-all border border-zinc-800"
-                >
-                    <ArrowLeft size={20} className="text-zinc-400 group-hover:text-white" />
-                </button>
-                <h1 className="text-2xl font-serif text-white uppercase tracking-widest">Профайл</h1>
-            </div>
-
             <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -154,6 +144,12 @@ export function ProfileView({ userId, onBack, onNavigateToChat }: ProfileViewPro
             >
                 <div className="h-48 bg-linear-to-br from-rose-900/20 to-purple-900/20 relative">
                     <div className="absolute inset-0 bg-black/20" />
+                    <button
+                        onClick={onBack}
+                        className="absolute top-6 left-6 p-3 bg-black/40 hover:bg-rose-500 group rounded-2xl backdrop-blur-md transition-all border border-white/10 z-10"
+                    >
+                        <ArrowLeft size={20} className="text-white/70 group-hover:text-white" />
+                    </button>
                 </div>
 
                 <div className="px-8 pb-10 -mt-16 relative z-10">

@@ -95,7 +95,7 @@ export function DiscoverView({
     };
 
     return (
-        <div className="flex-1 flex flex-col h-full overflow-y-auto relative custom-scrollbar p-6 md:p-10">
+        <div className="flex-1 flex flex-col h-full overflow-y-auto relative custom-scrollbar p-4 md:p-10">
             <div className="max-w-7xl mx-auto w-full space-y-10">
                 <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
                     <div className="space-y-4">
@@ -130,7 +130,7 @@ export function DiscoverView({
                     </div>
                 </div>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+                <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3 sm:gap-6 md:gap-8">
                     {users?.map((profile, index) => (
                         <motion.div
                             key={profile._id}
@@ -138,9 +138,10 @@ export function DiscoverView({
                             animate={{ opacity: 1, scale: 1 }}
                             transition={{ duration: 0.6, delay: index * 0.05 }}
                             whileHover={{ y: -12 }}
+                            onClick={() => onNavigateToProfile?.(String(profile._id))}
                             className="group relative cursor-pointer"
                         >
-                            <div className="relative bg-zinc-900/40 border border-white/5 rounded-[2.5rem] overflow-hidden backdrop-blur-xl transition-all duration-700 h-full group-hover:border-rose-500/30 group-hover:shadow-[0_40px_80px_-20px_rgba(0,0,0,0.8)]">
+                            <div className="relative bg-zinc-900/40 border border-white/5 rounded-2xl md:rounded-[2.5rem] overflow-hidden backdrop-blur-xl transition-all duration-700 h-full group-hover:border-rose-500/30 group-hover:shadow-[0_40px_80px_-20px_rgba(0,0,0,0.8)]">
 
                                 <div className="relative aspect-[4/5] overflow-hidden bg-zinc-900">
                                     <Image
@@ -151,7 +152,6 @@ export function DiscoverView({
                                         priority={index < 4}
                                         className="object-cover transition-all duration-1000 group-hover:scale-110 grayscale-[10%] group-hover:grayscale-0"
                                         referrerPolicy="no-referrer"
-                                        onClick={() => onNavigateToProfile?.(String(profile._id))}
                                         onError={(e) => {
                                             const target = e.target as HTMLImageElement;
                                             target.src = `https://ui-avatars.com/api/?name=${profile.username}&background=random`;
@@ -159,52 +159,52 @@ export function DiscoverView({
                                     />
                                     <div className="absolute inset-0 bg-gradient-to-t from-zinc-950/90 via-zinc-950/20 to-transparent opacity-90 group-hover:opacity-60 transition-opacity duration-700 pointer-events-none" />
 
-                                    <div className="absolute top-5 left-5 flex flex-col gap-2">
-                                        <div className="px-3 py-1 rounded-full bg-black/60 backdrop-blur-xl border border-white/10 text-[9px] font-black text-white uppercase tracking-[0.2em] w-fit">
+                                    <div className="absolute top-3 left-3 md:top-5 md:left-5 flex flex-col gap-1.5 md:gap-2">
+                                        <div className="px-2 py-0.5 md:px-3 md:py-1 rounded-full bg-black/60 backdrop-blur-xl border border-white/10 text-[7px] md:text-[9px] font-black text-white uppercase tracking-[0.2em] w-fit">
                                             {profile.gender === 'male' ? 'Эрэгтэй' : 'Эмэгтэй'}
                                         </div>
                                         {profile.age && (
-                                            <div className="px-3 py-1 rounded-full bg-rose-500/90 backdrop-blur-md text-[9px] font-black text-white uppercase tracking-[0.2em] w-fit">
+                                            <div className="px-2 py-0.5 md:px-3 md:py-1 rounded-full bg-rose-500/90 backdrop-blur-md text-[7px] md:text-[9px] font-black text-white uppercase tracking-[0.2em] w-fit">
                                                 {profile.age} yrs
                                             </div>
                                         )}
                                     </div>
                                 </div>
 
-                                <div className="p-6 space-y-5">
-                                    <div className="space-y-4">
-                                        <div className="flex items-center gap-2">
-                                            <div className={`w-1.5 h-1.5 rounded-full ${profile.isOnline ? 'bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.6)] animate-pulse' : 'bg-zinc-600'}`} />
-                                            <span className="text-[9px] font-bold text-zinc-500 uppercase tracking-widest">{profile.isOnline ? 'Онлайн' : 'Офлайн'}</span>
+                                <div className="p-3 md:p-6 space-y-2.5 md:space-y-5 flex flex-col justify-between flex-1">
+                                    <div className="space-y-1.5 md:space-y-4">
+                                        <div className="flex items-center gap-1.5 md:gap-2">
+                                            <div className={`w-1 h-1 md:w-1.5 md:h-1.5 rounded-full ${profile.isOnline ? 'bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.6)] animate-pulse' : 'bg-zinc-600'}`} />
+                                            <span className="text-[7px] md:text-[9px] font-bold text-zinc-500 uppercase tracking-widest">{profile.isOnline ? 'Онлайн' : 'Офлайн'}</span>
                                         </div>
-                                        <h3
-                                            className="text-2xl md:text-3xl font-serif font-bold text-white group-hover:text-rose-500 transition-colors duration-700 leading-none tracking-tight italic truncate cursor-pointer"
-                                            onClick={() => onNavigateToProfile?.(String(profile._id))}
-                                        >
+                                        <h3 className="text-base md:text-3xl font-serif font-bold text-white group-hover:text-rose-500 transition-colors duration-700 leading-tight tracking-tight italic truncate">
                                             {profile.username}
                                         </h3>
-                                        <div className="flex items-center gap-3">
-                                            <div className="px-3 py-1 rounded-lg bg-white/5 border border-white/5 text-[10px] font-bold text-rose-400 uppercase tracking-wider">
+                                        <div className="flex items-center gap-2 md:gap-3">
+                                            <div className="px-2 py-0.5 md:px-3 md:py-1 rounded-lg bg-white/5 border border-white/5 text-[8px] md:text-[10px] font-bold text-rose-400 uppercase tracking-wider">
                                                 {profile.exp} EXP
                                             </div>
                                         </div>
                                     </div>
 
-                                    <div className="pt-2">
+                                    <div className="pt-1 md:pt-2 mt-auto">
                                         <div
-                                            onClick={() => handleGreet(profile._id)}
-                                            className={`relative group/btn-container overflow-hidden rounded-xl cursor-pointer ${isGreeting === profile._id ? 'opacity-70 pointer-events-none' : ''}`}
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                handleGreet(profile._id);
+                                            }}
+                                            className={`relative group/btn-container overflow-hidden rounded-[8px] md:rounded-xl cursor-pointer ${isGreeting === profile._id ? 'opacity-70 pointer-events-none' : ''}`}
                                         >
                                             <div className="absolute inset-0 bg-gradient-to-r from-rose-600 to-rose-400 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-                                            <div className="relative w-full h-12 bg-white/[0.04] border border-white/5 flex items-center justify-between px-6 transition-all duration-500 group-hover:bg-transparent group-hover:border-transparent">
-                                                <span className="text-[10px] font-black uppercase tracking-[0.2em] text-zinc-400 group-hover:text-white transition-colors">
+                                            <div className="relative w-full h-8 md:h-12 bg-white/[0.04] border border-white/5 flex items-center justify-between px-3 md:px-6 transition-all duration-500 group-hover:bg-transparent group-hover:border-transparent">
+                                                <span className="text-[7px] md:text-[10px] font-black uppercase tracking-[0.2em] text-zinc-400 group-hover:text-white transition-colors">
                                                     {isGreeting === profile._id ? 'Уншиж байна...' : 'Мэндчилэх'}
                                                 </span>
-                                                <div className="w-7 h-7 rounded-full bg-white/5 flex items-center justify-center text-zinc-500 group-hover:bg-white group-hover:text-rose-600 transition-all duration-500 shadow-lg">
+                                                <div className="w-5 h-5 md:w-7 md:h-7 rounded-[6px] md:rounded-full bg-white/5 flex items-center justify-center text-zinc-500 group-hover:bg-white group-hover:text-rose-600 transition-all duration-500 shadow-lg">
                                                     {isGreeting === profile._id ? (
-                                                        <div className="w-4 h-4 border-2 border-zinc-500 border-t-transparent rounded-full animate-spin" />
+                                                        <div className="w-3 h-3 md:w-4 md:h-4 border-2 border-zinc-500 border-t-transparent rounded-full animate-spin" />
                                                     ) : (
-                                                        <Heart size={14} fill="currentColor" className="opacity-40 group-hover:opacity-100" />
+                                                        <Heart size={10} fill="currentColor" className="opacity-40 group-hover:opacity-100 scale-100 md:scale-125" />
                                                     )}
                                                 </div>
                                             </div>

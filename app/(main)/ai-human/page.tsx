@@ -9,17 +9,14 @@ function AIHumanContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const personaId = searchParams.get('personaId');
+  const activeTab = (searchParams.get('tab') as 'discover' | 'history') || 'discover';
 
-  if (personaId) {
-    return (
-      <AIHumanChatView 
-        personaId={personaId} 
-        onBack={() => router.push('/ai-human')} 
-      />
-    );
-  }
-
-  return <AIHumanListView />;
+  return (
+    <AIHumanChatView 
+      personaId={personaId || undefined} 
+      activeTab={activeTab}
+    />
+  );
 }
 
 export default function AIHumanPage() {

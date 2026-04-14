@@ -30,7 +30,7 @@ export function AIHumanListView() {
             <div className="fixed top-20 right-0 w-[500px] h-[500px] bg-rose-500/5 blur-[150px] rounded-full -z-10 pointer-events-none" />
             <div className="fixed bottom-0 left-0 w-[300px] h-[300px] bg-purple-500/5 blur-[120px] rounded-full -z-10 pointer-events-none" />
 
-            <div className="relative space-y-2 md:space-y-4 max-w-4xl">
+            <div className="relative space-y-2 md:space-y-4 max-w-4xl md:hidden">
                 <h1 className="text-4xl md:text-7xl font-black text-white tracking-tighter uppercase leading-none animate-in fade-in slide-in-from-left-6 duration-1000">
                     AI <span className="text-transparent bg-clip-text bg-gradient-to-r from-rose-500 to-purple-500">Personas</span>
                 </h1>

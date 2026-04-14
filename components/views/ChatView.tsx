@@ -2,7 +2,7 @@
 
 import React, { useEffect, useMemo } from 'react';
 import { motion } from 'framer-motion';
-import { ImageIcon, Smile, Send, MessageCircle, ChevronLeft } from 'lucide-react';
+import { ImageIcon, Smile, Send, MessageCircle, ChevronLeft, Info } from 'lucide-react';
 import Image from 'next/image';
 import Loading from '@/components/ui/Loading';
 
@@ -190,7 +190,7 @@ export function ChatView({ onNavigateToProfile, selectedChatId, setSelectedChatI
                                         }}
                                     >
                                         <Image
-                                            src={display.avatar || `https://ui-avatars.com/api/?name=${display.name || 'User'}&background=random`}
+                                            src={display.avatar || `https://ui-avatars.com/api/?name=${encodeURIComponent(display.name || 'User')}&background=random`}
                                             alt={display.name}
                                             fill
                                             className="object-cover"
@@ -253,7 +253,7 @@ export function ChatView({ onNavigateToProfile, selectedChatId, setSelectedChatI
                                         }}
                                     >
                                         <Image
-                                            src={getChatDisplay(activeChat).avatar || `https://ui-avatars.com/api/?name=${getChatDisplay(activeChat).name || 'User'}&background=random`}
+                                            src={getChatDisplay(activeChat).avatar || `https://ui-avatars.com/api/?name=${encodeURIComponent(getChatDisplay(activeChat).name || 'User')}&background=random`}
                                             alt={getChatDisplay(activeChat).name}
                                             fill
                                             className="object-cover"
@@ -268,7 +268,15 @@ export function ChatView({ onNavigateToProfile, selectedChatId, setSelectedChatI
                                         </div>
                                     </div>
                                 </div>
-
+                                <button
+                                    onClick={() => {
+                                        const display = getChatDisplay(activeChat);
+                                        if (display.userId) onNavigateToProfile?.(display.userId);
+                                    }}
+                                    className="w-10 h-10 rounded-xl bg-zinc-900/50 flex items-center justify-center text-zinc-400 hover:text-white hover:bg-zinc-800 transition-all cursor-pointer"
+                                >
+                                    <Info size={20} />
+                                </button>
                             </div>
 
                             <div className="flex-1 overflow-y-auto p-4 md:p-8 space-y-6 scroll-smooth">
@@ -279,7 +287,7 @@ export function ChatView({ onNavigateToProfile, selectedChatId, setSelectedChatI
                                             {!isMine && (
                                                 <div className="w-8 h-8 rounded-xl overflow-hidden relative shrink-0 mt-auto border border-zinc-800">
                                                     <Image
-                                                        src={msg.sender.avatar || `https://ui-avatars.com/api/?name=${msg.sender.username || 'User'}&background=random`}
+                                                        src={msg.sender.avatar || `https://ui-avatars.com/api/?name=${encodeURIComponent(msg.sender.username || 'User')}&background=random`}
                                                         alt={msg.sender.username}
                                                         fill
                                                         className="object-cover"
@@ -303,9 +311,6 @@ export function ChatView({ onNavigateToProfile, selectedChatId, setSelectedChatI
 
                             <form onSubmit={handleSendMessage} className="p-4 md:p-8 bg-transparent">
                                 <div className="flex items-center gap-3 md:gap-4 bg-zinc-900/80 border border-zinc-800/50 rounded-3xl md:rounded-4xl px-4 md:px-6 py-3 backdrop-blur-xl shadow-2xl focus-within:ring-2 focus-within:ring-rose-500/20 transition-all">
-                                    <button type="button" className="text-zinc-500 hover:text-rose-500 transition-colors transform active:scale-90">
-                                        <ImageIcon size={22} />
-                                    </button>
                                     <input
                                         ref={inputRef}
                                         type="text"
@@ -314,9 +319,6 @@ export function ChatView({ onNavigateToProfile, selectedChatId, setSelectedChatI
                                         placeholder="Шинэ зурвас бичих..."
                                         className="flex-1 bg-transparent border-none focus:outline-none text-sm text-zinc-100 placeholder:text-zinc-600 px-2 font-medium"
                                     />
-                                    <button type="button" className="text-zinc-500 hover:text-rose-500 transition-colors transform active:scale-90">
-                                        <Smile size={22} />
-                                    </button>
                                     <button
                                         type="submit"
                                         disabled={!messageBody.trim() || isSending}

@@ -30,9 +30,11 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
   };
 
   const searchParams = useSearchParams();
+  const isChattingWithUser = (pathname.startsWith('/chat') || pathname.startsWith('/groups')) && searchParams.get('chatId');
   const isChattingWithAI = pathname.startsWith('/ai-human') && searchParams.get('personaId');
+  
   const isSpecialPage = pathname === '/plans' || pathname.startsWith('/payment');
-  const showSidebar = !isSpecialPage && !isChattingWithAI;
+  const showSidebar = !isSpecialPage;
 
   return (
     <div className="flex h-screen bg-zinc-950 text-zinc-200 overflow-hidden noise-bg font-sans">
@@ -42,7 +44,7 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
       {showSidebar && <Sidebar />}
 
       <AnimatePresence>
-        {(showSidebar || isChattingWithAI) && isMobileMenuOpen && (
+        {showSidebar && isMobileMenuOpen && (
           <>
             <motion.div
               initial={{ opacity: 0 }}
@@ -120,16 +122,14 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
         )}
       </AnimatePresence>
 
-      <main className={`flex-1 relative flex flex-col z-10 ${isChattingWithAI ? 'pt-0' : 'pt-20 md:pt-0'}`}>
-        {!isChattingWithAI && (
-          <div>
-            <Header
-              isMobileMenuOpen={isMobileMenuOpen}
-              setIsMobileMenuOpen={setIsMobileMenuOpen}
-              activeTabTitle={getPageTitle()}
-            />
-          </div>
-        )}
+      <main className={`flex-1 relative flex flex-col z-10 ${isChattingWithAI || isChattingWithUser ? 'pt-0 md:pt-0' : 'pt-20 md:pt-0'}`}>
+        <div className={isChattingWithAI || isChattingWithUser ? "hidden md:block" : ""}>
+          <Header
+            isMobileMenuOpen={isMobileMenuOpen}
+            setIsMobileMenuOpen={setIsMobileMenuOpen}
+            activeTabTitle={getPageTitle()}
+          />
+        </div>
 
         <div className={`flex-1 flex flex-col h-full ${(['/chat', '/groups', '/ai-human'].some(p => pathname.startsWith(p))) ? 'overflow-hidden' : 'overflow-y-auto scroll-smooth'}`}>
           <AnimatePresence mode="wait">
