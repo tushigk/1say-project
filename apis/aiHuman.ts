@@ -22,6 +22,7 @@ export interface AIHuman {
     updatedAt: string;
     conversation?: AIHumanConversation;
     canChat: boolean;
+    badge?: string[];
 }
 
 export interface AIHumanConversation {

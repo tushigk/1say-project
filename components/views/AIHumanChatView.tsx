@@ -508,6 +508,11 @@ export function AIHumanChatView({ personaId: propPersonaId, onBack, activeTab = 
                                             {persona?.age} yrs
                                         </div>
                                     )}
+                                    {persona?.badge?.map((tag, i) => (
+                                        <div key={i} className="px-3 py-1 rounded-full bg-rose-500/10 border border-rose-500/20 text-[10px] font-black text-rose-300 uppercase tracking-[0.2em]">
+                                            {tag}
+                                        </div>
+                                    ))}
                                 </div>
 
                                 <p className="text-sm text-zinc-400 leading-relaxed font-medium">

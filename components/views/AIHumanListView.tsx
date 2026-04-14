@@ -30,16 +30,16 @@ export function AIHumanListView() {
             <div className="fixed top-20 right-0 w-[500px] h-[500px] bg-rose-500/5 blur-[150px] rounded-full -z-10 pointer-events-none" />
             <div className="fixed bottom-0 left-0 w-[300px] h-[300px] bg-purple-500/5 blur-[120px] rounded-full -z-10 pointer-events-none" />
 
-            <div className="relative space-y-2 md:space-y-4 max-w-4xl md:hidden">
-                <h1 className="text-4xl md:text-7xl font-black text-white tracking-tighter uppercase leading-none animate-in fade-in slide-in-from-left-6 duration-1000">
+            <div className="relative space-y-1 md:space-y-2 max-w-4xl md:hidden">
+                <h1 className="text-2xl md:text-5xl font-black text-white tracking-tighter uppercase leading-none animate-in fade-in slide-in-from-left-6 duration-1000">
                     AI <span className="text-transparent bg-clip-text bg-gradient-to-r from-rose-500 to-purple-500">Personas</span>
                 </h1>
-                <p className="text-zinc-500 max-w-2xl text-sm md:text-lg font-medium leading-relaxed animate-in fade-in slide-in-from-left-8 duration-700 delay-200">
-                    Өвөрмөц зан чанартай AI-г нээгээрэй. Аялал бүр ганцхан мессежээр эхэлдэг...
+                <p className="text-zinc-500 max-w-2xl text-[10px] md:text-sm font-medium leading-relaxed animate-in fade-in slide-in-from-left-8 duration-700 delay-200">
+                    Өвөрмөц зан чанартай AI-г нээгээрэй.
                 </p>
             </div>
 
-            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3 sm:gap-6 md:gap-8">
+            <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-4 sm:gap-6 md:gap-8">
                 {aiHumans.map((persona, index) => (
                     <motion.div
                         key={persona._id}
@@ -76,15 +76,25 @@ export function AIHumanListView() {
                             <div className="p-3 md:p-6 space-y-2.5 md:space-y-5 flex flex-col justify-between flex-1">
                                 <div className="space-y-1.5 md:space-y-4">
                                     <div className="flex items-center gap-1.5 md:gap-2">
-                                        <div className="w-1 h-1 md:w-1.5 md:h-1.5 rounded-full bg-rose-500 shadow-[0_0_8px_rgba(244,63,94,0.6)] animate-pulse" />
-                                        <span className="text-[7px] md:text-[9px] font-bold text-zinc-500 uppercase tracking-widest">Active now</span>
+                                        <div className="w-1 h-1 md:w-1.2 md:h-1.2 rounded-full bg-rose-500 shadow-[0_0_8px_rgba(244,63,94,0.6)] animate-pulse" />
+                                        <span className="text-[7px] md:text-[8px] font-bold text-zinc-500 uppercase tracking-widest">Active now</span>
                                     </div>
-                                    <h3 className="text-base md:text-3xl font-serif font-bold text-white group-hover:text-rose-500 transition-colors duration-700 leading-tight tracking-tight italic truncate">
+                                    <h3 className="text-base md:text-xl font-serif font-bold text-white group-hover:text-rose-500 transition-colors duration-700 leading-tight tracking-tight italic truncate">
                                         {persona.name}
                                     </h3>
-                                    <p className="text-[10px] md:text-[13px] text-zinc-500 line-clamp-2 leading-snug md:leading-relaxed font-medium transition-colors group-hover:text-zinc-400">
+                                    <p className="text-[9px] md:text-[11px] text-zinc-500 line-clamp-2 leading-relaxed font-medium transition-colors group-hover:text-zinc-400">
                                         {persona.shortBio || "Step into a world of mystery..."}
                                     </p>
+
+                                    {persona.badge && persona.badge.length > 0 && (
+                                        <div className="flex flex-wrap gap-1.5 pt-1">
+                                            {persona.badge.map((tag, i) => (
+                                                <span key={i} className="px-2 py-0.5 rounded-md bg-white/[0.03] border border-white/5 text-[8px] font-bold text-zinc-400 uppercase tracking-wider backdrop-blur-md group-hover:bg-rose-500/10 group-hover:border-rose-500/20 group-hover:text-rose-200 transition-all duration-500">
+                                                    {tag}
+                                                </span>
+                                            ))}
+                                        </div>
+                                    )}
                                 </div>
 
                                 <div className="pt-1 md:pt-2 mt-auto">
