@@ -321,9 +321,9 @@ export function AIHumanChatView({ personaId: propPersonaId, onBack }: AIHumanCha
                             animate={{ scale: 1, opacity: 1, y: 0 }}
                             exit={{ scale: 0.95, opacity: 0, y: 20 }}
                             onClick={(e) => e.stopPropagation()}
-                            className="relative w-full max-w-lg bg-zinc-950 border border-zinc-800 rounded-3xl overflow-hidden shadow-2xl"
+                            className="relative w-full max-w-lg bg-zinc-950 border border-zinc-800 rounded-3xl overflow-hidden shadow-2xl flex flex-col max-h-[90vh]"
                         >
-                            <div className="relative h-64 md:h-80 w-full overflow-hidden">
+                            <div className="relative h-64 md:h-80 w-full overflow-hidden shrink-0">
                                 <Image
                                     src={persona.image?.url || `https://ui-avatars.com/api/?name=${persona.name}&background=random`}
                                     alt={persona.name}
@@ -350,7 +350,7 @@ export function AIHumanChatView({ personaId: propPersonaId, onBack }: AIHumanCha
                                 </div>
                             </div>
 
-                            <div className="p-6 md:p-8 space-y-6">
+                            <div className="p-6 md:p-8 space-y-6 overflow-y-auto custom-scrollbar">
                                 <div className="flex flex-wrap gap-2">
                                     <div className="px-3 py-1 rounded-full bg-zinc-900 border border-white/10 text-[10px] font-black text-white uppercase tracking-[0.2em]">
                                         {persona.gender}
