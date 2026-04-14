@@ -155,15 +155,15 @@ export function AIHumanChatView({ personaId: propPersonaId, onBack }: AIHumanCha
     return (
         <div className="flex flex-1 flex-col relative bg-zinc-950 h-full overflow-hidden w-full">
             <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
-                <motion.div 
+                <motion.div
                     animate={{ y: [0, -30, 0], x: [0, 20, 0], opacity: [0.3, 0.6, 0.3] }}
                     transition={{ duration: 7, repeat: Infinity, ease: "easeInOut" }}
-                    className="absolute top-[10%] left-[5%] w-96 h-96 bg-rose-500/10 rounded-full blur-[100px]" 
+                    className="absolute top-[10%] left-[5%] w-96 h-96 bg-rose-500/10 rounded-full blur-[100px]"
                 />
-                <motion.div 
+                <motion.div
                     animate={{ y: [0, 40, 0], x: [0, -30, 0], opacity: [0.2, 0.5, 0.2] }}
                     transition={{ duration: 9, repeat: Infinity, ease: "easeInOut", delay: 1 }}
-                    className="absolute bottom-[20%] right-[10%] w-[30rem] h-[30rem] bg-purple-500/10 rounded-full blur-[120px]" 
+                    className="absolute bottom-[20%] right-[10%] w-[30rem] h-[30rem] bg-purple-500/10 rounded-full blur-[120px]"
                 />
             </div>
 
@@ -175,7 +175,7 @@ export function AIHumanChatView({ personaId: propPersonaId, onBack }: AIHumanCha
                     >
                         <ChevronLeft size={20} />
                     </button>
-                    <div 
+                    <div
                         className="w-10 h-10 md:w-12 md:h-12 rounded-2xl overflow-hidden relative border-2 border-zinc-800 cursor-pointer hover:border-rose-500/50 transition-colors"
                         onClick={() => setIsAvatarZoomed(true)}
                     >
@@ -257,7 +257,7 @@ export function AIHumanChatView({ personaId: propPersonaId, onBack }: AIHumanCha
                         </div>
                     </div>
                 )}
-                
+
                 <div ref={messagesEndRef} />
             </div>
 
@@ -313,40 +313,65 @@ export function AIHumanChatView({ personaId: propPersonaId, onBack }: AIHumanCha
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         exit={{ opacity: 0 }}
-                        className="fixed inset-0 z-[100] flex items-center justify-center bg-black/80 backdrop-blur-sm p-4"
+                        className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm"
                         onClick={() => setIsInfoOpen(false)}
                     >
                         <motion.div
-                            initial={{ scale: 0.95, opacity: 0 }}
-                            animate={{ scale: 1, opacity: 1 }}
-                            exit={{ scale: 0.95, opacity: 0 }}
-                            onClick={e => e.stopPropagation()}
-                            className="bg-zinc-950 border border-zinc-800 rounded-3xl p-6 max-w-md w-full relative overflow-hidden shadow-2xl shadow-rose-900/20"
+                            initial={{ scale: 0.95, opacity: 0, y: 20 }}
+                            animate={{ scale: 1, opacity: 1, y: 0 }}
+                            exit={{ scale: 0.95, opacity: 0, y: 20 }}
+                            onClick={(e) => e.stopPropagation()}
+                            className="relative w-full max-w-lg bg-zinc-950 border border-zinc-800 rounded-3xl overflow-hidden shadow-2xl"
                         >
-                            <div className="absolute -top-24 -right-24 w-48 h-48 bg-rose-500/20 rounded-full blur-[50px] pointer-events-none" />
-                            
-                            <button
-                                onClick={() => setIsInfoOpen(false)}
-                                className="absolute top-4 right-4 w-8 h-8 flex items-center justify-center rounded-full bg-zinc-900 hover:bg-zinc-800 text-zinc-400 transition-colors z-10"
-                            >
-                                <X size={16} />
-                            </button>
-                            
-                            <div className="flex flex-col items-center text-center gap-4 mt-4 relative z-10">
-                                <div className="w-24 h-24 rounded-3xl overflow-hidden relative border-2 border-zinc-800">
-                                    <Image 
-                                        src={persona.image?.url || `https://ui-avatars.com/api/?name=${persona.name}&background=random`} 
-                                        fill 
-                                        className="object-cover" 
-                                        alt={persona.name} 
-                                    />
+                            <div className="relative h-64 md:h-80 w-full overflow-hidden">
+                                <Image
+                                    src={persona.image?.url || `https://ui-avatars.com/api/?name=${persona.name}&background=random`}
+                                    alt={persona.name}
+                                    fill
+                                    className="object-cover"
+                                />
+                                <div className="absolute inset-0 bg-gradient-to-t from-zinc-950 via-zinc-950/40 to-transparent" />
+
+                                <button
+                                    onClick={() => setIsInfoOpen(false)}
+                                    className="absolute top-4 right-4 w-8 h-8 flex items-center justify-center rounded-full bg-black/50 text-white/70 hover:bg-black hover:text-white transition-all backdrop-blur-md"
+                                >
+                                    <X size={16} />
+                                </button>
+
+                                <div className="absolute bottom-0 left-0 p-6 w-full">
+                                    <div className="flex items-center gap-2 mb-2">
+                                        <div className="w-2 h-2 rounded-full bg-rose-500 animate-pulse shadow-[0_0_8px_rgba(244,63,94,0.6)]" />
+                                        <span className="text-[10px] font-bold text-zinc-300 uppercase tracking-widest">Active now</span>
+                                    </div>
+                                    <h2 className="text-3xl md:text-4xl font-serif font-bold text-white italic truncate">
+                                        {persona.name}
+                                    </h2>
                                 </div>
-                                <div>
-                                    <h2 className="text-2xl font-bold text-white mb-1">{persona.name}</h2>
-                                    <p className="text-sm text-zinc-400 max-w-[280px] mx-auto italic font-serif leading-relaxed">
-                                        "{persona.greeting || "Let's begin our story..."}"
-                                    </p>
+                            </div>
+
+                            <div className="p-6 md:p-8 space-y-6">
+                                <div className="flex flex-wrap gap-2">
+                                    <div className="px-3 py-1 rounded-full bg-zinc-900 border border-white/10 text-[10px] font-black text-white uppercase tracking-[0.2em]">
+                                        {persona.gender}
+                                    </div>
+                                    {persona.age && (
+                                        <div className="px-3 py-1 rounded-full bg-zinc-900 border border-white/10 text-[10px] font-black text-white uppercase tracking-[0.2em]">
+                                            {persona.age} yrs
+                                        </div>
+                                    )}
                                 </div>
+
+                                <p className="text-sm text-zinc-400 leading-relaxed font-medium">
+                                    {persona.greeting || persona.shortBio || persona.shortBio || "Step into a world of mystery. Start chatting to discover more about my personality and life."}
+                                </p>
+
+                                <button
+                                    onClick={() => setIsInfoOpen(false)}
+                                    className="w-full h-12 md:h-14 bg-zinc-900 border border-white/10 rounded-xl flex items-center justify-center text-white font-bold tracking-wider hover:bg-zinc-800 transition-colors"
+                                >
+                                    ХААХ
+                                </button>
                             </div>
                         </motion.div>
                     </motion.div>
@@ -363,15 +388,15 @@ export function AIHumanChatView({ personaId: propPersonaId, onBack }: AIHumanCha
                         onClick={() => setIsAvatarZoomed(false)}
                     >
                         <div className="absolute inset-0 overflow-hidden pointer-events-none">
-                            <motion.div 
+                            <motion.div
                                 animate={{ y: [0, -20, 0], x: [0, 10, 0], opacity: [0.5, 0.8, 0.5] }}
                                 transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-                                className="absolute top-1/4 left-1/4 w-64 h-64 bg-rose-500/30 rounded-full blur-[80px]" 
+                                className="absolute top-1/4 left-1/4 w-64 h-64 bg-rose-500/30 rounded-full blur-[80px]"
                             />
-                            <motion.div 
+                            <motion.div
                                 animate={{ y: [0, 30, 0], x: [0, -20, 0], opacity: [0.3, 0.6, 0.3] }}
                                 transition={{ duration: 5, repeat: Infinity, ease: "easeInOut", delay: 1 }}
-                                className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-purple-500/20 rounded-full blur-[100px]" 
+                                className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-purple-500/20 rounded-full blur-[100px]"
                             />
                         </div>
 
