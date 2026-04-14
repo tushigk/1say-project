@@ -32,6 +32,7 @@ interface Chat {
     _id: string;
     type: 'direct' | 'group';
     title?: string;
+    memberCount?: number;
     participants: Array<{
         _id: string;
         username: string;
@@ -277,13 +278,13 @@ export function GroupChatView({ onNavigateToProfile, selectedChatId, setSelected
                                         }`}
                                 >
                                     <div className="relative shrink-0">
-                                        <div className="w-14 h-14 rounded-2xl overflow-hidden relative ring-2 ring-zinc-800/50">
+                                        <div className="w-14 h-14 rounded-2xl overflow-hidden relative ring-2 ring-zinc-800/50 bg-zinc-900 flex items-center justify-center">
                                             <Image
-                                                src={`https://ui-avatars.com/api/?name=${encodeURIComponent(chat.title || 'Group')}&background=random&color=fff`}
+                                                src={`https://ui-avatars.com/api/?name=${encodeURIComponent(chat.title || 'G')}&background=random&color=fff&size=128`}
                                                 alt={chat.title || 'Group'}
                                                 fill
+                                                unoptimized
                                                 className="object-cover"
-                                                referrerPolicy="no-referrer"
                                             />
                                         </div>
                                         <div className="absolute -bottom-1 -right-1 w-5 h-5 bg-rose-600 rounded-lg flex items-center justify-center border-2 border-zinc-950">
@@ -350,13 +351,13 @@ export function GroupChatView({ onNavigateToProfile, selectedChatId, setSelected
                                     >
                                         <ChevronLeft size={20} />
                                     </button>
-                                    <div className="w-10 h-10 md:w-12 md:h-12 rounded-2xl overflow-hidden relative border-2 border-zinc-800">
+                                    <div className="w-10 h-10 md:w-12 md:h-12 rounded-2xl overflow-hidden relative border-2 border-zinc-800 bg-zinc-900">
                                         <Image
-                                            src={`https://ui-avatars.com/api/?name=${encodeURIComponent(activeChat.title || 'Group')}&background=random&color=fff`}
+                                            src={`https://ui-avatars.com/api/?name=${encodeURIComponent(activeChat.title || 'G')}&background=random&color=fff&size=128`}
                                             alt={activeChat.title || 'Group'}
                                             fill
+                                            unoptimized
                                             className="object-cover"
-                                            referrerPolicy="no-referrer"
                                         />
                                     </div>
                                     <div>
@@ -370,7 +371,7 @@ export function GroupChatView({ onNavigateToProfile, selectedChatId, setSelected
                                                 ))}
                                             </div>
                                             <p className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest leading-none">
-                                                {activeChat.participants?.length || 0} гишүүн
+                                                {activeChat.memberCount || 0} гишүүн
                                             </p>
                                         </div>
                                     </div>
