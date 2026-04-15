@@ -56,6 +56,7 @@ export function DiscoverView({
     const { data: infiniteData, size, setSize, isLoading, isValidating } = useSWRInfinite<MembershipResponse>(
         getKey,
         ([, gender, p]) => membershipApi.listActiveMembershipUsers({
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             gender: gender === 'all' ? undefined : (gender as any),
             page: p as number
         }),

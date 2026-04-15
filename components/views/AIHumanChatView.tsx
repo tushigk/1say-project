@@ -1,13 +1,13 @@
 'use client';
 
-import { useState, useEffect, useRef, FormEvent } from 'react';
-import { Send, ChevronLeft, MoreVertical, Sparkles, Info, X, Trash2 } from 'lucide-react';
+import { useState, useEffect, useRef, FormEvent, useMemo } from 'react';
+import { Send, ChevronLeft, Sparkles, Info, X, Trash2 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Image from 'next/image';
 import { useRouter, useSearchParams } from 'next/navigation';
 import useSWR from 'swr';
 import { aiHumanApi } from '@/apis';
-import { AIHuman, AIHumanMessage, AIHumanConversation, deleteAIHumanChat } from '@/apis/aiHuman';
+import { AIHuman, AIHumanMessage, AIHumanConversation } from '@/apis/aiHuman';
 import { useSocket } from '@/components/providers/SocketProvider';
 import { toast } from 'react-hot-toast';
 
@@ -61,9 +61,10 @@ export function AIHumanChatView({ personaId: propPersonaId, onBack, activeTab = 
     const { data: personaData } = useSWR(personaId ? `ai-humans/${personaId}` : null, () => aiHumanApi.getAIHumanDetail(personaId));
     const { data: historyData, mutate: mutateHistory } = useSWR(personaId ? `ai-humans/${personaId}/history` : null, () => aiHumanApi.getAIHumanHistory(personaId));
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const historyPersona = (historyData as any)?.persona as AIHuman | undefined;
     const persona: AIHuman | null = historyPersona || (Array.isArray(personaData?.data) ? personaData.data[0] : (personaData?.data || null));
-    const messages: AIHumanMessage[] = historyData?.data || [];
+    const messages: AIHumanMessage[] = useMemo(() => historyData?.data || [], [historyData?.data]);
 
     const canChat = personaData?.canChat !== false;
     const membershipRequired = personaData?.membershipRequired;
@@ -142,6 +143,7 @@ export function AIHumanChatView({ personaId: propPersonaId, onBack, activeTab = 
             updatedAt: new Date().toISOString(),
         };
 
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         mutateHistory((current: any) => ({
             ...current,
             data: [...(current?.data || []), optimisticMsg]
@@ -271,6 +273,7 @@ export function AIHumanChatView({ personaId: propPersonaId, onBack, activeTab = 
 
                 <div className="flex-1 overflow-y-auto p-4 space-y-3 custom-scrollbar">
                     {chats?.map((chat, idx) => {
+                        // eslint-disable-next-line @typescript-eslint/no-explicit-any
                         const p = (chat as any).personaDetails || (typeof chat.persona === 'object' ? chat.persona : null);
                         const pName = p?.name || 'AI Persona';
                         const pImage = p?.image?.url || `https://ui-avatars.com/api/?name=${encodeURIComponent(pName)}&background=random`;
@@ -321,6 +324,7 @@ export function AIHumanChatView({ personaId: propPersonaId, onBack, activeTab = 
                                         <h4 className={`font-bold truncate text-sm transition-colors ${pId === personaId ? 'text-rose-500' : 'text-white group-hover:text-rose-100'}`}>{pName}</h4>
                                         <span className="text-[9px] font-black text-zinc-600 uppercase tracking-tighter shrink-0">
                                             {(() => {
+                                            // eslint-disable-next-line @typescript-eslint/no-explicit-any
                                                 const time = (chat as any).lastMessageAt || (chat as any).conversation?.lastMessageAt || (p as any)?.conversation?.lastMessageAt;
                                                 return time ? new Date(time).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : '';
                                             })()}
@@ -328,6 +332,7 @@ export function AIHumanChatView({ personaId: propPersonaId, onBack, activeTab = 
                                     </div>
                                     <p className={`text-[11px] line-clamp-1 leading-tight ${pId === personaId ? 'text-rose-200/60 font-medium' : 'text-zinc-500 font-medium'}`}>
                                         {(() => {
+                                            // eslint-disable-next-line @typescript-eslint/no-explicit-any
                                             const preview = (chat as any).lastMessagePreview || (chat as any).conversation?.lastMessagePreview || (p as any)?.conversation?.lastMessagePreview;
                                             return preview?.replace(/\s+/g, ' ') || 'Яриаг эхлүүлэх...';
                                         })()}

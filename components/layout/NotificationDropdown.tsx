@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useMemo, useEffect } from 'react';
-import { Bell, Check, X, Loader2, Inbox } from 'lucide-react';
+import { Bell, Check, X, Inbox } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import useSWR from 'swr';
 import { chatApi } from '@/apis';

@@ -1,12 +1,10 @@
 'use client';
 
-import { AIHumanListView } from '@/components/views/AIHumanListView';
 import { AIHumanChatView } from '@/components/views/AIHumanChatView';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useSearchParams } from 'next/navigation';
 import { Suspense } from 'react';
 
 function AIHumanContent() {
-  const router = useRouter();
   const searchParams = useSearchParams();
   const personaId = searchParams.get('personaId');
   const activeTab = (searchParams.get('tab') as 'discover' | 'history') || 'discover';

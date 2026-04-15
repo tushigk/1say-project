@@ -21,7 +21,7 @@ type BankUrl = {
 type Invoice = {
   _id?: string;
   createdAt?: string;
-  qr_image?: string; 
+  qr_image?: string;
   urls?: BankUrl[];
 };
 
@@ -50,7 +50,7 @@ function isPaidStatus(res: MembershipStatusResponse | undefined): boolean {
 }
 
 interface PaymentViewProps {
-    planId: string;
+  planId: string;
 }
 
 export function PaymentView({ planId }: PaymentViewProps) {

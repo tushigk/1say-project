@@ -9,8 +9,7 @@ import { useAuth } from "../../../components/providers/AuthProvider";
 import { authApi } from "../../../apis";
 import AuthBanner from "../../../components/auth/AuthBanner";
 import TermOfServiceModal from "../../../components/auth/TermOfServiceModal";
-import { Sparkles, UserPlus, Check } from "lucide-react";
-import Image from "next/image";
+import { UserPlus, Check } from "lucide-react";
 
 export default function RegisterPage() {
     const { login } = useAuth();

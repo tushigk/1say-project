@@ -2,7 +2,7 @@
 
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { motion } from 'framer-motion';
-import { Search, ImageIcon, Smile, Send, Users, Plus, MessageSquare, ChevronLeft, Info } from 'lucide-react';
+import { Search, Send, Users, Plus, MessageSquare, ChevronLeft, Info } from 'lucide-react';
 import Image from 'next/image';
 import Loading from '@/components/ui/Loading';
 import useSWR from 'swr';

@@ -8,8 +8,7 @@ import Input from "../../../components/ui/Input";
 import { useAuth } from "../../../components/providers/AuthProvider";
 import { authApi } from "../../../apis";
 import AuthBanner from "../../../components/auth/AuthBanner";
-import { Eye, EyeOff, ChevronRight, Sparkles } from "lucide-react";
-import Image from "next/image";
+import { Eye, EyeOff, ChevronRight } from "lucide-react";
 
 export default function LoginPage() {
     const { login } = useAuth();

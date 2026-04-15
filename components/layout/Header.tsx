@@ -2,7 +2,7 @@
 
 import React from 'react';
 import Image from 'next/image';
-import { Menu, X, Search } from 'lucide-react';
+import { Menu, X } from 'lucide-react';
 import { NotificationDropdown } from './NotificationDropdown';
 import { useRouter, usePathname } from 'next/navigation';
 import { useAuth } from '@/components/providers/AuthProvider';

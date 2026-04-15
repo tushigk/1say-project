@@ -2,7 +2,7 @@
 
 import React, { useEffect, useMemo } from 'react';
 import { motion } from 'framer-motion';
-import { ImageIcon, Smile, Send, MessageCircle, ChevronLeft, Info } from 'lucide-react';
+import { Send, MessageCircle, ChevronLeft, Info } from 'lucide-react';
 import Image from 'next/image';
 import Loading from '@/components/ui/Loading';
 

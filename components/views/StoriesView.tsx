@@ -14,10 +14,14 @@ type ReportModalState = { phase: 'idle' } | { phase: 'confirm'; storyId: string 
 function ReportModal({ state, onConfirm, onClose }: { state: ReportModalState; onConfirm: (reason: string) => void; onClose: () => void }) {
     const isOpen = state.phase !== 'idle';
     const [reason, setReason] = useState('');
+    const [prevIsOpen, setPrevIsOpen] = useState(isOpen);
 
-    useEffect(() => {
-        if (!isOpen) setReason('');
-    }, [isOpen]);
+    if (isOpen !== prevIsOpen) {
+        setPrevIsOpen(isOpen);
+        if (!isOpen) {
+            setReason('');
+        }
+    }
 
     return (
         <AnimatePresence>
