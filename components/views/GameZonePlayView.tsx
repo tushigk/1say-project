@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ArrowLeft, Send, Sparkles, User, RefreshCcw, Info, Trophy, BrainCircuit, X } from 'lucide-react';
+import { ArrowLeft, Send, Sparkles, User, RefreshCcw, Info, Trophy, BrainCircuit, X, ArrowRight } from 'lucide-react';
 import Image from 'next/image';
 import { gameZoneApi } from '@/apis';
 import { GameZone, GameZonePlayResponse } from '@/apis/gameZone';
@@ -22,8 +22,10 @@ export function GameZonePlayView({ gameId }: GameZonePlayViewProps) {
     const [players, setPlayers] = useState<string[]>([]);
     const [currentPlayerName, setCurrentPlayerName] = useState('');
     const [result, setResult] = useState<GameZonePlayResponse['data'] | null>(null);
+    const [pendingResult, setPendingResult] = useState<GameZonePlayResponse['data'] | null>(null);
     const [error, setError] = useState<string | null>(null);
     const [isDeciding, setIsDeciding] = useState(false);
+    const [isWaiting, setIsWaiting] = useState(false);
     const [countdown, setCountdown] = useState<number | null>(null);
 
     useEffect(() => {
@@ -83,16 +85,26 @@ export function GameZonePlayView({ gameId }: GameZonePlayViewProps) {
             const response = await gameZoneApi.playGameZone(gameId, { playerName: joinedNames });
 
             setIsDeciding(true);
-            setTimeout(() => {
-                setResult(response.data);
-                setPlaying(false);
-                setIsDeciding(false);
-            }, 2000);
+            setPendingResult(response.data);
         } catch (err) {
             console.error(err);
             setError('Тоглоход алдаа гарлаа. Дахин оролдоно уу.');
             setPlaying(false);
             setIsDeciding(false);
+        }
+    };
+
+    const handleStopComplete = () => {
+        setIsWaiting(true);
+    };
+
+    const handleTimerComplete = () => {
+        if (pendingResult) {
+            setResult(pendingResult);
+            setPlaying(false);
+            setIsDeciding(false);
+            setIsWaiting(false);
+            setPendingResult(null);
         }
     };
 
@@ -197,17 +209,36 @@ export function GameZonePlayView({ gameId }: GameZonePlayViewProps) {
                                 exit={{ opacity: 0, scale: 1.1 }}
                                 className="flex flex-col items-center justify-center space-y-12"
                             >
-                                <RouletteWheel players={players} isSpinning={true} isStopping={isDeciding} />
+                                <RouletteWheel
+                                    players={players}
+                                    isSpinning={true}
+                                    isStopping={isDeciding}
+                                    onStopComplete={handleStopComplete}
+                                />
+                                {isWaiting && (
+                                    <div className="w-48 h-1 bg-white/5 rounded-full overflow-hidden mt-8 relative">
+                                        <motion.div
+                                            key="wait-timer"
+                                            initial={{ width: "0%" }}
+                                            animate={{ width: "100%" }}
+                                            transition={{ duration: 1.5, ease: "linear" }}
+                                            className="absolute inset-y-0 left-0 bg-gradient-to-r from-indigo-500 to-cyan-400"
+                                            onAnimationComplete={handleTimerComplete}
+                                        />
+                                    </div>
+                                )}
                                 <div className="text-center space-y-3">
                                     <h3 className="text-2xl md:text-4xl font-black text-white uppercase tracking-tighter animate-pulse">
-                                        {isDeciding ? (
+                                        {isWaiting ? (
+                                            <>Revealing <span className="text-cyan-400">Result...</span></>
+                                        ) : isDeciding ? (
                                             <>Finalizing <span className="text-cyan-400">Outcome...</span></>
                                         ) : (
                                             <>Spinning the <span className="text-indigo-500">Wheel...</span></>
                                         )}
                                     </h3>
                                     <p className="text-zinc-500 text-xs md:text-sm font-bold uppercase tracking-widest">
-                                        {isDeciding ? "Хувь заяа тань шийдэгдэж байна" : "AI таны хувь заяаг шийдэж байна"}
+                                        {isWaiting ? "Бэлэн үү?..." : isDeciding ? "Хувь заяа тань шийдэгдэж байна" : "AI таны хувь заяаг шийдэж байна"}
                                     </p>
                                 </div>
                             </motion.div>
@@ -358,15 +389,15 @@ export function GameZonePlayView({ gameId }: GameZonePlayViewProps) {
                                                 <button
                                                     onClick={handleRestart}
                                                     title="Reset Players"
-                                                    className="p-3 rounded-full bg-white/5 hover:bg-rose-500/20 text-zinc-400 hover:text-rose-400 transition-all border border-white/5 group"
+                                                    className="px-6 hidden md:flex h-12 cursor-pointer items-center gap-2 rounded-2xl bg-white/5 hover:bg-rose-500/20 text-zinc-400 hover:text-rose-400 transition-all border border-white/5 group"
                                                 >
-                                                    <RefreshCcw size={18} className="group-hover:rotate-180 transition-transform duration-700" />
+                                                    <ArrowLeft />Буцах
                                                 </button>
                                                 <button
                                                     onClick={handleSpinAgain}
-                                                    className="px-6 h-12 bg-white text-black rounded-xl font-black text-xs uppercase tracking-[0.2em] hover:bg-indigo-500 hover:text-white transition-all shadow-lg hover:shadow-indigo-500/40"
+                                                    className="px-6 h-12 cursor-pointer bg-white text-black rounded-xl font-black text-xs uppercase tracking-[0.2em] hover:bg-indigo-500 hover:text-white transition-all shadow-lg hover:shadow-indigo-500/40"
                                                 >
-                                                    Spin Again
+                                                    <RefreshCcw size={18} className="group-hover:rotate-180 transition-transform duration-700" />
                                                 </button>
                                             </div>
                                         </div>

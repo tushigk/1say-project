@@ -7,9 +7,10 @@ interface RouletteWheelProps {
   players: string[];
   isSpinning: boolean;
   isStopping?: boolean;
+  onStopComplete?: () => void;
 }
 
-export function RouletteWheel({ players, isSpinning, isStopping }: RouletteWheelProps) {
+export function RouletteWheel({ players, isSpinning, isStopping, onStopComplete }: RouletteWheelProps) {
   const displayPlayers = useMemo(() => {
     if (players.length === 0) return ['Luck', 'Fate', 'Chance', 'Destiny', 'Fortune', 'Mystery'];
     if (players.length === 1) return [...players, 'Fate', 'Chance', 'Destiny'];
@@ -60,21 +61,26 @@ export function RouletteWheel({ players, isSpinning, isStopping }: RouletteWheel
           background: `conic-gradient(${conicGradient})`,
         }}
         animate={isStopping ? {
-          rotate: 360 * 15 + randomStopOffset, // Use stable random value
+          rotate: [null, 360 * 12 + randomStopOffset], // Start from current pos
         } : isSpinning ? {
-          rotate: 360 * 10,
+          rotate: 360,
         } : {
           rotate: 0,
         }}
         transition={isStopping ? {
-          duration: 2, // Match the pause duration
-          ease: [0.12, 0, 0.39, 0], // Custom ease-out curve
+          duration: 6, // Longer duration for more natural feel
+          ease: "circOut",
         } : isSpinning ? {
-          duration: 20,
+          duration: 0.25, // Fast consistent spin from the start
           ease: "linear",
           repeat: Infinity,
         } : {
           duration: 0.5,
+        }}
+        onAnimationComplete={() => {
+          if (isStopping && onStopComplete) {
+            onStopComplete();
+          }
         }}
       >
         {displayPlayers.map((player, i) => (
