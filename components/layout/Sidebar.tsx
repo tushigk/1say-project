@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useEffect } from 'react';
-import { Heart, BookOpen, MessageCircle, Users, LogOut, Sparkles } from 'lucide-react';
+import { Heart, BookOpen, MessageCircle, Users, LogOut, Sparkles, Gamepad2 } from 'lucide-react';
 import { NavItem } from './NavItem';
 import Image from 'next/image';
 import { useAuth } from '../providers/AuthProvider';
@@ -93,6 +93,14 @@ export function Sidebar() {
                         icon={<Sparkles />}
                         label="AI Personas"
                         isActive={pathname.startsWith('/ai-human')}
+                    />
+                </Link>
+
+                <Link href="/game-zone" className="block">
+                    <NavItem
+                        icon={<Gamepad2 />}
+                        label="Game Zone"
+                        isActive={pathname.startsWith('/game-zone')}
                     />
                 </Link>
 

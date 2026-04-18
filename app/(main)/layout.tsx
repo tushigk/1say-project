@@ -7,7 +7,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import Image from 'next/image';
 import { useAuth } from '@/components/providers/AuthProvider';
 import { useRouter, usePathname } from 'next/navigation';
-import { Heart, BookOpen, MessageCircle, Users, LogOut, Sparkles } from 'lucide-react';
+import { Heart, BookOpen, MessageCircle, Users, LogOut, Sparkles, Gamepad2 } from 'lucide-react';
 import { NavItem } from '@/components/layout/NavItem';
 import { useSearchParams } from 'next/navigation';
 
@@ -24,6 +24,7 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
     if (pathname.startsWith('/groups')) return 'Грүпп чат';
     if (pathname.startsWith('/profile')) return 'Профайл';
     if (pathname.startsWith('/ai-human')) return 'AI Personas';
+    if (pathname.startsWith('/game-zone')) return 'Game Zone';
     if (pathname === '/plans') return 'Гишүүнчлэл';
     if (pathname.startsWith('/payment')) return 'Төлбөр төлөх';
     return 'Noir';
@@ -32,6 +33,7 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
   const searchParams = useSearchParams();
   const isChattingWithUser = (pathname.startsWith('/chat') || pathname.startsWith('/groups')) && searchParams.get('chatId');
   const isChattingWithAI = pathname.startsWith('/ai-human') && searchParams.get('personaId');
+  const isGaming = pathname.startsWith('/game-zone/play');
   
   const isSpecialPage = pathname === '/plans' || pathname.startsWith('/payment');
   const showSidebar = !isSpecialPage;
@@ -76,6 +78,7 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
                 <NavItem icon={<Heart />} label="Танилцах" isActive={pathname === '/discover'} onClick={() => { router.push('/discover'); setIsMobileMenuOpen(false); }} />
                 <NavItem icon={<BookOpen />} label="Түүхүүд" isActive={pathname === '/stories'} onClick={() => { router.push('/stories'); setIsMobileMenuOpen(false); }} />
                 <NavItem icon={<Sparkles />} label="AI Personas" isActive={pathname.startsWith('/ai-human')} onClick={() => { router.push('/ai-human'); setIsMobileMenuOpen(false); }} />
+                <NavItem icon={<Gamepad2 />} label="Game Zone" isActive={pathname.startsWith('/game-zone')} onClick={() => { router.push('/game-zone'); setIsMobileMenuOpen(false); }} />
                 <NavItem icon={<MessageCircle />} label="Зурвасууд" isActive={pathname.startsWith('/chat')} onClick={() => { router.push('/chat'); setIsMobileMenuOpen(false); }} />
                 <NavItem icon={<Users />} label="Грүпп чат" isActive={pathname.startsWith('/groups')} onClick={() => { router.push('/groups'); setIsMobileMenuOpen(false); }} />
               </nav>
@@ -122,8 +125,8 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
         )}
       </AnimatePresence>
 
-      <main className={`flex-1 relative flex flex-col z-10 ${isChattingWithAI || isChattingWithUser ? 'pt-0 md:pt-0' : 'pt-20 md:pt-0'}`}>
-        <div className={isChattingWithAI || isChattingWithUser ? "hidden md:block" : ""}>
+      <main className={`flex-1 relative flex flex-col z-10 ${isChattingWithAI || isChattingWithUser || isGaming ? 'pt-0 md:pt-0' : 'pt-20 md:pt-0'}`}>
+        <div className={isChattingWithAI || isChattingWithUser || isGaming ? "hidden md:block" : ""}>
           <Header
             isMobileMenuOpen={isMobileMenuOpen}
             setIsMobileMenuOpen={setIsMobileMenuOpen}
@@ -131,7 +134,7 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
           />
         </div>
 
-        <div className={`flex-1 flex flex-col h-full ${(['/chat', '/groups', '/ai-human'].some(p => pathname.startsWith(p))) ? 'overflow-hidden' : 'overflow-y-auto scroll-smooth'}`}>
+        <div className={`flex-1 flex flex-col h-full ${(['/chat', '/groups', '/ai-human', '/game-zone'].some(p => pathname.startsWith(p))) ? 'overflow-hidden' : 'overflow-y-auto scroll-smooth'}`}>
           <AnimatePresence mode="wait">
             <motion.div
               key={pathname}
