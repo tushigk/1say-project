@@ -14,8 +14,13 @@ interface RouletteWheelProps {
 export function RouletteWheel({ players, isSpinning, isStopping, winnerName, onStopComplete }: RouletteWheelProps) {
   const displayPlayers = useMemo(() => {
     if (players.length === 0) return ['Luck', 'Fate', 'Chance', 'Destiny', 'Fortune', 'Mystery'];
-    if (players.length === 1) return [...players, 'Fate', 'Chance', 'Destiny'];
-    return players;
+    if (players.length === 1) return [players[0], 'Fate', players[0], 'Chance', players[0], 'Destiny'];
+
+    let repeated = [...players];
+    while (repeated.length < 6) {
+      repeated = [...repeated, ...players];
+    }
+    return repeated;
   }, [players]);
 
   const segments = displayPlayers.length;
@@ -28,7 +33,6 @@ export function RouletteWheel({ players, isSpinning, isStopping, winnerName, onS
       );
       if (targetIndex !== -1) {
         const sliceCenterAngle = targetIndex * rotationPerSegment + rotationPerSegment / 2;
-        // Random jitter within the winning slice so it looks organic and not perfectly centered every time
         const jitter = (Math.random() - 0.5) * (rotationPerSegment * 0.7);
         return 360 - (sliceCenterAngle + jitter);
       }
@@ -46,13 +50,21 @@ export function RouletteWheel({ players, isSpinning, isStopping, winnerName, onS
     '#d97706', // amber-600
   ];
 
+  const getSafeColor = (index: number, total: number) => {
+    let cIndex = index % colors.length;
+    if (index === total - 1 && cIndex === 0 && total > 1) {
+      cIndex = 1; // Prevent the last slice from identical bordering with the first slice (0)
+    }
+    return colors[cIndex];
+  };
+
   const conicGradient = useMemo(() => {
     return displayPlayers.map((_, i) => {
       const start = i * rotationPerSegment;
       const end = (i + 1) * rotationPerSegment;
-      return `${colors[i % colors.length]} ${start}deg ${end}deg`;
+      return `${getSafeColor(i, segments)} ${start}deg ${end}deg`;
     }).join(', ');
-  }, [displayPlayers, rotationPerSegment, colors]);
+  }, [displayPlayers, rotationPerSegment, colors, segments]);
 
   return (
     <div className="relative w-64 h-64 md:w-80 md:h-80 flex items-center justify-center">
@@ -65,7 +77,7 @@ export function RouletteWheel({ players, isSpinning, isStopping, winnerName, onS
 
       {/* The Wheel */}
       <motion.div
-        className="relative w-full h-full rounded-full border-8 border-zinc-900 shadow-2xl z-0"
+        className="relative w-full h-full rounded-full border-8 border-zinc-900 shadow-2xl z-0 overflow-hidden"
         style={{
           background: `conic-gradient(${conicGradient})`,
         }}

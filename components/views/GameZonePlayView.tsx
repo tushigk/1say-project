@@ -218,7 +218,7 @@ export function GameZonePlayView({ gameId }: GameZonePlayViewProps) {
                                 initial={{ opacity: 0, scale: 0.8 }}
                                 animate={{ opacity: 1, scale: 1 }}
                                 exit={{ opacity: 0, scale: 1.1 }}
-                                className="flex flex-col items-center justify-center space-y-12"
+                                className="flex flex-col items-center justify-center space-y-6 md:space-y-12"
                             >
                                 {game.type === 'hot_pass_the_hot_potato' ? (
                                     <HotPotato
