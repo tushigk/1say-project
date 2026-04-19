@@ -1,13 +1,14 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ArrowLeft, Send, Sparkles, User, RefreshCcw, Info, Trophy, BrainCircuit, X, ArrowRight } from 'lucide-react';
+import { ArrowLeft, Send, Sparkles, User, RefreshCcw, Info, Trophy, BrainCircuit, X } from 'lucide-react';
 import Image from 'next/image';
 import { gameZoneApi } from '@/apis';
-import { GameZone, GameZonePlayResponse } from '@/apis/gameZone';
-import { useRouter } from 'next/navigation';
+import { GameZonePlayResponse } from '@/apis/gameZone';
+import { useRouter, useSearchParams } from 'next/navigation';
 import Loading from '@/components/ui/Loading';
+import useSWR from 'swr';
 import { RouletteWheel } from '@/components/ui/RouletteWheel';
 import { HotPotato } from '@/components/ui/HotPotato';
 
@@ -17,40 +18,35 @@ interface GameZonePlayViewProps {
 
 export function GameZonePlayView({ gameId }: GameZonePlayViewProps) {
     const router = useRouter();
-    const [game, setGame] = useState<GameZone | null>(null);
-    const [loading, setLoading] = useState(true);
+    const searchParams = useSearchParams();
+    const { data: gameResponse, isLoading, error: fetchError } = useSWR(
+        gameId ? `gameZone-${gameId}` : null,
+        () => gameZoneApi.getGameZoneDetail(gameId),
+        { revalidateOnFocus: false, dedupingInterval: 5000 }
+    );
+
+    const game = gameResponse?.data || null;
+    const loading = isLoading;
+
     const [playing, setPlaying] = useState(false);
     const [players, setPlayers] = useState<string[]>([]);
     const [currentPlayerName, setCurrentPlayerName] = useState('');
     const [result, setResult] = useState<GameZonePlayResponse['data'] | null>(null);
     const [pendingResult, setPendingResult] = useState<GameZonePlayResponse['data'] | null>(null);
-    const [error, setError] = useState<string | null>(null);
+    const [localError, setLocalError] = useState<string | null>(null);
     const [isDeciding, setIsDeciding] = useState(false);
     const [isWaiting, setIsWaiting] = useState(false);
     const [countdown, setCountdown] = useState<number | null>(null);
+    const startingRef = useRef(false);
 
-    useEffect(() => {
-        const fetchGame = async () => {
-            try {
-                const response = await gameZoneApi.getGameZoneDetail(gameId);
-                setGame(response.data);
-            } catch (err) {
-                console.error(err);
-                setError('Тоглоомын мэдээллийг авахад алдаа гарлаа.');
-            } finally {
-                setLoading(false);
-            }
-        };
-
-        fetchGame();
-    }, [gameId]);
+    const error = fetchError ? 'Тоглоомын мэдээллийг авахад алдаа гарлаа.' : localError;
 
     const addPlayer = (e?: React.FormEvent) => {
         if (e) e.preventDefault();
         if (currentPlayerName.trim() && !players.includes(currentPlayerName.trim())) {
             setPlayers([...players, currentPlayerName.trim()]);
             setCurrentPlayerName('');
-            setError(null);
+            setLocalError(null);
         }
     };
 
@@ -60,38 +56,50 @@ export function GameZonePlayView({ gameId }: GameZonePlayViewProps) {
 
     const handlePlayArea = async () => {
         if (players.length === 0) {
-            setError('Дор хаяж нэг тоглогч нэмнэ үү.');
+            setLocalError('Дор хаяж нэг тоглогч нэмнэ үү.');
             return;
         }
+        if (startingRef.current || playing) return;
 
-        setError(null);
+        startingRef.current = true;
+        setLocalError(null);
         setCountdown(3);
 
+        let currentCount = 3;
         const timer = setInterval(() => {
-            setCountdown((prev) => {
-                if (prev === null || prev <= 1) {
-                    clearInterval(timer);
-                    startGameExecution();
-                    return null;
-                }
-                return prev - 1;
-            });
+            currentCount -= 1;
+
+            if (currentCount <= 0) {
+                clearInterval(timer);
+                setCountdown(null);
+                startGameExecution();
+            } else {
+                setCountdown(currentCount);
+            }
         }, 1000);
     };
 
     const startGameExecution = async () => {
         setPlaying(true);
         try {
-            const joinedNames = players.join(', ');
-            const response = await gameZoneApi.playGameZone(gameId, { playerName: joinedNames });
+            const randomPlayer = players[Math.floor(Math.random() * players.length)];
+            const heatLevelQuery = searchParams.get('heatLevel');
+            const heatLevel = heatLevelQuery ? parseInt(heatLevelQuery, 10) : 1;
+            const levelMapping = ['Энгийн', 'Дундаж', 'Халуухан'];
+
+            const response = await gameZoneApi.playGameZone(gameId, {
+                playerName: randomPlayer,
+                level: levelMapping[heatLevel] || 'Дундаж'
+            });
 
             setIsDeciding(true);
             setPendingResult(response.data);
         } catch (err) {
             console.error(err);
-            setError('Тоглоход алдаа гарлаа. Дахин оролдоно уу.');
+            setLocalError('Тоглоход алдаа гарлаа. Дахин оролдоно уу.');
             setPlaying(false);
             setIsDeciding(false);
+            startingRef.current = false;
         }
     };
 
@@ -106,20 +114,22 @@ export function GameZonePlayView({ gameId }: GameZonePlayViewProps) {
             setIsDeciding(false);
             setIsWaiting(false);
             setPendingResult(null);
+            startingRef.current = false;
         }
     };
 
     const handleSpinAgain = () => {
         setResult(null);
-        setError(null);
+        setLocalError(null);
         handlePlayArea();
     };
 
     const handleRestart = () => {
         setResult(null);
-        setError(null);
+        setLocalError(null);
         setPlayers([]);
         setCurrentPlayerName('');
+        startingRef.current = false;
     };
 
     if (loading) {
@@ -186,8 +196,8 @@ export function GameZonePlayView({ gameId }: GameZonePlayViewProps) {
             </div>
 
             {/* Main Content Area */}
-            <div className="relative z-10 flex-1 overflow-y-auto custom-scrollbar p-6 md:p-12 flex flex-col items-center justify-center">
-                <div className="w-full max-w-4xl">
+            <div className="relative z-10 flex-1 overflow-y-auto custom-scrollbar p-4 md:p-12 flex flex-col items-center">
+                <div className="w-full max-w-4xl my-auto py-4 md:py-8">
                     <AnimatePresence mode="wait">
                         {countdown !== null ? (
                             <motion.div
@@ -221,6 +231,7 @@ export function GameZonePlayView({ gameId }: GameZonePlayViewProps) {
                                         players={players}
                                         isSpinning={true}
                                         isStopping={isDeciding}
+                                        winnerName={pendingResult?.playerName}
                                         onStopComplete={handleStopComplete}
                                     />
                                 )}
@@ -374,16 +385,19 @@ export function GameZonePlayView({ gameId }: GameZonePlayViewProps) {
                                 <div className="relative w-full">
                                     <div className="absolute -top-12 left-1/2 -translate-x-1/2 w-16 h-1 w-24 bg-gradient-to-r from-indigo-500 to-cyan-400 rounded-full blur-sm opacity-50" />
 
-                                    <div className="bg-zinc-900/60 border border-white/10 rounded-[2.5rem] p-8 md:p-12 backdrop-blur-xl relative overflow-hidden group">
+                                    <div className="bg-zinc-900/60 border border-white/10 rounded-[2.5rem] p-6 md:p-12 backdrop-blur-xl relative overflow-hidden group">
                                         {/* Result Header */}
-                                        <div className="flex items-center justify-between mb-8 border-b border-white/5 pb-6">
+                                        <div className="flex items-center justify-between mb-5 md:mb-8 border-b border-white/5 pb-5 md:pb-6">
                                             <div className="flex items-center gap-3">
                                                 <div className="w-10 h-10 rounded-full bg-indigo-500 flex items-center justify-center text-white shadow-lg shadow-indigo-500/20">
                                                     <BrainCircuit size={20} />
                                                 </div>
                                                 <div>
-                                                    <p className="text-xs font-bold text-white uppercase tracking-tight">Тоглогчид: {result.playerName}</p>
+                                                    <p className="text-xs font-bold text-white uppercase tracking-tight">{result.prompt}</p>
                                                 </div>
+                                            </div>
+                                            <div>
+                                                <p className="text-xs font-bold text-white uppercase tracking-tight">Түвшин: {result.selectedLevel}🔥</p>
                                             </div>
                                         </div>
 
@@ -395,7 +409,7 @@ export function GameZonePlayView({ gameId }: GameZonePlayViewProps) {
                                         </div>
 
                                         {/* Stats Bar */}
-                                        <div className="mt-12 pt-8 border-t border-white/5 flex gap-4 items-center justify-center">
+                                        <div className="mt-8 md:mt-12 pt-6 md:pt-8 border-t border-white/5 flex gap-4 items-center justify-center">
                                             <div className="flex items-center gap-2">
                                                 <button
                                                     onClick={handleRestart}

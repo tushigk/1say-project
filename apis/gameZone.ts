@@ -30,6 +30,7 @@ export interface GameZoneListResponse {
 
 export interface GameZonePlayPayload {
     playerName: string;
+    level: string;
 }
 
 export interface GameZonePlayResponse {
@@ -38,6 +39,7 @@ export interface GameZonePlayResponse {
         playerName: string;
         prompt: string;
         response: string;
+        selectedLevel: string;
         model: string;
         usage: {
             promptTokens?: number;

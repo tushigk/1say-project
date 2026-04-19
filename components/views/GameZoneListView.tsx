@@ -9,9 +9,11 @@ import { GameZone } from '@/apis/gameZone';
 import useSWR from 'swr';
 import { useRouter } from 'next/navigation';
 import Loading from '@/components/ui/Loading';
+import { HeatLevelSelector } from '@/components/ui/HeatLevelSelector';
 
 export function GameZoneListView() {
     const [selectedGame, setSelectedGame] = useState<GameZone | null>(null);
+    const [heatLevel, setHeatLevel] = useState(1);
     const router = useRouter();
     const { data: gameZonesData, isLoading } = useSWR('game-zones', () => gameZoneApi.listGameZones());
 
@@ -112,7 +114,7 @@ export function GameZoneListView() {
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         exit={{ opacity: 0 }}
-                        className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/90 backdrop-blur-md"
+                        className="fixed inset-0 z-[60] flex items-center justify-center p-4 pt-24 md:pt-4 bg-black/90 backdrop-blur-md"
                         onClick={() => setSelectedGame(null)}
                     >
                         <motion.div
@@ -120,7 +122,7 @@ export function GameZoneListView() {
                             animate={{ scale: 1, opacity: 1, y: 0 }}
                             exit={{ scale: 0.9, opacity: 0, y: 30 }}
                             onClick={(e) => e.stopPropagation()}
-                            className="relative w-full max-w-2xl bg-zinc-950 border border-white/10 rounded-[2.5rem] overflow-hidden shadow-2xl flex flex-col md:flex-row max-h-[90vh]"
+                            className="relative w-full max-w-4xl bg-zinc-950 border border-white/10 rounded-[2.5rem] shadow-2xl flex flex-col md:flex-row max-h-[85vh] overflow-y-auto overflow-x-hidden"
                         >
                             <div className="relative w-full md:w-1/2 aspect-video md:aspect-auto overflow-hidden">
                                 <Image
@@ -139,8 +141,8 @@ export function GameZoneListView() {
                                 </button>
                             </div>
 
-                            <div className="p-8 md:p-12 w-full md:w-1/2 flex flex-col">
-                                <div className="flex items-center justify-between mb-6">
+                            <div className="p-6 md:p-12 w-full md:w-1/2 flex flex-col shrink-0">
+                                <div className="flex items-center justify-between mb-4 md:mb-6">
                                     <div className="flex gap-2">
                                         <span className="px-3 py-1 rounded-full bg-indigo-500/10 border border-indigo-500/20 text-[9px] font-black text-indigo-400 uppercase tracking-wider">
                                             {selectedGame.type}
@@ -154,17 +156,17 @@ export function GameZoneListView() {
                                     </button>
                                 </div>
 
-                                <h2 className="text-3xl font-black text-white mb-4 uppercase tracking-tighter">
+                                <h2 className="text-2xl md:text-3xl font-black text-white mb-3 md:mb-4 uppercase tracking-tighter">
                                     {selectedGame.title}
                                 </h2>
 
-                                <div className="space-y-4 mb-8">
-                                    <p className="text-sm text-zinc-400 leading-relaxed">
+                                <div className="space-y-3 md:space-y-4 mb-6 md:mb-8">
+                                    <p className="text-xs md:text-sm text-zinc-400 leading-relaxed max-h-[80px] md:max-h-none overflow-y-auto pr-2">
                                         {selectedGame.description || "Experience the next generation of AI gaming. Engage in a unique adventure where your choices and interactions shape the outcome."}
                                     </p>
 
-                                    <div className="grid grid-cols-2 gap-4 pt-4">
-                                        <div className="p-4 rounded-2xl bg-white/[0.03] border border-white/5 space-y-1">
+                                    <div className="grid grid-cols-1 gap-2 pt-2 md:pt-4">
+                                        <div className="p-4 rounded-2xl bg-white/[0.03] border border-white/5 space-y-1 w-full flex-1">
                                             <p className="text-[9px] font-bold text-zinc-600 uppercase tracking-widest">Difficulty</p>
                                             <div className="flex items-center gap-1 text-xs font-bold text-zinc-300 uppercase">
                                                 <Star size={12} className="text-yellow-500 fill-yellow-500" />
@@ -172,10 +174,13 @@ export function GameZoneListView() {
                                             </div>
                                         </div>
                                     </div>
+                                    <div className="mb-6 pt-2 w-full">
+                                        <HeatLevelSelector level={heatLevel} onChange={setHeatLevel} variant="compact" />
+                                    </div>
                                 </div>
 
                                 <button
-                                    onClick={() => router.push(`/game-zone/play/${selectedGame._id}`)}
+                                    onClick={() => router.push(`/game-zone/play/${selectedGame._id}?heatLevel=${heatLevel}`)}
                                     className="group/play w-full h-14 bg-white text-black rounded-2xl flex items-center justify-center gap-3 font-black tracking-widest hover:bg-indigo-500 hover:text-white transition-all duration-300 shadow-xl hover:shadow-indigo-500/40 active:scale-95"
                                 >
                                     <span>ЭХЛЭХ</span>

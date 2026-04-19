@@ -7,10 +7,11 @@ interface RouletteWheelProps {
   players: string[];
   isSpinning: boolean;
   isStopping?: boolean;
+  winnerName?: string | null;
   onStopComplete?: () => void;
 }
 
-export function RouletteWheel({ players, isSpinning, isStopping, onStopComplete }: RouletteWheelProps) {
+export function RouletteWheel({ players, isSpinning, isStopping, winnerName, onStopComplete }: RouletteWheelProps) {
   const displayPlayers = useMemo(() => {
     if (players.length === 0) return ['Luck', 'Fate', 'Chance', 'Destiny', 'Fortune', 'Mystery'];
     if (players.length === 1) return [...players, 'Fate', 'Chance', 'Destiny'];
@@ -20,13 +21,21 @@ export function RouletteWheel({ players, isSpinning, isStopping, onStopComplete 
   const segments = displayPlayers.length;
   const rotationPerSegment = 360 / segments;
 
-  const [randomStopOffset, setRandomStopOffset] = React.useState(0);
-
-  React.useEffect(() => {
-    if (isSpinning && !isStopping) {
-      setRandomStopOffset(Math.random() * 360);
+  const targetOffset = useMemo(() => {
+    if (winnerName) {
+      const targetIndex = displayPlayers.findIndex(
+        (p) => p.trim().toLowerCase() === winnerName.trim().toLowerCase()
+      );
+      if (targetIndex !== -1) {
+        const sliceCenterAngle = targetIndex * rotationPerSegment + rotationPerSegment / 2;
+        // Random jitter within the winning slice so it looks organic and not perfectly centered every time
+        const jitter = (Math.random() - 0.5) * (rotationPerSegment * 0.7);
+        return 360 - (sliceCenterAngle + jitter);
+      }
     }
-  }, [isSpinning, isStopping]);
+    return Math.random() * 360;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [winnerName]);
 
   const colors = [
     '#e11d48', // rose-600
@@ -61,7 +70,7 @@ export function RouletteWheel({ players, isSpinning, isStopping, onStopComplete 
           background: `conic-gradient(${conicGradient})`,
         }}
         animate={isStopping ? {
-          rotate: [null, 360 * 12 + randomStopOffset], // Start from current pos
+          rotate: [null, 360 * 12 + targetOffset], // Stop at precise computed item
         } : isSpinning ? {
           rotate: 360,
         } : {
