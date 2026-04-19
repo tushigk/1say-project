@@ -9,6 +9,7 @@ import { GameZone, GameZonePlayResponse } from '@/apis/gameZone';
 import { useRouter } from 'next/navigation';
 import Loading from '@/components/ui/Loading';
 import { RouletteWheel } from '@/components/ui/RouletteWheel';
+import { HotPotato } from '@/components/ui/HotPotato';
 
 interface GameZonePlayViewProps {
     gameId: string;
@@ -209,12 +210,20 @@ export function GameZonePlayView({ gameId }: GameZonePlayViewProps) {
                                 exit={{ opacity: 0, scale: 1.1 }}
                                 className="flex flex-col items-center justify-center space-y-12"
                             >
-                                <RouletteWheel
-                                    players={players}
-                                    isSpinning={true}
-                                    isStopping={isDeciding}
-                                    onStopComplete={handleStopComplete}
-                                />
+                                {game.type === 'hot_pass_the_hot_potato' ? (
+                                    <HotPotato
+                                        isTicking={true}
+                                        isExploding={isDeciding}
+                                        onExplosionComplete={handleStopComplete}
+                                    />
+                                ) : (
+                                    <RouletteWheel
+                                        players={players}
+                                        isSpinning={true}
+                                        isStopping={isDeciding}
+                                        onStopComplete={handleStopComplete}
+                                    />
+                                )}
                                 {isWaiting && (
                                     <div className="w-48 h-1 bg-white/5 rounded-full overflow-hidden mt-8 relative">
                                         <motion.div
@@ -233,6 +242,8 @@ export function GameZonePlayView({ gameId }: GameZonePlayViewProps) {
                                             <>Revealing <span className="text-cyan-400">Result...</span></>
                                         ) : isDeciding ? (
                                             <>Finalizing <span className="text-cyan-400">Outcome...</span></>
+                                        ) : game.type === 'hot_pass_the_hot_potato' ? (
+                                            <>Passing the <span className="text-rose-500">Potato...</span></>
                                         ) : (
                                             <>Spinning the <span className="text-indigo-500">Wheel...</span></>
                                         )}

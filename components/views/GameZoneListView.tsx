@@ -43,7 +43,7 @@ export function GameZoneListView() {
                     </div>
                     <span className="text-[10px] font-black uppercase tracking-[0.3em] text-indigo-400">Entertainment</span>
                 </motion.div>
-                
+
                 <h1 className="text-3xl md:text-6xl font-black text-white tracking-tighter uppercase leading-none">
                     Game <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-500 via-purple-500 to-cyan-400">Zone</span>
                 </h1>
@@ -65,9 +65,9 @@ export function GameZoneListView() {
                     >
                         {/* Glow effect on hover */}
                         <div className="absolute -inset-1 bg-gradient-to-r from-indigo-500 to-cyan-500 rounded-[2rem] blur opacity-0 group-hover:opacity-20 transition duration-500" />
-                        
+
                         <div className="relative bg-zinc-900/40 border border-white/5 rounded-[2rem] overflow-hidden backdrop-blur-xl transition-all duration-500 h-full flex flex-col group-hover:border-white/10">
-                            
+
                             <div className="relative aspect-[16/10] overflow-hidden">
                                 <Image
                                     src={game.image?.url || `https://images.unsplash.com/photo-1614027164847-1b28006879b2?q=80&w=800&auto=format&fit=crop`}
@@ -76,7 +76,7 @@ export function GameZoneListView() {
                                     className="object-cover transition-transform duration-700 group-hover:scale-110"
                                 />
                                 <div className="absolute inset-0 bg-gradient-to-t from-zinc-950 via-zinc-950/20 to-transparent" />
-                                
+
                                 <div className="absolute top-4 left-4 flex gap-2">
                                     <div className="px-3 py-1 rounded-full bg-black/60 backdrop-blur-md border border-white/10 text-[9px] font-black text-white uppercase tracking-wider">
                                         {game.type.replace('_', ' ')}
@@ -95,18 +95,7 @@ export function GameZoneListView() {
                                     {game.description || "Explore this exciting AI-powered game and discover new possibilities."}
                                 </p>
 
-                                <div className="mt-auto flex items-center justify-between">
-                                    <div className="flex items-center gap-1.5">
-                                        <div className="flex -space-x-2">
-                                            {[1, 2, 3].map((i) => (
-                                                <div key={i} className="w-5 h-5 rounded-full border-2 border-zinc-900 bg-zinc-800 flex items-center justify-center">
-                                                    <div className="w-full h-full rounded-full bg-gradient-to-br from-indigo-500 to-purple-500 opacity-80" />
-                                                </div>
-                                            ))}
-                                        </div>
-                                        <span className="text-[8px] font-bold text-zinc-600 uppercase tracking-widest">+1.2k active</span>
-                                    </div>
-
+                                <div className="mt-auto flex items-center justify-end">
                                     <div className="w-10 h-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-zinc-400 group-hover:bg-indigo-500 group-hover:text-white group-hover:border-indigo-400 transition-all duration-500 shadow-xl group-hover:shadow-indigo-500/20">
                                         <Play size={16} fill="currentColor" className="ml-0.5" />
                                     </div>
@@ -141,7 +130,7 @@ export function GameZoneListView() {
                                     className="object-cover"
                                 />
                                 <div className="absolute inset-0 bg-gradient-to-t md:bg-gradient-to-r from-zinc-950 via-transparent to-transparent" />
-                                
+
                                 <button
                                     onClick={() => setSelectedGame(null)}
                                     className="absolute top-6 left-6 w-10 h-10 flex items-center justify-center rounded-full bg-black/50 text-white/70 hover:bg-black hover:text-white transition-all backdrop-blur-md border border-white/10 md:hidden"
@@ -168,25 +157,18 @@ export function GameZoneListView() {
                                 <h2 className="text-3xl font-black text-white mb-4 uppercase tracking-tighter">
                                     {selectedGame.title}
                                 </h2>
-                                
+
                                 <div className="space-y-4 mb-8">
                                     <p className="text-sm text-zinc-400 leading-relaxed">
                                         {selectedGame.description || "Experience the next generation of AI gaming. Engage in a unique adventure where your choices and interactions shape the outcome."}
                                     </p>
-                                    
+
                                     <div className="grid grid-cols-2 gap-4 pt-4">
                                         <div className="p-4 rounded-2xl bg-white/[0.03] border border-white/5 space-y-1">
                                             <p className="text-[9px] font-bold text-zinc-600 uppercase tracking-widest">Difficulty</p>
                                             <div className="flex items-center gap-1 text-xs font-bold text-zinc-300 uppercase">
                                                 <Star size={12} className="text-yellow-500 fill-yellow-500" />
                                                 {selectedGame.level}
-                                            </div>
-                                        </div>
-                                        <div className="p-4 rounded-2xl bg-white/[0.03] border border-white/5 space-y-1">
-                                            <p className="text-[9px] font-bold text-zinc-600 uppercase tracking-widest">Rewards</p>
-                                            <div className="flex items-center gap-1 text-xs font-bold text-zinc-300 uppercase">
-                                                <Trophy size={12} className="text-indigo-400" />
-                                                EPIC
                                             </div>
                                         </div>
                                     </div>
