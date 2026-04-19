@@ -36,7 +36,7 @@ export const metadata: Metadata = {
     type: "website",
     images: [
       {
-        url: "https://shunu.zurhai.com/OgImage.jpeg",
+        url: "https://shunu.zurhai.com/OgImage.jpg",
         width: 1200,
         height: 630,
         alt: "Шөнийн таалал",
@@ -48,7 +48,7 @@ export const metadata: Metadata = {
     title: "Шөнийн таалал: Өөрийгөө чөлөөл 🔥",
     description:
       "Хориотой сэдвээр нээлттэй ярилцаж, өөрийн нууцлаг эротик ертөнцийг нээх VIP бүс. Сэрэл хөдөлгөм тестүүд болон нийтлэлүүд.",
-    images: ["https://shunu.zurhai.com/OgImage.jpeg"],
+    images: ["https://shunu.zurhai.com/OgImage.jpg"],
   },
   robots: {
     index: true,
