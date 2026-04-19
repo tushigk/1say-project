@@ -22,7 +22,7 @@ const fraunces = Fraunces({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL('https://shunu.zurhai.com'),
+  metadataBase: new URL('https://shuniintaalal.com'),
   title: "Шөнийн таалал: Өөрийгөө чөлөөл 🔥",
   description:
     "Хориотой сэдвээр нээлттэй ярилцаж, өөрийн нууцлаг эротик ертөнцийг нээх VIP бүс. Сэрэл хөдөлгөм тестүүд болон нийтлэлүүд.",
@@ -30,7 +30,7 @@ export const metadata: Metadata = {
     title: "Шөнийн таалал: Өөрийгөө чөлөөл 🔥",
     description:
       "Хориотой сэдвээр нээлттэй ярилцаж, өөрийн нууцлаг эротик ертөнцийг нээх VIP бүс. Сэрэл хөдөлгөм тестүүд болон нийтлэлүүд.",
-    url: "https://shunu.zurhai.com",
+    url: "https://shuniintaalal.com",
     siteName: "Шөнийн таалал",
     locale: "mn_MN",
     type: "website",
@@ -62,9 +62,9 @@ export const metadata: Metadata = {
     },
   },
   icons: {
-    icon: "https://shunu.zurhai.com/favicon.jpeg",
-    shortcut: "https://shunu.zurhai.com/favicon.jpeg",
-    apple: "https://shunu.zurhai.com/favicon.jpeg",
+    icon: "/favicon.jpeg",
+    shortcut: "/favicon.jpeg",
+    apple: "/favicon.jpeg",
   },
   keywords: [
     "Хайр",
