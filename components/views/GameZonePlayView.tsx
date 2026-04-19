@@ -250,17 +250,17 @@ export function GameZonePlayView({ gameId }: GameZonePlayViewProps) {
                                 <div className="text-center space-y-3">
                                     <h3 className="text-2xl md:text-4xl font-black text-white uppercase tracking-tighter animate-pulse">
                                         {isWaiting ? (
-                                            <>Revealing <span className="text-cyan-400">Result...</span></>
+                                            <>ШИЙТГЭЛ <span className="text-rose-400">БЭЛЭН БОЛЛОО...</span></>
                                         ) : isDeciding ? (
-                                            <>Finalizing <span className="text-cyan-400">Outcome...</span></>
+                                            <>СҮҮЛЧИЙН <span className="text-cyan-400">ЗОГСООЛ...</span></>
                                         ) : game.type === 'hot_pass_the_hot_potato' ? (
-                                            <>Passing the <span className="text-rose-500">Potato...</span></>
+                                            <>БУЦАЛЖ БУЙ <span className="text-rose-500">БӨМБӨГ...</span></>
                                         ) : (
-                                            <>Spinning the <span className="text-indigo-500">Wheel...</span></>
+                                            <>ЭРГЭЛДЭХ <span className="text-indigo-500">ХҮРД...</span></>
                                         )}
                                     </h3>
                                     <p className="text-zinc-500 text-xs md:text-sm font-bold uppercase tracking-widest">
-                                        {isWaiting ? "Бэлэн үү?..." : isDeciding ? "Хувь заяа тань шийдэгдэж байна" : "AI таны хувь заяаг шийдэж байна"}
+                                        {isWaiting ? "зорьсон хүндээ хүрч байна, гүнзгий амьсгаа ав" : isDeciding ? "хувь заяа шийдэгдэх мөч" : game.type === 'hot_pass_the_hot_potato' ? "хэний гар дээр дэлбэрэх бол?" : "аз таныг ивээх үү, эсвэл илбэх үү?"}
                                     </p>
                                 </div>
                             </motion.div>
