@@ -146,7 +146,7 @@ export function DiscoverView({
 
                                 <div className="relative aspect-[4/5] overflow-hidden bg-zinc-900">
                                     <Image
-                                        src={profile.avatar || `https://ui-avatars.com/api/?name=${profile.username}&background=random`}
+                                        src={profile.avatar || ""}
                                         alt={profile.username}
                                         fill
                                         sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
