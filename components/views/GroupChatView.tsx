@@ -234,7 +234,13 @@ export function GroupChatView({ onNavigateToProfile, selectedChatId, setSelected
                                                 src={`https://ui-avatars.com/api/?name=${encodeURIComponent(invite.title || 'Group')}&background=random&color=fff`}
                                                 alt="Group"
                                                 fill
+                                                unoptimized={true}
                                                 className="object-cover"
+                                                onError={(e) => {
+                                                    const target = e.target as HTMLImageElement;
+                                                    target.onerror = null;
+                                                    target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(invite.title || 'Group')}&background=random&color=fff`;
+                                                }}
                                             />
                                         </div>
                                         <div className="flex-1 min-w-0">
@@ -366,7 +372,18 @@ export function GroupChatView({ onNavigateToProfile, selectedChatId, setSelected
                                             <div className="hidden sm:flex -space-x-2">
                                                 {activeChat.participants?.slice(0, 3)?.map((p, i) => (
                                                     <div key={i} className="w-5 h-5 rounded-full border border-zinc-900 overflow-hidden relative">
-                                                        <Image src={p.avatar || `https://ui-avatars.com/api/?name=${encodeURIComponent(p.username || 'User')}&background=random`} alt="user" fill className="object-cover" />
+                                                        <Image 
+                                                            src={p.avatar || `https://ui-avatars.com/api/?name=${encodeURIComponent(p.username || 'User')}&background=random`} 
+                                                            alt="user" 
+                                                            fill 
+                                                            unoptimized={true}
+                                                            className="object-cover" 
+                                                            onError={(e) => {
+                                                                const target = e.target as HTMLImageElement;
+                                                                target.onerror = null;
+                                                                target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(p.username || 'User')}&background=random`;
+                                                            }}
+                                                        />
                                                     </div>
                                                 ))}
                                             </div>
@@ -400,8 +417,14 @@ export function GroupChatView({ onNavigateToProfile, selectedChatId, setSelected
                                                         src={msg.sender.avatar || `https://ui-avatars.com/api/?name=${encodeURIComponent(msg.sender.username || 'User')}&background=random`}
                                                         alt={msg.sender.username}
                                                         fill
+                                                        unoptimized={true}
                                                         className="object-cover"
                                                         referrerPolicy="no-referrer"
+                                                        onError={(e) => {
+                                                            const target = e.target as HTMLImageElement;
+                                                            target.onerror = null;
+                                                            target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(msg.sender.username || 'User')}&background=random`;
+                                                        }}
                                                     />
                                                 </div>
                                             )}

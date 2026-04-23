@@ -189,13 +189,19 @@ export function ChatView({ onNavigateToProfile, selectedChatId, setSelectedChatI
                                             if (display.userId) onNavigateToProfile?.(display.userId);
                                         }}
                                     >
-                                        <Image
-                                            src={display.avatar || `https://ui-avatars.com/api/?name=${encodeURIComponent(display.name || 'User')}&background=random`}
-                                            alt={display.name}
-                                            fill
-                                            className="object-cover"
-                                            referrerPolicy="no-referrer"
-                                        />
+                                            <Image
+                                                src={display.avatar || `https://ui-avatars.com/api/?name=${encodeURIComponent(display.name || 'User')}&background=random`}
+                                                alt={display.name}
+                                                fill
+                                                unoptimized={true}
+                                                className="object-cover"
+                                                referrerPolicy="no-referrer"
+                                                onError={(e) => {
+                                                    const target = e.target as HTMLImageElement;
+                                                    target.onerror = null;
+                                                    target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(display.name || 'User')}&background=random`;
+                                                }}
+                                            />
                                     </div>
                                     {/* Mocking online status */}
                                     <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-green-500 border-4 border-zinc-950 rounded-full shadow-lg"></div>
@@ -256,8 +262,14 @@ export function ChatView({ onNavigateToProfile, selectedChatId, setSelectedChatI
                                             src={getChatDisplay(activeChat).avatar || `https://ui-avatars.com/api/?name=${encodeURIComponent(getChatDisplay(activeChat).name || 'User')}&background=random`}
                                             alt={getChatDisplay(activeChat).name}
                                             fill
+                                            unoptimized={true}
                                             className="object-cover"
                                             referrerPolicy="no-referrer"
+                                            onError={(e) => {
+                                                const target = e.target as HTMLImageElement;
+                                                target.onerror = null;
+                                                target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(getChatDisplay(activeChat).name || 'User')}&background=random`;
+                                            }}
                                         />
                                     </div>
                                     <div>
@@ -290,8 +302,14 @@ export function ChatView({ onNavigateToProfile, selectedChatId, setSelectedChatI
                                                         src={msg.sender.avatar || `https://ui-avatars.com/api/?name=${encodeURIComponent(msg.sender.username || 'User')}&background=random`}
                                                         alt={msg.sender.username}
                                                         fill
+                                                        unoptimized={true}
                                                         className="object-cover"
                                                         referrerPolicy="no-referrer"
+                                                        onError={(e) => {
+                                                            const target = e.target as HTMLImageElement;
+                                                            target.onerror = null;
+                                                            target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(msg.sender.username || 'User')}&background=random`;
+                                                        }}
                                                     />
                                                 </div>
                                             )}

@@ -183,7 +183,13 @@ export function NotificationDropdown() {
                                                                     src={invite.invitedBy.avatar || `https://ui-avatars.com/api/?name=${invite.invitedBy.username || 'User'}&background=random`}
                                                                     alt="Inviter"
                                                                     fill
+                                                                    unoptimized={true}
                                                                     className="object-cover"
+                                                                    onError={(e) => {
+                                                                        const target = e.target as HTMLImageElement;
+                                                                        target.onerror = null;
+                                                                        target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(invite.invitedBy.username || 'User')}&background=random`;
+                                                                    }}
                                                                 />
                                                             </div>
                                                             <div className="min-w-0 flex-1">
@@ -240,7 +246,11 @@ export function NotificationDropdown() {
                                                             >
                                                                 <div className="flex items-center gap-3">
                                                                     <div className="w-10 h-10 rounded-xl overflow-hidden relative border border-zinc-800/50">
-                                                                        <Image src={avatar} alt="Avatar" fill className="object-cover" />
+                                                                        <Image src={avatar} alt="Avatar" fill unoptimized={true} className="object-cover" onError={(e) => {
+                                                                            const target = e.target as HTMLImageElement;
+                                                                            target.onerror = null;
+                                                                            target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(title || 'User')}&background=random`;
+                                                                        }} />
                                                                     </div>
                                                                     <div className="flex-1 min-w-0">
                                                                         <div className="flex items-center justify-between gap-2">

@@ -163,7 +163,13 @@ export function ProfileView({ userId, onBack, onNavigateToChat }: ProfileViewPro
                                     src={profile.avatar || `https://ui-avatars.com/api/?name=${profile.username}&background=random`}
                                     alt={profile.username}
                                     fill
+                                    unoptimized={true}
                                     className={`object-cover transition-transform duration-500 ${currentUser?._id === profile._id ? 'group-hover/avatar:scale-110' : ''}`}
+                                    onError={(e) => {
+                                        const target = e.target as HTMLImageElement;
+                                        target.onerror = null;
+                                        target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(profile.username || 'User')}&background=random`;
+                                    }}
                                 />
                                 {currentUser?._id === profile._id && (
                                     <div className="absolute inset-0 bg-black/40 opacity-0 group-hover/avatar:opacity-100 transition-opacity flex items-center justify-center">

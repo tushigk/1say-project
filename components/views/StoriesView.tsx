@@ -387,8 +387,14 @@ export function StoriesView({ onNavigateToProfile }: { onNavigateToProfile?: (id
                                                     src={story.createdBy?.avatar || `https://ui-avatars.com/api/?name=${story.createdBy?.username || 'User'}&background=random`}
                                                     alt="Avatar"
                                                     fill
+                                                    unoptimized={true}
                                                     className="object-cover grayscale group-hover:grayscale-0 transition-all duration-500"
                                                     referrerPolicy="no-referrer"
+                                                    onError={(e) => {
+                                                        const target = e.target as HTMLImageElement;
+                                                        target.onerror = null;
+                                                        target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(story.createdBy?.username || 'User')}&background=random`;
+                                                    }}
                                                 />
                                             </div>
                                             <div className="min-w-0 flex-1">

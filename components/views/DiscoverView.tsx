@@ -146,16 +146,18 @@ export function DiscoverView({
 
                                 <div className="relative aspect-[4/5] overflow-hidden bg-zinc-900">
                                     <Image
-                                        src={profile.avatar || ""}
+                                        src={profile.avatar || `https://ui-avatars.com/api/?name=${encodeURIComponent(profile.username || 'User')}&background=random`}
                                         alt={profile.username}
                                         fill
+                                        unoptimized={true}
                                         sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
                                         priority={index < 4}
                                         className="object-cover transition-all duration-1000 group-hover:scale-110 grayscale-[10%] group-hover:grayscale-0"
                                         referrerPolicy="no-referrer"
                                         onError={(e) => {
                                             const target = e.target as HTMLImageElement;
-                                            target.src = `https://ui-avatars.com/api/?name=${profile.username}&background=random`;
+                                            target.onerror = null;
+                                            target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(profile.username || 'User')}&background=random`;
                                         }}
                                     />
                                     <div className="absolute inset-0 bg-gradient-to-t from-zinc-950/90 via-zinc-950/20 to-transparent opacity-90 group-hover:opacity-60 transition-opacity duration-700 pointer-events-none" />
