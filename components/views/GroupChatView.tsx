@@ -5,6 +5,8 @@ import { motion } from 'framer-motion';
 import { Search, Send, Users, Plus, MessageSquare, ChevronLeft, Info } from 'lucide-react';
 import Image from 'next/image';
 import Loading from '@/components/ui/Loading';
+import { ConfirmModal } from '@/components/ui/ConfirmModal';
+import { GroupInfoModal } from './GroupInfoModal';
 import useSWR from 'swr';
 import { chatApi } from '@/apis';
 import { useAuth } from '@/components/providers/AuthProvider';
@@ -60,6 +62,9 @@ export function GroupChatView({ onNavigateToProfile, selectedChatId, setSelected
     const messagesEndRef = useRef<HTMLDivElement>(null);
     const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
     const [isCreating, setIsCreating] = useState(false);
+    const [isLeaving, setIsLeaving] = useState(false);
+    const [isLeaveModalOpen, setIsLeaveModalOpen] = useState(false);
+    const [isInfoOpen, setIsInfoOpen] = useState(false);
 
     const { data: chatsData, mutate: mutateChats } = useSWR('chats', () => chatApi.listChats());
     const { data: messagesData, mutate: mutateMessages } = useSWR(
@@ -184,6 +189,25 @@ export function GroupChatView({ onNavigateToProfile, selectedChatId, setSelected
         } catch (error) {
             console.error("Invite Response Error:", error);
             toast.error("Алдаа гарлаа");
+        }
+    };
+
+    const handleLeaveChat = async () => {
+        if (!selectedChatId || isLeaving) return;
+
+        setIsLeaving(true);
+        try {
+            await chatApi.leaveChat(selectedChatId);
+            toast.success('Грүппээс гарлаа');
+            setSelectedChatId?.(null);
+            mutateChats();
+            setIsLeaveModalOpen(false);
+            setIsInfoOpen(false);
+        } catch (error) {
+            console.error("Leave Chat Error:", error);
+            toast.error("Грүппээс гарахад алдаа гарлаа");
+        } finally {
+            setIsLeaving(false);
         }
     };
 
@@ -394,9 +418,7 @@ export function GroupChatView({ onNavigateToProfile, selectedChatId, setSelected
                                     </div>
                                 </div>
                                 <button
-                                    onClick={() => {
-                                        toast('Грүппийн мэдээлэл тун удахгүй...');
-                                    }}
+                                    onClick={() => setIsInfoOpen(true)}
                                     className="w-10 h-10 rounded-xl bg-zinc-900/50 flex items-center justify-center text-zinc-400 hover:text-white hover:bg-zinc-800 transition-all cursor-pointer"
                                 >
                                     <Info size={20} />
@@ -492,6 +514,24 @@ export function GroupChatView({ onNavigateToProfile, selectedChatId, setSelected
                 onClose={() => setIsCreateModalOpen(false)}
                 onSubmit={handleCreateGroup}
                 isLoading={isCreating}
+            />
+            <GroupInfoModal 
+                isOpen={isInfoOpen}
+                onClose={() => setIsInfoOpen(false)}
+                title={activeChat?.title || 'Грүпп чат'}
+                participants={activeChat?.participants || []}
+                onLeave={() => setIsLeaveModalOpen(true)}
+                isLeaving={isLeaving}
+            />
+            <ConfirmModal
+                isOpen={isLeaveModalOpen}
+                onClose={() => setIsLeaveModalOpen(false)}
+                onConfirm={handleLeaveChat}
+                isLoading={isLeaving}
+                title="Грүппээс гарах"
+                description="Та энэ грүппээс гарахдаа итгэлтэй байна уу?"
+                confirmText="Гарах"
+                cancelText="Болих"
             />
         </div>
     );

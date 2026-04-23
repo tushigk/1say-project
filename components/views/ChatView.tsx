@@ -2,9 +2,11 @@
 
 import React, { useEffect, useMemo } from 'react';
 import { motion } from 'framer-motion';
-import { Send, MessageCircle, ChevronLeft, Info } from 'lucide-react';
+import { Send, MessageCircle, ChevronLeft, Info, Trash2 } from 'lucide-react';
 import Image from 'next/image';
 import Loading from '@/components/ui/Loading';
+import { ConfirmModal } from '@/components/ui/ConfirmModal';
+import { ChatInfoModal } from './ChatInfoModal';
 
 import useSWR from 'swr';
 import { chatApi } from '@/apis';
@@ -55,6 +57,9 @@ export function ChatView({ onNavigateToProfile, selectedChatId, setSelectedChatI
     const { socket } = useSocket();
     const [messageBody, setMessageBody] = React.useState('');
     const [isSending, setIsSending] = React.useState(false);
+    const [isDeleting, setIsDeleting] = React.useState(false);
+    const [isDeleteModalOpen, setIsDeleteModalOpen] = React.useState(false);
+    const [isInfoOpen, setIsInfoOpen] = React.useState(false);
     const inputRef = React.useRef<HTMLInputElement>(null);
     const messagesEndRef = React.useRef<HTMLDivElement>(null);
 
@@ -145,6 +150,25 @@ export function ChatView({ onNavigateToProfile, selectedChatId, setSelectedChatI
             toast.error("Зурвас илгээхэд алдаа гарлаа");
         } finally {
             setIsSending(false);
+        }
+    };
+    
+    const handleDeleteChat = async () => {
+        if (!selectedChatId || isDeleting) return;
+
+        setIsDeleting(true);
+        try {
+            await chatApi.deleteChat(selectedChatId);
+            toast.success("Чат амжилттай устгагдлаа");
+            setSelectedChatId?.(null);
+            mutateChats();
+            setIsDeleteModalOpen(false);
+            setIsInfoOpen(false);
+        } catch (error) {
+            console.error("Delete Chat Error:", error);
+            toast.error("Чат устгахад алдаа гарлаа");
+        } finally {
+            setIsDeleting(false);
         }
     };
 
@@ -281,10 +305,7 @@ export function ChatView({ onNavigateToProfile, selectedChatId, setSelectedChatI
                                     </div>
                                 </div>
                                 <button
-                                    onClick={() => {
-                                        const display = getChatDisplay(activeChat);
-                                        if (display.userId) onNavigateToProfile?.(display.userId);
-                                    }}
+                                    onClick={() => setIsInfoOpen(true)}
                                     className="w-10 h-10 rounded-xl bg-zinc-900/50 flex items-center justify-center text-zinc-400 hover:text-white hover:bg-zinc-800 transition-all cursor-pointer"
                                 >
                                     <Info size={20} />
@@ -361,6 +382,28 @@ export function ChatView({ onNavigateToProfile, selectedChatId, setSelectedChatI
                     <p className="text-sm font-medium">Зурвасаа сонгож харилцаарай</p>
                 </div>
             )}
+            <ConfirmModal
+                isOpen={isDeleteModalOpen}
+                onClose={() => setIsDeleteModalOpen(false)}
+                onConfirm={handleDeleteChat}
+                isLoading={isDeleting}
+                title="Чат устгах"
+                description="Энэ чатыг бүрмөсөн устгахдаа итгэлтэй байна уу? Энэ үйлдлийг буцаах боломжгүй."
+                confirmText="Устгах"
+                cancelText="Болих"
+            />
+            <ChatInfoModal 
+                isOpen={isInfoOpen}
+                onClose={() => setIsInfoOpen(false)}
+                name={activeChat ? getChatDisplay(activeChat).name : ''}
+                avatar={activeChat ? getChatDisplay(activeChat).avatar : undefined}
+                onViewProfile={() => {
+                    const userId = activeChat ? getChatDisplay(activeChat).userId : null;
+                    if (userId) onNavigateToProfile?.(userId);
+                }}
+                onDelete={() => setIsDeleteModalOpen(true)}
+                isDeleting={isDeleting}
+            />
         </div>
     );
 }
