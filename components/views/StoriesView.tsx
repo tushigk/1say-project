@@ -370,7 +370,7 @@ export function StoriesView({ onNavigateToProfile }: { onNavigateToProfile?: (id
                             animate={{ opacity: 1, x: 0 }}
                             transition={{ delay: index * 0.1 }}
                             onClick={() => setSelectedStory(story)}
-                            className="group glass-card rounded-4xl p-8 hover:bg-zinc-900/40 transition-all border border-zinc-800/40 cursor-pointer"
+                            className="group glass-card rounded-4xl p-8 hover:bg-zinc-900/40 transition-all border border-zinc-800/40 cursor-pointer overflow-hidden"
                         >
                             <div className="flex flex-col md:flex-row gap-6">
                                 <div className="flex-1 space-y-4 min-w-0">
@@ -399,13 +399,16 @@ export function StoriesView({ onNavigateToProfile }: { onNavigateToProfile?: (id
                                             </div>
                                             <div className="min-w-0 flex-1">
                                                 <p
-                                                    className="font-bold text-white tracking-wide cursor-pointer hover:text-rose-500 transition-colors truncate"
+                                                    className="font-bold text-white tracking-wide cursor-pointer hover:text-rose-500 transition-colors truncate max-w-full"
                                                     onClick={(e) => {
                                                         e.stopPropagation();
                                                         onNavigateToProfile?.(story.createdBy?._id);
                                                     }}
                                                 >
-                                                    {story.createdBy?.username}
+                                                    {(() => {
+                                                        const name = story.createdBy?.username ?? '';
+                                                        return name.length > 8 ? name.slice(0, 20) + '...' : name;
+                                                    })()}
                                                 </p>
                                                 <div className="flex items-center gap-2 text-[10px] text-zinc-500 font-bold uppercase tracking-wider">
                                                     <Clock size={12} className="text-rose-500/80" />
